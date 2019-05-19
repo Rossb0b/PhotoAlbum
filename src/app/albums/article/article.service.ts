@@ -25,9 +25,6 @@ export class ArticleService {
   addArticle(title: string, paragraphs: any, albumId: string) {
     const articleData = new FormData();
     articleData.append('title', title);
-    // paragraphs.map((paragraph: {content: string, path: string, alt: string}) =>
-    //   articleData.append('paragraphs[]', paragraphs)
-    // );
     // paragraphs.forEach(paragraph => {
     //   // console.log(paragraph.content);
     //   // console.log(paragraph.path);
@@ -41,10 +38,8 @@ export class ArticleService {
     // console.log(articleData.getAll('paragraphs[]'));
     this.http.post<{message: string, article: Article}>(BACKEND_URL, articleData)
     .subscribe(() => {
-      // return this.http.post(Body)
       this.router.navigate(['/albums']);
     });
-    // return this.http.post(Body);
   }
 
 }
