@@ -1,0 +1,92 @@
+<div class="container">
+  <div class="row mt-4">
+    <div class="offset-3 col-6">
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+    </div>
+  </div>
+  <form [formGroup]="form" (submit)="onSaveArticle()" *ngIf="!isLoading">
+    <mat-form-field>
+      <input
+      matInput
+      type="text"
+      formControlName="title"
+      minLength="4"
+      maxlength="18"
+      placeholder="Article's title">
+      <mat-error *ngIf="form.get('title').invalid">Please enter an article title with at least 4 caracters and a max of 18.</mat-error>
+    </mat-form-field>
+    <div *ngFor="let p of form.get('paragraphs').controls; let i = index">
+      <div class="mt-4" formArrayName="paragraphs">
+        <div [formGroupName]="i">
+          <mat-form-field>
+            <textarea
+            matInput
+            rows="4"
+            minlength="1"
+            maxlength="255"
+            formControlName="content"
+            placeholder="Paragraph {{ i + 1 }}"
+            (focus)="displayChooseImg(i)"></textarea>
+            <mat-error *ngIf="form.get('paragraphs').invalid">Please enter an article content with at least 60 caracters and a max of 255.</mat-error>
+          </mat-form-field>
+          <div class="choose-image">
+            <p class="mt-4">Pick an image to illustrate your content</p>
+            <div *ngIf="photosToDisplay.length == 4" class="row mt-3">
+              <div class="col-3 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+                <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
+                  <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo" [alt]="album.imagePath">
+                </mat-card>
+              </div>
+            </div>
+
+            <div *ngIf="photosToDisplay.length == 3" class="row mt-3">
+              <div class="col-4 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+                <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
+                  <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo" [alt]="album.imagePath">
+                </mat-card>
+              </div>
+            </div>
+
+            <div *ngIf="photosToDisplay.length == 2" class="row mt-3">
+              <div class="col-5 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+                <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
+                  <img mat-card-image class="mx-auto mt-1 medium-picture" [src]="photo" [alt]="album.imagePath">
+                </mat-card>
+              </div>
+            </div>
+
+            <div *ngIf="photosToDisplay.length == 1" class="row mt-3">
+              <div class="col-8 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+                <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
+                  <img mat-card-image class="mx-auto mt-1 big-picture" [src]="photo" [alt]="album.imagePath">
+                </mat-card>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col">
+                <mat-paginator [length]="totalPhotos" [pageSize]="photosPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"></mat-paginator>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <mat-card class="col-3 mx-auto" *ngIf="p.controls.path.value !== null">
+              <img mat-card-image class="ml-2 little-picture" [src]="p.controls.path.value">
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button mat-raised-button color="primary" type="button" (click)="addparagraph()" *ngIf="form.get('paragraphs').controls.length < 4">Ajouter un paragraph</button>
+
+    <div class="row mt-2">
+      <div class="col">
+        <button
+        mat-raised-button
+        color="accent"
+        type="submit"
+        style="margin-top:10px;">Save Article</button>
+      </div>
+    </div>
+  </form>
+</div>

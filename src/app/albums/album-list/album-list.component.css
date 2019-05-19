@@ -1,0 +1,42 @@
+:host {
+  display: block;
+  margin-top:1rem;
+}
+
+
+mat-spinner {
+  margin:auto;
+}
+/*
+.image-holder {
+  width:100%;
+} */
+
+img {
+  width:100%;
+  max-width:290px;
+  height:100%;
+  min-height:200px;
+  max-height:300px;
+}
+
+mat-card {
+  display:block;
+  height:50vh;
+}
+
+mat-card-title {
+  text-align:center;
+  font-weight:bold;
+}
+
+mat-card-footer {
+  position: absolute;
+  bottom:2vh;
+  left:46%;
+}
+
+
+mat-paginator {
+  margin-top:1rem;
+}
