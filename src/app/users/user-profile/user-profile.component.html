@@ -5,23 +5,54 @@
   <div class="row mt-4">
     <div class="col-6 mx-auto">
       <mat-card *ngIf="user">
-        <mat-card-title class="text-center">Welcome {{user.firstname}}</mat-card-title>
-        <div class="image-preview">
-          <img [src]="user.imagePath" alt="user avatar">
-        </div>
-        <form [formGroup]="form" (submit)="onSaveUser()" *ngIf="!isLoading">
-          <button mat-stroked-button type="button" (click)="filePicker.click()">Pick Image</button>
-          <input type="file" #filePicker (change)="onImagePicked($event)">
-          <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
-            <img [src]="imagePreview" [alt]="form.value.title">
+        <div class="row">
+          <div class="col">
+            <mat-card-title class="text-center">Welcome {{user.firstname}}</mat-card-title>
           </div>
+        </div>
 
-          <button
-          mat-raised-button
-          color="accent"
-          class="mt-3"
-          type="submit">Edit User picture</button>
-        </form>
+        <div class="row mt-3">
+          <div class="col">
+            <p class="text-justify">
+              There is your user ID, you can share it to your friends using the application allowing them to share their ablums with you.
+            </p>
+            <ul>
+              <li id="id">{{userId}}</li>
+            </ul>
+            <div class="row">
+              <div class="col" style="display:flex; flex-direction:row;">
+                <i class="material-icons">warning</i>
+                <p class="ml-2 text-center">
+                  This user Id is unique and cannot be change, so be carreful about who you are sharing it with.
+                </p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col">
+            <div class="image-preview">
+              <img [src]="user.imagePath" alt="user avatar">
+            </div>
+
+            <form [formGroup]="form" (submit)="onSaveUser()" *ngIf="!isLoading">
+              <button mat-stroked-button type="button" (click)="filePicker.click()">Pick Image</button>
+              <input type="file" #filePicker (change)="onImagePicked($event)">
+              <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
+                <img [src]="imagePreview" [alt]="form.value.title">
+              </div>
+
+              <button
+              mat-raised-button
+              color="accent"
+              class="mt-3"
+              type="submit">Edit User picture</button>
+            </form>
+          </div>
+        </div>
+
       </mat-card>
     </div>
   </div>

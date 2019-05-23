@@ -1,27 +1,31 @@
 const Article = require('../models/article');
 
 exports.createArticle = (req, res, next) => {
-  const url = req.protocol + '://' + req.get("host");
-  const article = new Article({
+  if (req.body.owner == req.userData.userId) {
+    const url = req.protocol + '://' + req.get("host");
+    const article = new Article({
     title: req.body.title,
     paragraphs: req.body.paragraphs,
     creator: req.userData.userId,
     albumId: req.body.albumId
-  });
-  article.save().then(createdArticle => {
-    res.status(201).json({
-      message: 'Article added successfully',
-      post: {
-        ...createdArticle,
-        id: createdArticle._id
-      }
     });
-  })
-  .catch(error => {
-    res.status(500).json({
-      message: 'Creating an Article failed'
+    article.save().then(createdArticle => {
+      res.status(201).json({
+        message: 'Article added successfully',
+        post: {
+          ...createdArticle,
+          id: createdArticle._id
+        }
+      });
     })
-  });
+    .catch(error => {
+      res.status(500).json({
+        message: 'Creating an Article failed'
+      })
+    });
+  } else {
+    res.status(401).json({ message: 'Not authorized'});
+  }
 }
 
 exports.getArticle = (req, res, next) => {

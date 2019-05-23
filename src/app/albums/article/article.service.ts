@@ -23,11 +23,12 @@ export class ArticleService {
     return this.http.get<Article>(BACKEND_URL + queryParams);
   }
 
-  addArticle(title: string, paragraphs: any, albumId: string) {
+  addArticle(title: string, paragraphs: any, albumId: string, owner: string) {
     const articleData = {
       title,
       paragraphs,
-      albumId
+      albumId,
+      owner
     };
     this.http.post<{message: string, article: Article}>(BACKEND_URL, articleData)
       .subscribe(() => {

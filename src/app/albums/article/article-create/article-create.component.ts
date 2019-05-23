@@ -152,7 +152,8 @@ export class ArticleCreateComponent implements OnInit {
       this.articleService.addArticle(
         this.form.value.title,
         this.form.value.paragraphs,
-        this.album.id
+        this.album.id,
+        this.album.creator
         );
     } else {
       console.log('edit');

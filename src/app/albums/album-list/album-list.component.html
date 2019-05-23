@@ -24,10 +24,21 @@
         </div>
 
         <div class="row">
-          <div class="offset-2 col-9">
-            <a [routerLink]="['/albums/edit', album.id]" mat-raised-button color="primary">Edit</a>
-            <button mat-raised-button color="primary" class="ml-3" (click)="onShow(album.id)">Show</button>
-            <button mat-raised-button color="warn" class="ml-3" (click)="onDelete(album.id, album.imagesPath)">Delete</button>
+          <div class="col-12">
+            <div class="row">
+              <div class="col-3 mx-auto text-center">
+                  <a *ngIf="userId == album.creator" [routerLink]="['/albums/edit', album.id]" mat-raised-button color="primary">Edit</a>
+              </div>
+
+              <div class="col-3 mx-auto text-center">
+                  <button mat-raised-button color="primary" (click)="onShow(album.id)">Show</button>
+              </div>
+
+              <div class="col-3 mx-auto text-center">
+                  <button *ngIf="userId == album.creator" mat-raised-button color="warn" (click)="onDelete(album.id, album.imagesPath)">Delete</button>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

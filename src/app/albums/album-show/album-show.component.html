@@ -7,7 +7,7 @@
 
   <div class="row">
     <div class="col-3">
-      <button *ngIf="album && userId === album.creator" mat-raised-button class="text-center" color="primary" (click)="onAdd()">Add a Photo</button>
+      <button *ngIf="album && userId == album.creator" mat-raised-button class="text-center" color="primary" (click)="onAdd()">Add a Photo</button>
     </div>
 
     <div class="col-7" *ngIf="!isLoading && addPhoto">
@@ -27,7 +27,7 @@
 
     <div class="col-2">
         <button *ngIf='articleExist' mat-raised-button color="primary" class="ml-3" (click)="onShow(albumId)" style="position:absolute; right:0;">Show Article</button>
-        <button *ngIf='!articleExist' mat-raised-button color="primary" class="ml-3" (click)="onAddArticle(albumId)" style="position:absolute; right:0;">Create Article</button>
+        <button *ngIf='!articleExist && userId == album.creator' mat-raised-button color="primary" class="ml-3" (click)="onAddArticle(albumId)" style="position:absolute; right:0;">Create Article</button>
     </div>
   </div>
 
@@ -41,7 +41,7 @@
 
   <div *ngIf="photosToDisplay.length == 4" class="row mt-3">
     <div class="col-3 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
-      <button mat-raised-button class="text-center ml-3" color="warn" (click)="onDelete(photo)">X</button>
+      <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="onDelete(photo)">X</button>
       <mat-card>
         <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo" [alt]="album.imagePath">
       </mat-card>
@@ -50,7 +50,7 @@
 
   <div *ngIf="photosToDisplay.length == 3" class="row mt-3">
     <div class="col-4 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
-      <button mat-raised-button class="text-center ml-3" color="warn" (click)="onDelete(photo)">X</button>
+      <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="onDelete(photo)">X</button>
       <mat-card>
         <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo" [alt]="album.imagePath">
       </mat-card>
@@ -59,7 +59,7 @@
 
   <div *ngIf="photosToDisplay.length == 2" class="row mt-3">
     <div class="col-5 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
-      <button mat-raised-button class="text-center ml-3" color="warn" (click)="onDelete(photo)">X</button>
+      <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="onDelete(photo)">X</button>
       <mat-card>
         <img mat-card-image class="mx-auto mt-1 medium-picture" [src]="photo" [alt]="album.imagePath">
       </mat-card>
@@ -68,7 +68,7 @@
 
   <div *ngIf="photosToDisplay.length == 1" class="row mt-3">
     <div class="col-8 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
-      <button mat-raised-button class="text-center ml-3" color="warn" (click)="onDelete(photo)">X</button>
+      <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="onDelete(photo)">X</button>
       <mat-card>
         <img mat-card-image class="mx-auto mt-1 big-picture" [src]="photo" [alt]="album.imagePath">
       </mat-card>
