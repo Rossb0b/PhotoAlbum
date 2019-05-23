@@ -27,11 +27,18 @@
             </div>
           </div>
 
-          <div class="row" *ngIf="mode == 'edit'">
-            <div class="col">
-              <ul>
-                <li *ngFor="let friend of album.linked_friendsId">{{friend}}</li>
-              </ul>
+          <div class="row mt-4" *ngIf="mode == 'edit'">
+            <div class="col-12">
+
+              <div class="row" *ngFor="let friendId of form.controls.friendsShare.controls; let i = index">
+                <div class="col">
+                  <label formArrayName="friendsShare">
+                    <input type="checkbox" class="checkbox" [formControlName]="i">
+                    {{friendsShare[i]}}
+                  </label>
+                </div>
+              </div>
+
             </div>
           </div>
 

@@ -6,7 +6,7 @@ import { Album } from '../album.model';
 import { AlbumsService } from '../albums.service';
 import { AuthService } from '../../auth/auth.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
 
 @Component({
@@ -25,6 +25,9 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
   form: FormGroup;
   private authStatusSub: Subscription;
   filesToUpload: Array<File> = [];
+  friendsShare: Array<string> = [];
+
+
 
 
 
@@ -37,11 +40,6 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('albumId')) {
         this.mode = 'edit';
-        this.form = new FormGroup({
-          title: new FormControl(null, {validators: [Validators.required, Validators.minLength(4)]}),
-          friendId: new FormControl(null)
-        });
-        console.log(this.form);
         this.albumId = paramMap.get('albumId');
         this.isLoading = true;
         this.albumsService.getAlbum(this.albumId).subscribe(albumData => {
@@ -54,9 +52,29 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
             creator: albumData.creator,
             created_date: albumData.created_date,
           };
+          this.form = new FormGroup({
+            title: new FormControl(null, {validators: [Validators.required, Validators.minLength(4)]}),
+            friendsShare: new FormArray([]),
+            friendId: new FormControl(null)
+          });
+          this.friendsShare = this.album.linked_friendsId;
+          this.addCheckboxes();
+          const checkboxes = document.getElementsByClassName('checkbox');
+          // const array = Array.from(checkboxes);
+          console.log(checkboxes);
+          console.log(checkboxes.length);
+          // console.log(checkboxes.length);
+          // for (let checkbox of checkboxes)  {
+            // console.log('test');
+            // console.log(checkbox);
+            // if (checkboxes[i].type == 'checkbox')   {
+            //   checkboxes[i].checked = false;
+            // }
+          // }
           console.log(this.album);
           this.form.setValue({
             title: this.album.title,
+            friendsShare: this.friendsShare,
             friendId: null
           });
         });
@@ -68,6 +86,13 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
           image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
         });
       }
+    });
+  }
+
+  private addCheckboxes() {
+    this.friendsShare.map((o, i) => {
+      const control = new FormControl(i === 0); // if first item set to true, else false
+      (this.form.controls.friendsShare as FormArray).push(control);
     });
   }
 
@@ -83,7 +108,8 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
   }
 
   onSaveAlbum() {
-    this.isLoading = true;
+    console.log(this.form.value);
+    // this.isLoading = true;
     if (this.mode === 'create') {
       this.albumsService.addAlbum(
         this.form.value.title,
@@ -94,6 +120,16 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
       if (this.form.value.friendId) {
         arrayOfFriends.push(this.form.value.friendId);
       }
+      for (let i = 0; i <= this.form.value.friendsShare.length - 1; i++) {
+        if (this.form.value.friendsShare[i] === true) {
+          for (let j = 0; j <= arrayOfFriends.length - 1; j++) {
+            if (arrayOfFriends[j] === this.friendsShare[i]) {
+              arrayOfFriends.splice(j , 1);
+            }
+          }
+        }
+      }
+      console.log(arrayOfFriends);
       this.albumsService.updateAlbum({
         id: this.albumId,
         title: this.form.value.title,
