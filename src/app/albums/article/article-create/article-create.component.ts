@@ -46,7 +46,7 @@ export class ArticleCreateComponent implements OnInit {
     private fb: FormBuilder,
   ) {
     this.form = this.fb.group({
-      title: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(18)]],
+      title: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(34)]],
       paragraphs: this.fb.array([])
     });
 
@@ -59,9 +59,6 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authStatusSub = this.authService.getAuthStatusListener().subscribe(authStatus => {
-      this.isLoading = false;
-    });
     this.userId = this.authService.getUserId();
     this.albumId = localStorage.getItem('albumId');
     localStorage.removeItem('albumId');
@@ -72,6 +69,7 @@ export class ArticleCreateComponent implements OnInit {
           id: albumData._id,
           title: albumData.title,
           imagePath: albumData.imagesPath,
+          linked_friendsId: albumData.linked_friendsId,
           creator: albumData.creator,
           created_date: albumData.created_date,
         };
@@ -103,6 +101,15 @@ export class ArticleCreateComponent implements OnInit {
     this.isLoading = false;
   }
 
+  goToView(): void {
+    const element = document.getElementById('submit-button');
+    const y = element.getBoundingClientRect().top + window.scrollY;
+    window.scroll({
+      top: y,
+      behavior: 'smooth'
+    });
+  }
+
   addparagraph(): void {
     console.log('1', this.form.get('paragraphs'));
     const p = this.form.controls.paragraphs as FormArray;
@@ -111,6 +118,7 @@ export class ArticleCreateComponent implements OnInit {
       path: [null],
       alt: [null],
     }));
+    this.goToView();
   }
 
   displayChooseImg(index: number): void {
@@ -122,17 +130,16 @@ export class ArticleCreateComponent implements OnInit {
         div[i].style.display = 'none';
       }
     }
+    this.goToView();
   }
 
   selectImage(index: number, photo: string): void {
-    // console.log(this.form.controls.paragraphs);
     const p = this.form.controls.paragraphs as FormArray;
     // p.controls[index].setValue
     console.log(p.controls[index]);
     p.controls[index].get('path').setValue(photo);
     p.controls[index].get('alt').setValue('image');
-    console.log(p);
-    console.log(photo);
+    this.goToView();
   }
 
   onSaveArticle() {
@@ -141,9 +148,7 @@ export class ArticleCreateComponent implements OnInit {
     // }
     this.isLoading = true;
     if (this.mode === 'create') {
-      console.log(this.form.value);
       this.isLoading = false;
-      console.log(this.form.value.paragraphs);
       this.articleService.addArticle(
         this.form.value.title,
         this.form.value.paragraphs,

@@ -1,0 +1,42 @@
+.article {
+  /* The image used */
+  background-image: url('../../../../../backend/images/background-article.png');
+
+  /* Full height */
+  min-height:100%;
+  width: 100%;
+
+  background-repeat: repeat;
+  /* Center and scale the image nicely */
+  /* background-position: center;
+  background-size: cover; */
+}
+
+.container {
+  padding:1vh;
+}
+
+.title {
+  height:10vh;
+  border-bottom:1px solid #FF4081;
+  margin-bottom:8vh;
+  color: #3F51B5;
+}
+
+.align-right {
+  position:absolute;
+  right:0;
+}
+
+.paragraphs-image {
+  width: 200px;
+  height:175px;
+}
+
+.float-right {
+  float:right;
+}
+
+.float-left {
+  float:left;
+}

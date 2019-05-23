@@ -108,14 +108,17 @@ exports.editAlbum = (req, res, next) => {
     // console.log(formatedArrayOfFile);
   }
 
-  // handle  title modification
+  // handle  title modification add new friends in list
   if(!req.body.imageToDeletePath && !req.body.onAdd && req.body.title.length >= 4 && req.body.title.length <= 18) {
     album = new Album({
       _id: req.body.id,
       title: req.body.title,
       imagesPath: imagePath,
+      linked_friendsId: req.body.linked_friendsId,
       created_date: req.body.created_date
     })
+    console.log(req.body.linked_friendsId);
+    console.log(album);
   }
 
   Album.updateOne({_id: req.params.id, creator: req.userData.userId}, album).then(result => {
@@ -129,15 +132,16 @@ exports.editAlbum = (req, res, next) => {
     res.status(500).json({ message: 'Couldn\'t update post'})
   });
 }
+
+
 // const albumQuery = Album.find({ creator: req.query.userId, shared: [...req.query.userId]})
 exports.getAlbums = (req, res, next) => {
-  const albumQuery = Album.find({ creator: req.query.userId })
+  const albumQuery = Album.find({ $or:[{ creator: req.query.userId }, { linked_friendsId: { "$in" : [req.query.userId] } }] })
   let fetchedAlbums;
-  albumQuery.find({ creator: req.query.userId })
+  albumQuery.find({ $or:[{ creator: req.query.userId }, { linked_friendsId: { "$in" : [req.query.userId] } }] })
     .then(documents => {
-      // console.log(documents);
       fetchedAlbums = documents;
-      return Album.count({ creator: req.query.userId });
+      return Album.count({ $or:[{ creator: req.query.userId }, { linked_friendsId: { "$in" : [req.query.userId] } }] });
     })
     .then(count => {
       res.status(200).json({

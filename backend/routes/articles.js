@@ -12,8 +12,8 @@ router.post("", checkAuth, ArticleController.createArticle);
 
 // router.get("", AlbumController.getAlbums);
 
-router.get("/:albumId", ArticleController.getArticle);
+router.get("", ArticleController.getArticle);
 
-// router.delete("/:id", checkAuth, AlbumController.deleteAlbum);
+router.delete("/:id", checkAuth, ArticleController.deleteArticle);
 
 module.exports = router;

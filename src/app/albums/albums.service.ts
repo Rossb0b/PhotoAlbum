@@ -27,11 +27,12 @@ export class AlbumsService {
           map((albumData) => {
             return {
               // tslint:disable-next-line: max-line-length
-              albums: albumData.albums.map((album: { _id: string; title: string; imagesPath: []; creator: string; created_date: Date; }) => {
+              albums: albumData.albums.map((album: { _id: string; title: string; imagesPath: []; linked_friendsId: []; creator: string; created_date: Date; }) => {
                 return {
-                  imagesPath: album.imagesPath,
                   id: album._id,
                   title: album.title,
+                  imagesPath: album.imagesPath,
+                  linked_friendsId: album.linked_friendsId,
                   creator: album.creator,
                   created_date: album.created_date
                 };
@@ -58,6 +59,7 @@ export class AlbumsService {
       title: string;
       content: string;
       imagesPath: [];
+      linked_friendsId: [];
       creator: string;
       created_date: string;
     }>(BACKEND_URL + id);
@@ -84,15 +86,19 @@ export class AlbumsService {
   updateAlbum({
     id,
     title,
-    creator,
     imagePath,
-    created_date }: { id: string; title: string; creator: string; imagePath: any; created_date: any; }) {
+    linked_friendsId,
+    creator,
+    created_date }: { id: string; title: string; creator: string; imagePath: any; linked_friendsId: any; created_date: any; }) {
     let albumData: Album | FormData;
     albumData = new FormData();
     albumData.append('id', id);
     albumData.append('title', title);
-    albumData.append('creator', creator);
     albumData.append('imagePath', imagePath);
+    for (let i = 0; i <= linked_friendsId.length - 1; i++) {
+      albumData.append('linked_friendsId[]', linked_friendsId[i]);
+    }
+    albumData.append('creator', creator);
     albumData.append('created_date', created_date);
     this.http.put(BACKEND_URL + id, albumData)
       .subscribe(() => {

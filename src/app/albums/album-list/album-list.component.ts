@@ -27,34 +27,36 @@ export class AlbumListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.userId = this.authService.getUserId();
     this.albumsService.getAlbums(this.userId);
+    this.authStatusSub = this.authService.getAuthStatusListener()
+      .subscribe(isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
+        this.userId = this.authService.getUserId();
+    });
     this.albumsSub = this.albumsService.getAlbumUpdatedListener()
       .subscribe((albumData: { albums: Album[], albumCount: number }) => {
         this.isLoading = false;
         const albumsForDate = albumData.albums;
         albumsForDate.forEach(album => {
-          let formatedDate = new Date(album.created_date);
-          const dateMonth = formatedDate.getMonth() + 1;
+          const dateOfAlbum = new Date(album.created_date);
+          const dateMonth = dateOfAlbum.getMonth() + 1;
+          let formatedDate: string;
           if (dateMonth >= 10) {
-            formatedDate = dateMonth + '/' + formatedDate.getFullYear();
+            formatedDate = dateMonth + '/' + dateOfAlbum.getFullYear();
           } else {
-            formatedDate = '0' + dateMonth + '/' + formatedDate.getFullYear();
+            formatedDate = '0' + dateMonth + '/' + dateOfAlbum.getFullYear();
           }
           album.created_date = formatedDate;
         });
         this.albums = albumsForDate;
+        console.log(this.albums);
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authStatusSub = this.authService.getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-        this.userId = this.authService.getUserId();
-      });
   }
 
 
   onShow(albumId: string) {
     localStorage.setItem('albumId', albumId);
-    this.router.navigate(['/yourAlbum']);
+    this.router.navigate(['/albums/myAlbum']);
   }
 
   onDelete(albumId: string, imageToDeletePath: any) {

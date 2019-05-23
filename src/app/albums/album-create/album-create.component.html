@@ -27,6 +27,27 @@
             </div>
           </div>
 
+          <div class="row" *ngIf="mode == 'edit'">
+            <div class="col">
+              <ul>
+                <li *ngFor="let friend of album.linked_friendsId">{{friend}}</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="mode == 'edit'">
+            <div class="col">
+              <mat-form-field>
+                <input
+                matInput
+                type="text"
+                formControlName="friendId"
+                placeholder="Friend ID to share album with">
+                <mat-error *ngIf="form.get('friendId').invalid">Please enter a valid with friend ID with 24 caracters.</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
           <div class="row mt-2">
             <div class="col">
               <button

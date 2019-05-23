@@ -39,7 +39,9 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
         this.mode = 'edit';
         this.form = new FormGroup({
           title: new FormControl(null, {validators: [Validators.required, Validators.minLength(4)]}),
+          friendId: new FormControl(null)
         });
+        console.log(this.form);
         this.albumId = paramMap.get('albumId');
         this.isLoading = true;
         this.albumsService.getAlbum(this.albumId).subscribe(albumData => {
@@ -48,11 +50,14 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
             id: albumData._id,
             title: albumData.title,
             imagePath: albumData.imagesPath,
+            linked_friendsId: albumData.linked_friendsId,
             creator: albumData.creator,
             created_date: albumData.created_date,
           };
+          console.log(this.album);
           this.form.setValue({
             title: this.album.title,
+            friendId: null
           });
         });
       } else {
@@ -85,11 +90,14 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
         this.filesToUpload
         );
     } else {
+      const arrayOfFriends = this.album.linked_friendsId;
+      arrayOfFriends.push(this.form.value.friendId);
       this.albumsService.updateAlbum({
         id: this.albumId,
         title: this.form.value.title,
         creator: this.album.creator,
         imagePath: this.album.imagePath,
+        linked_friendsId: arrayOfFriends,
         created_date: this.album.created_date
       });
     }

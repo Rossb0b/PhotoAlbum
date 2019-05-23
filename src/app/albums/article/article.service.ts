@@ -19,27 +19,24 @@ export class ArticleService {
   constructor(private http: HttpClient, private router: Router) { }
 
   getArticleFromAlbumId(albumId: string) {
-    return this.http.get<Article>(BACKEND_URL + albumId);
+    const queryParams = `?albumId=${albumId}`;
+    return this.http.get<Article>(BACKEND_URL + queryParams);
   }
 
   addArticle(title: string, paragraphs: any, albumId: string) {
-    const articleData = new FormData();
-    articleData.append('title', title);
-    // paragraphs.forEach(paragraph => {
-    //   // console.log(paragraph.content);
-    //   // console.log(paragraph.path);
-    //   // console.log(paragraph.alt);
-    //   console.log(paragraph);
-    //   articleData.append('paragraphs[]', paragraph);
-    // });
-    articleData.append('albumId', albumId);
-    // console.log(articleData.getAll('title'));
-    // console.log(articleData.getAll('albumId'));
-    // console.log(articleData.getAll('paragraphs[]'));
+    const articleData = {
+      title,
+      paragraphs,
+      albumId
+    };
     this.http.post<{message: string, article: Article}>(BACKEND_URL, articleData)
-    .subscribe(() => {
-      this.router.navigate(['/albums']);
-    });
+      .subscribe(() => {
+        this.router.navigate(['/albums']);
+      });
+  }
+
+  deleteArticle(articleId: string) {
+    return this.http.delete(BACKEND_URL + articleId);
   }
 
 }

@@ -9,6 +9,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
 import { PageEvent } from '@angular/material';
 import { ArticleService } from '../article/article.service';
+import { Article } from '../article/article.model';
 
 @Component({
   selector: 'app-album-show',
@@ -20,6 +21,7 @@ export class AlbumShowComponent implements OnInit {
   isLoading = false;
   albumId: string;
   album: Album;
+  article: Article;
   userId: string;
   articleId: string;
   articleExist = false;
@@ -33,7 +35,7 @@ export class AlbumShowComponent implements OnInit {
   public userIsAuthenticated: boolean;
   private authStatusSub: Subscription;
   form: FormGroup;
-  imagePreview: string;
+  imagePreview: any;
   addPhoto = false;
 
   constructor(
@@ -56,6 +58,7 @@ export class AlbumShowComponent implements OnInit {
           image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
         });
         this.articleService.getArticleFromAlbumId(this.albumId).subscribe(articleData => {
+          console.log(articleData);
           if (articleData.length > 0) {
             this.articleExist = true;
             this.articleId = articleData.id;
@@ -67,6 +70,7 @@ export class AlbumShowComponent implements OnInit {
             id: albumData._id,
             title: albumData.title,
             imagePath: albumData.imagesPath,
+            linked_friendsId: albumData.linked_friendsId,
             creator: albumData.creator,
             created_date: albumData.created_date,
           };
@@ -147,6 +151,7 @@ export class AlbumShowComponent implements OnInit {
         id: albumData._id,
         title: albumData.title,
         imagePath: albumData.imagesPath,
+        linked_friendsId: albumData.linked_friendsId,
         creator: albumData.creator,
         created_date: albumData.created_date,
       };

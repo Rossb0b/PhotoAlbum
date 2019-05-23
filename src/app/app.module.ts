@@ -14,7 +14,6 @@ import { AngularMaterialModule } from './angular-material.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
 import { AlbumsService } from './albums/albums.service';
-import { AlbumsModule } from './albums/albums.module';
 import { HomeComponent } from './home/home.component';
 import { ArticleModule } from './albums/article/article.module';
 
@@ -34,7 +33,6 @@ import { ArticleModule } from './albums/article/article.module';
     AngularMaterialModule,
     PostsModule,
     UsersModule,
-    AlbumsModule,
     ArticleModule,
   ],
   providers: [

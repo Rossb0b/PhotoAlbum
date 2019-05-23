@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Album } from '../../album.model';
+import { Article } from '../article.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Router } from '@angular/router';
 import { ArticleService } from '../article.service';
@@ -14,9 +14,11 @@ import { ArticleService } from '../article.service';
 export class ArticleShowComponent implements OnInit {
 
   isLoading = false;
+  articleExist = false;
   albumId: string;
-  album: Album;
+  article: Article;
   userId: string;
+  paragraphsLength: number;
   public userIsAuthenticated: boolean;
   private authStatusSub: Subscription;
 
@@ -30,9 +32,31 @@ export class ArticleShowComponent implements OnInit {
     this.albumId = localStorage.getItem('albumId');
     localStorage.removeItem('albumId');
     if (this.albumId !== null) {
-      // Handle shits
+      this.articleService.getArticleFromAlbumId(this.albumId).subscribe(articleData => {
+        if (articleData.length > 0) {
+          this.isLoading = false;
+          this.article = {
+            id: articleData[0]._id,
+            title: articleData[0].title,
+            paragraphs: articleData[0].paragraphs,
+            creator: articleData[0].creator,
+            albumId: articleData[0].albumId,
+            created_date: articleData[0].created_date,
+          };
+          this.articleExist = true;
+          this.paragraphsLength = this.article.paragraphs.length;
+        }
+      });
     } else {
       this.router.navigate(['/albums']);
     }
   }
+
+  onDelete(articleId: string) {
+    this.isLoading = true;
+    this.articleService.deleteArticle(articleId).subscribe(() => {
+      this.router.navigate(['/albums']);
+    });
+  }
+
 }

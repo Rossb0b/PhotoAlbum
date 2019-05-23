@@ -18,7 +18,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   isLoading = false;
   userId: string;
   form: FormGroup;
-  imagePreview: string;
+  imagePreview: any;
   public userIsAuthenticated: boolean;
   private authStatusSub: Subscription;
   private userSub: Subscription;
@@ -35,7 +35,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.userId = this.authService.getUserId();
       });
     this.form = new FormGroup({
-      'image': new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
+      image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
     });
     this.userSub = this.userService.getUser(this.userId).subscribe((userData: {
       _id: string,
@@ -46,7 +46,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       this.user = userData;
       this.form.setValue({
-        'image': ''
+        image: ''
       });
     });
   }

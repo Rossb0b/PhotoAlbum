@@ -7,10 +7,6 @@
 mat-spinner {
   margin:auto;
 }
-/*
-.image-holder {
-  width:100%;
-} */
 
 img {
   width:100%;
@@ -22,7 +18,7 @@ img {
 
 mat-card {
   display:block;
-  height:50vh;
+  height:35vh;
 }
 
 mat-card-title {
