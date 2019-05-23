@@ -121,7 +121,7 @@ export class AlbumsService {
     this.http.put(BACKEND_URL + id, albumData)
       .subscribe(() => {
         localStorage.setItem('albumId', id);
-        this.router.navigate(['/yourAlbum']);
+        this.router.navigate(['/albums/myAlbum']);
       });
   }
 
@@ -138,7 +138,7 @@ export class AlbumsService {
     this.http.put(BACKEND_URL + id, albumData)
       .subscribe(() => {
         localStorage.setItem('albumId', id);
-        this.router.navigate(['/yourAlbum']);
+        this.router.navigate(['/albums/myAlbum']);
       });
   }
 }

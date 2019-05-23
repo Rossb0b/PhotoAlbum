@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -18,7 +18,7 @@ export class ArticleService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getArticleFromAlbumId(albumId: string) {
+  getArticleFromAlbumId(albumId: string): Observable<Article> {
     const queryParams = `?albumId=${albumId}`;
     return this.http.get<Article>(BACKEND_URL + queryParams);
   }

@@ -4,7 +4,7 @@ import { Observable, Observer, of } from 'rxjs';
 export const mimeType = (
   control: AbstractControl
 ): Promise<{ [key: string]: any }> | Observable<{ [key: string]: any }> => {
-  if(typeof(control.value) === 'string') {
+  if (typeof(control.value) === 'string') {
     return of(null);
   }
   const file = control.value as File;
@@ -12,7 +12,7 @@ export const mimeType = (
   const frObs = Observable.create(
     (observer: Observer<{ [key: string]: any }>) => {
       fileReader.addEventListener('loadend', () => {
-        const arr = new Uint8Array(fileReader.result).subarray(0, 4);
+        const arr = new Uint8Array(fileReader.result as unknown as number[]).subarray(0, 4);
         let header = '';
         let isValid = false;
         // tslint:disable-next-line: prefer-for-of

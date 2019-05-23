@@ -91,7 +91,9 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
         );
     } else {
       const arrayOfFriends = this.album.linked_friendsId;
-      arrayOfFriends.push(this.form.value.friendId);
+      if (this.form.value.friendId) {
+        arrayOfFriends.push(this.form.value.friendId);
+      }
       this.albumsService.updateAlbum({
         id: this.albumId,
         title: this.form.value.title,

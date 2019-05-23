@@ -16,8 +16,8 @@ const routes: Routes = [
   { path: 'editPost/:postId', component: PostCreateComponent, canActivate: [AuthGuard] },
   { path: 'auth', loadChildren: './auth/auth.module#AuthModule' },
   { path: 'profile/:userId', component: UserProfileComponent, canActivate: [AuthGuard] },
-  { path: 'yourAlbum/Article', component: ArticleShowComponent, canActivate: [AuthGuard] },
-  { path: 'yourAlbum/newArticle', component: ArticleCreateComponent, canActivate: [AuthGuard] },
+  { path: 'myAlbum/Article', component: ArticleShowComponent, canActivate: [AuthGuard] },
+  { path: 'myAlbum/newArticle', component: ArticleCreateComponent, canActivate: [AuthGuard] },
   { path: 'albums', loadChildren: './albums/albums.module#AlbumsModule', canActivate: [AuthGuard] }
 ];
 

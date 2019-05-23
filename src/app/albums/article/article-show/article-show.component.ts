@@ -33,7 +33,7 @@ export class ArticleShowComponent implements OnInit {
     localStorage.removeItem('albumId');
     if (this.albumId !== null) {
       this.articleService.getArticleFromAlbumId(this.albumId).subscribe(articleData => {
-        if (articleData.length > 0) {
+        if (Object.entries(articleData).length > 0) {
           this.isLoading = false;
           this.article = {
             id: articleData[0]._id,

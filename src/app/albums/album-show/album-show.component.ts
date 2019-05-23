@@ -58,8 +58,7 @@ export class AlbumShowComponent implements OnInit {
           image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
         });
         this.articleService.getArticleFromAlbumId(this.albumId).subscribe(articleData => {
-          console.log(articleData);
-          if (articleData.length > 0) {
+          if ( Object.entries(articleData).length > 0) {
             this.articleExist = true;
             this.articleId = articleData.id;
           }
@@ -96,12 +95,12 @@ export class AlbumShowComponent implements OnInit {
 
   onShow(albumId: string) {
     localStorage.setItem('albumId', albumId);
-    this.router.navigate(['/yourAlbum/Article']);
+    this.router.navigate(['/albums/myAlbum/Article']);
   }
 
   onAddArticle(albumId: string) {
     localStorage.setItem('albumId', albumId);
-    this.router.navigate(['/yourAlbum/newArticle']);
+    this.router.navigate(['/albums/myAlbum/newArticle']);
   }
 
   onChangedPage(pageData: PageEvent) {
@@ -192,5 +191,6 @@ export class AlbumShowComponent implements OnInit {
     //     this.photosToDisplay = [];
     // });
     this.totalPhotos = this.photosToDisplay.length;
+    this.isLoading = false;
   }
 }
