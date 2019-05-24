@@ -10,7 +10,7 @@ const articlesRoutes = require('./routes/articles');
 
 const app = express();
 
-mongoose.connect("mongodb+srv://USERNAME_ATLAS_DB:" + process.env.MONGO_ATLAS_PW + "@cluster0-6xxe0.mongodb.net/test?retryWrites=true", { useNewUrlParser: true })
+mongoose.connect("mongodb+srv://DBUSERNAME:" + process.env.MONGO_ATLAS_PW + "@cluster0-6xxe0.mongodb.net/test?retryWrites=true", { useNewUrlParser: true })
   .then(() => {
     console.log('connected to database');
   })
