@@ -33,7 +33,7 @@
               <div class="row" *ngFor="let friendId of form.controls.friendsShare.controls; let i = index">
                 <div class="col">
                   <label formArrayName="friendsShare">
-                    <input type="checkbox" class="checkbox" [formControlName]="i">
+                    <input #checkbox type="checkbox" class="checkbox" [formControlName]="i">
                     {{friendsShare[i]}}
                   </label>
                 </div>

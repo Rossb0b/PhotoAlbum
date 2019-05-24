@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material';
 
@@ -26,6 +26,7 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
   private authStatusSub: Subscription;
   filesToUpload: Array<File> = [];
   friendsShare: Array<string> = [];
+  @ViewChildren('checkbox') checkboxes;
 
 
 
@@ -59,18 +60,14 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
           });
           this.friendsShare = this.album.linked_friendsId;
           this.addCheckboxes();
-          const checkboxes = document.getElementsByClassName('checkbox');
-          // const array = Array.from(checkboxes);
-          console.log(checkboxes);
-          console.log(checkboxes.length);
-          // console.log(checkboxes.length);
-          // for (let checkbox of checkboxes)  {
-            // console.log('test');
-            // console.log(checkbox);
-            // if (checkboxes[i].type == 'checkbox')   {
-            //   checkboxes[i].checked = false;
-            // }
-          // }
+          this.checkboxes.changes.subscribe(() => {
+            this.checkboxes.toArray().forEach(el => {
+              console.log(el.nativeElement.type);
+              if (el.nativeElement.type == 'checkbox') {
+                  el.nativeElement.checked = false;
+              }
+            });
+          });
           console.log(this.album);
           this.form.setValue({
             title: this.album.title,
