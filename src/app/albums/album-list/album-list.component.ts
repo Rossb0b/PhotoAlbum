@@ -48,8 +48,6 @@ export class AlbumListComponent implements OnInit, OnDestroy {
           album.created_date = formatedDate;
         });
         this.albums = albumsForDate;
-        console.log(this.albums);
-        console.log(this.userId);
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
   }

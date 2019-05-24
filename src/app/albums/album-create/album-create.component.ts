@@ -62,13 +62,11 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
           this.addCheckboxes();
           this.checkboxes.changes.subscribe(() => {
             this.checkboxes.toArray().forEach(el => {
-              console.log(el.nativeElement.type);
-              if (el.nativeElement.type == 'checkbox') {
+              if (el.nativeElement.type === 'checkbox') {
                   el.nativeElement.checked = false;
               }
             });
           });
-          console.log(this.album);
           this.form.setValue({
             title: this.album.title,
             friendsShare: this.friendsShare,
@@ -105,8 +103,7 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
   }
 
   onSaveAlbum() {
-    console.log(this.form.value);
-    // this.isLoading = true;
+    this.isLoading = true;
     if (this.mode === 'create') {
       this.albumsService.addAlbum(
         this.form.value.title,
@@ -122,6 +119,7 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
           for (let j = 0; j <= arrayOfFriends.length - 1; j++) {
             if (arrayOfFriends[j] === this.friendsShare[i]) {
               arrayOfFriends.splice(j , 1);
+              i = i - 1;
             }
           }
         }
@@ -135,6 +133,7 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
         linked_friendsId: arrayOfFriends,
         created_date: this.album.created_date
       });
+      this.isLoading = false;
     }
     this.form.reset();
   }
