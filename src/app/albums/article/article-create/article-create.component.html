@@ -84,7 +84,13 @@
         </div>
       </div>
     </div>
-    <button mat-raised-button color="primary" type="button" (click)="addparagraph()" *ngIf="form.get('paragraphs').controls.length < 4">Ajouter un paragraph</button>
+
+    <div class="row">
+      <div class="col">
+        <button mat-raised-button color="primary" type="button" (click)="addparagraph()" *ngIf="form.get('paragraphs').controls.length < 4">Add a paragraph</button>
+        <button mat-raised-button class="ml-3" color="primary" type="button" (click)="deleteparagraph()" *ngIf="form.get('paragraphs').controls.length > 1">Delete a paragraph</button>
+      </div>
+    </div>
 
     <div class="row mt-2">
       <div class="col">

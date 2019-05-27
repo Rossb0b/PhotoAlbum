@@ -7,6 +7,10 @@
 # Only exists if Bazel was run
 /bazel-out
 
+# Personnal
+nodemon.json
+/backend/app.js
+
 # dependencies
 /node_modules
 

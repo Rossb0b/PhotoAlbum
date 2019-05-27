@@ -124,7 +124,6 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
           }
         }
       }
-      console.log(arrayOfFriends);
       this.albumsService.updateAlbum({
         id: this.albumId,
         title: this.form.value.title,

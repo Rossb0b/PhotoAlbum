@@ -33,6 +33,10 @@
   height:175px;
 }
 
+.paragraphs-text {
+  word-wrap: break-word;
+}
+
 .float-right {
   float:right;
 }

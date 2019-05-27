@@ -121,6 +121,15 @@ export class ArticleCreateComponent implements OnInit {
     this.goToView();
   }
 
+  deleteparagraph(): void {
+    const p = this.form.controls.paragraphs as FormArray;
+    const length = p.length;
+    if (length > 1) {
+      p.removeAt(length - 1);
+    }
+    this.goToView();
+  }
+
   displayChooseImg(index: number): void {
     const div = document.getElementsByClassName('choose-image') as any;
     for (let i = 0; i < div.length; i++) {
