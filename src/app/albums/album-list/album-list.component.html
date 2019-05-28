@@ -1,7 +1,7 @@
 <div class="container">
   <mat-spinner *ngIf="isLoading"></mat-spinner>
 
-  <div *ngIf="!isLoading">
+  <div class="mb-2" *ngIf="!isLoading">
 
     <div class="row">
       <div class="offset-1 col">
@@ -10,40 +10,47 @@
     </div>
 
     <div class="row mt-2" *ngIf="albums.length > 0">
-      <div class="col-4 mx-auto" *ngFor="let album of albums">
-        <div class="row mt-4">
-          <div class="col-12">
-            <mat-card class="col">
-              <mat-card-title class="col">{{album.title}}</mat-card-title>
-              <div class="image-holder mt-4 col-12 mx-auto">
-                <img class="ml-1" [src]="album.imagesPath[0]" [alt]="album.title" mat-card-image>
+      <div class="col-9 col-sm-9 col-md-6 col-lg-5 col-xl-4 mx-auto" *ngFor="let album of albums">
+
+        <div class="row mt-3">
+          <div class="col">
+            <mat-card>
+              <mat-card-title>{{album.title}}</mat-card-title>
+              <div class="image-holder mt-2 col-12 mx-auto">
+                <img class="ml-1" [src]="album.imagesPath[0]" [alt]="album.title">
               </div>
-              <mat-card-footer>{{album.created_date}}</mat-card-footer>
+              <mat-card-footer class="text-center m-2">{{album.created_date}}</mat-card-footer>
             </mat-card>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-12">
+          <div class="col-lg-12 col-md-12 col-10 mx-auto">
             <div class="row">
-              <div class="col-3 mx-auto text-center">
-                  <a *ngIf="userId == album.creator" [routerLink]="['/albums/edit', album.id]" mat-raised-button color="primary">Edit</a>
+              <div class="col-4 col-md-4 col-lg-4 mx-auto text-center">
+                <a *ngIf="userId == album.creator" [routerLink]="['/albums/edit', album.id]" class="mx-auto" mat-raised-button color="primary" style="padding:0!important;">Edit</a>
               </div>
 
-              <div class="col-3 mx-auto text-center">
-                  <button mat-raised-button color="primary" (click)="onShow(album.id)">Show</button>
+              <div class="col-4 col-md-4 col-lg-4 mx-auto text-center">
+                <button mat-raised-button color="primary" (click)="onShow(album.id)">Show</button>
               </div>
 
-              <div class="col-3 mx-auto text-center">
-                  <button *ngIf="userId == album.creator" mat-raised-button color="warn" (click)="onDelete(album.id, album.imagesPath)">Delete</button>
+              <div class="col-4 col-md-4 col-lg-4 mx-auto text-center">
+                <button *ngIf="userId == album.creator" mat-raised-button color="warn" (click)="onDelete(album.id, album.imagesPath)">Delete</button>
               </div>
             </div>
-
           </div>
         </div>
+
       </div>
     </div>
+
+    <div class="row mt-2" *ngIf="albums.length == 0">
+      <div class="col text-center">
+        <p class="h3">You haven't yet any album to fetch</p>
+      </div>
+    </div>
+
   </div>
 
 </div>
-

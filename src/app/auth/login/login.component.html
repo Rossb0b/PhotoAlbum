@@ -1,8 +1,11 @@
 <div class="container">
-  <div class="row">
-    <div class="offset-3 col-6">
+
+  <div class="row mt-3">
+    <div class="mx-auto col-12 col-md-10 col-lg-6">
+
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+
       <mat-card>
-        <mat-spinner *ngIf="isLoading"></mat-spinner>
         <form (submit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
           <mat-form-field>
             <input
@@ -34,6 +37,8 @@
           *ngIf="!isLoading">Login</button>
         </form>
       </mat-card>
+
     </div>
   </div>
+
 </div>
