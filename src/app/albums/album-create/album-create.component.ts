@@ -18,7 +18,7 @@ import { UserService } from 'src/app/users/user.service';
 export class AlbumCreateComponent implements OnInit, OnDestroy {
 
   private mode = 'create';
-  exist = false;
+
   results = [];
   album: Album;
   private albumId: string;
@@ -26,11 +26,11 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
   isLoading = false;
   form: FormGroup;
   private authStatusSub: Subscription;
-  private userExist: boolean;
   filesToUpload: Array<File> = [];
   friendsShare: Array<string> = [];
   arrayOfFriends;
   newUserToShare: string;
+  private errorMsg = false;
   @ViewChildren('checkbox') checkboxes;
 
 
@@ -129,37 +129,50 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
       if (this.form.value.friendId) {
         this.newUserToShare = this.form.value.friendId;
         const formTitle = this.form.value.title;
-        this.userService.checkUser(this.newUserToShare).then(response => {
-          response.subscribe(data => {
-            console.log(data);
-            if (data) {
-              this.arrayOfFriends.push(data._id);
-            }
-
-            for (let i = 0; i <= this.form.value.friendsShare.length - 1; i++) {
-              if (this.form.value.friendsShare[i] === true) {
-                for (let j = 0; j <= this.arrayOfFriends.length - 1; j++) {
-                  if (this.arrayOfFriends[j] === this.friendsShare[i]) {
-                    this.arrayOfFriends.splice(j , 1);
-                    i = i - 1;
+        let userIsAlreadyInList = false;
+        for (let i = 0; i < this.arrayOfFriends.length; i++) {
+          console.log(this.newUserToShare);
+          console.log(this.arrayOfFriends[i]);
+          if (this.newUserToShare === this.arrayOfFriends[i]) {
+            userIsAlreadyInList = true;
+          }
+        }
+        console.log(userIsAlreadyInList);
+        if (userIsAlreadyInList !== true) {
+          this.userService.checkUser(this.newUserToShare).then(response => {
+            response.subscribe(data => {
+              console.log(data);
+              if (data) {
+                this.arrayOfFriends.push(data._id);
+              }
+              
+              for (let i = 0; i <= this.form.value.friendsShare.length - 1; i++) {
+                if (this.form.value.friendsShare[i] === true) {
+                  for (let j = 0; j <= this.arrayOfFriends.length - 1; j++) {
+                    if (this.arrayOfFriends[j] === this.friendsShare[i]) {
+                      this.arrayOfFriends.splice(j , 1);
+                      i = i - 1;
+                    }
                   }
                 }
               }
-            }
-
-            this.albumsService.updateAlbum({
-              id: this.albumId,
-              title: formTitle,
-              creator: this.album.creator,
-              imagePath: this.album.imagePath,
-              linked_friendsId: this.arrayOfFriends,
-              created_date: this.album.created_date
-            });
-            this.isLoading = false;
-          })
-        });
+              
+              this.albumsService.updateAlbum({
+                id: this.albumId,
+                title: formTitle,
+                creator: this.album.creator,
+                imagePath: this.album.imagePath,
+                linked_friendsId: this.arrayOfFriends,
+                created_date: this.album.created_date
+              });
+              this.isLoading = false;
+            })
+          });
+        } else {
+          this.isLoading = false;
+          this.form.reset();
+        }
       } else {
-
         for (let i = 0; i <= this.form.value.friendsShare.length - 1; i++) {
           if (this.form.value.friendsShare[i] === true) {
             for (let j = 0; j <= this.arrayOfFriends.length - 1; j++) {
