@@ -30,7 +30,6 @@ export class AlbumListComponent implements OnInit, OnDestroy {
     this.authStatusSub = this.authService.getAuthStatusListener()
       .subscribe(isAuthenticated => {
         this.userIsAuthenticated = isAuthenticated;
-        this.userId = this.authService.getUserId();
     });
     this.albumsSub = this.albumsService.getAlbumUpdatedListener()
       .subscribe((albumData: { albums: Album[], albumCount: number }) => {

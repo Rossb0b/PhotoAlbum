@@ -68,6 +68,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result;
+      console.log(this.imagePreview);
     };
     reader.readAsDataURL(file);
   }

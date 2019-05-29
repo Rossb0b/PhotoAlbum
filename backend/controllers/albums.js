@@ -110,6 +110,7 @@ exports.editAlbum = (req, res, next) => {
 
   // handle  title modification add new friends in list
   if(!req.body.imageToDeletePath && !req.body.onAdd && req.body.title.length >= 4 && req.body.title.length <= 18) {
+    console.log(req.body);
     album = new Album({
       _id: req.body.id,
       title: req.body.title,
@@ -133,8 +134,6 @@ exports.editAlbum = (req, res, next) => {
   });
 }
 
-
-// const albumQuery = Album.find({ creator: req.query.userId, shared: [...req.query.userId]})
 exports.getAlbums = (req, res, next) => {
   const albumQuery = Album.find({ $or:[{ creator: req.query.userId }, { linked_friendsId: { "$in" : [req.query.userId] } }] })
   let fetchedAlbums;

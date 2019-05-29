@@ -8,6 +8,7 @@ import { AuthService } from '../../auth/auth.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
+import { UserService } from 'src/app/users/user.service';
 
 @Component({
   selector: 'app-album-create',
@@ -17,22 +18,31 @@ import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
 export class AlbumCreateComponent implements OnInit, OnDestroy {
 
   private mode = 'create';
+  exist = false;
   results = [];
   album: Album;
   private albumId: string;
-  imagePreview: string;
+  imagePreview = [];
   isLoading = false;
   form: FormGroup;
   private authStatusSub: Subscription;
+  private userExist: boolean;
   filesToUpload: Array<File> = [];
   friendsShare: Array<string> = [];
+  arrayOfFriends;
+  newUserToShare: string;
   @ViewChildren('checkbox') checkboxes;
 
 
 
 
 
-  constructor(public albumsService: AlbumsService, public route: ActivatedRoute, private authService: AuthService) { }
+  constructor(
+    public albumsService: AlbumsService,
+    public route: ActivatedRoute,
+    private authService: AuthService,
+    private userService: UserService
+    ) { }
 
   ngOnInit() {
     this.authStatusSub = this.authService.getAuthStatusListener().subscribe(authStatus => {
@@ -93,13 +103,18 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
 
   onImagePicked(event: Event) {
     this.filesToUpload = (event.target as HTMLInputElement).files as unknown as Array<File>;
-    // const fileList = this.filesToUpload.length;
-    // const arrayOfFile = [];
-    // for (let i = 0; i <= fileList; i++) {
-    //   arrayOfFile.push(this.filesToUpload[i]);
-    // }
-    // this.form.patchValue({image: arrayOfFile});
-    // this.form.get('image').updateValueAndValidity();
+    this.imagePreview = [];
+    const fileList = this.filesToUpload.length;
+    for (let i = 0; i <= fileList - 1; i++) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result.toString();
+        if (result.startsWith('data:image/jpeg') || result.startsWith('data:image/jpg') || result.startsWith('data:image/png')) {
+          this.imagePreview.push(reader.result);
+        }
+      };
+      reader.readAsDataURL(this.filesToUpload[i]);
+    }
   }
 
   onSaveAlbum() {
@@ -110,29 +125,62 @@ export class AlbumCreateComponent implements OnInit, OnDestroy {
         this.filesToUpload
         );
     } else {
-      const arrayOfFriends = this.album.linked_friendsId;
+      this.arrayOfFriends = this.album.linked_friendsId;
       if (this.form.value.friendId) {
-        arrayOfFriends.push(this.form.value.friendId);
-      }
-      for (let i = 0; i <= this.form.value.friendsShare.length - 1; i++) {
-        if (this.form.value.friendsShare[i] === true) {
-          for (let j = 0; j <= arrayOfFriends.length - 1; j++) {
-            if (arrayOfFriends[j] === this.friendsShare[i]) {
-              arrayOfFriends.splice(j , 1);
-              i = i - 1;
+        this.newUserToShare = this.form.value.friendId;
+        const formTitle = this.form.value.title;
+        this.userService.checkUser(this.newUserToShare).then(response => {
+          response.subscribe(data => {
+            console.log(data);
+            if (data) {
+              this.arrayOfFriends.push(data._id);
+            }
+
+            for (let i = 0; i <= this.form.value.friendsShare.length - 1; i++) {
+              if (this.form.value.friendsShare[i] === true) {
+                for (let j = 0; j <= this.arrayOfFriends.length - 1; j++) {
+                  if (this.arrayOfFriends[j] === this.friendsShare[i]) {
+                    this.arrayOfFriends.splice(j , 1);
+                    i = i - 1;
+                  }
+                }
+              }
+            }
+
+            this.albumsService.updateAlbum({
+              id: this.albumId,
+              title: formTitle,
+              creator: this.album.creator,
+              imagePath: this.album.imagePath,
+              linked_friendsId: this.arrayOfFriends,
+              created_date: this.album.created_date
+            });
+            this.isLoading = false;
+          })
+        });
+      } else {
+
+        for (let i = 0; i <= this.form.value.friendsShare.length - 1; i++) {
+          if (this.form.value.friendsShare[i] === true) {
+            for (let j = 0; j <= this.arrayOfFriends.length - 1; j++) {
+              if (this.arrayOfFriends[j] === this.friendsShare[i]) {
+                this.arrayOfFriends.splice(j , 1);
+                i = i - 1;
+              }
             }
           }
         }
+
+        this.albumsService.updateAlbum({
+          id: this.albumId,
+          title: this.form.value.title,
+          creator: this.album.creator,
+          imagePath: this.album.imagePath,
+          linked_friendsId: this.arrayOfFriends,
+          created_date: this.album.created_date
+        });
+        this.isLoading = false;
       }
-      this.albumsService.updateAlbum({
-        id: this.albumId,
-        title: this.form.value.title,
-        creator: this.album.creator,
-        imagePath: this.album.imagePath,
-        linked_friendsId: arrayOfFriends,
-        created_date: this.album.created_date
-      });
-      this.isLoading = false;
     }
     this.form.reset();
   }

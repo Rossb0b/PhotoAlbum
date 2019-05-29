@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
+import { Observable } from 'rxjs';
 
 const BACKEND_URL = environment.apiUrl + '/user/';
 
@@ -13,6 +14,7 @@ const BACKEND_URL = environment.apiUrl + '/user/';
 export class UserService {
 
   private error: string;
+  private userExist: boolean;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -24,6 +26,27 @@ export class UserService {
       lastname: string;
       imagePath: string;
     }>(BACKEND_URL + id);
+  }
+
+  // checkUser(id: string): boolean {
+  //   this.getUser(id).subscribe(response => {
+  //     console.log(response);
+  //     if (response) {
+  //       this.userExist = true;
+  //     } else {
+  //       this.userExist = false;
+  //     }
+  //   })
+  //   console.log(this.userExist);
+  //   return this.userExist;
+  // }
+
+  async checkUser(id: string) {
+    return await this.isUserExisting(id);
+  }
+
+  isUserExisting(id: string) {
+    return Promise.resolve(this.getUser(id));
   }
 
   updateUser(id: string, email: string, firstname: string, lastname: string, image: File | string, imagePath: string) {
