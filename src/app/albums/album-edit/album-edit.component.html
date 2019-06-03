@@ -39,18 +39,17 @@
               </div>
             </div>
 
-            <div class="row mt-2">
+            <div class="row mt-2" *ngIf="users">
               <div class="col">
                 <mat-form-field>
                   <input
                   matInput
-                  type="text"
                   formControlName="friendId"
                   placeholder="Pick a person that you would want to add to friend list of this album"
                   [matAutocomplete]="auto">
                   <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let user of users" [value]="users">
-                      {{user.firstname}} + {{user.lastname}}
+                    <mat-option *ngFor="let user of filteredUsers" [value]="filteredUsers._id">
+                      {{user.firstname | lowercase}} {{user.lastname | lowercase }}
                     </mat-option>
                   </mat-autocomplete>
 

@@ -4,9 +4,8 @@ import { AlbumsService } from '../albums.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { UserService } from 'src/app/users/user.service';
-import { User } from 'src/app/users/user.interface';
 import { from, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-album-edit',
@@ -24,8 +23,9 @@ export class AlbumEditComponent implements OnInit {
   form: FormGroup;
   /** current list of all user */
   private users;
-  /** formated array of users */
-  private usersUpdated = new Subject<{ users: User[] }>();
+
+  private filteredUsers = [];
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -35,6 +35,11 @@ export class AlbumEditComponent implements OnInit {
     public userService: UserService,
   ) {
     this.buildForm();
+    this.users = this.form.get('friendId').valueChanges
+    .pipe(
+      startWith(''),
+      map((user) => this.filterFriend(user)),
+    );
   }
 
   ngOnInit() {
@@ -46,7 +51,6 @@ export class AlbumEditComponent implements OnInit {
 
     try {
       this.album = await this.albumsService.getAlbum(this.albumId);
-      console.log(this.album);
     } catch (e) {
       /** debbuging */
       console.error(e);
@@ -57,10 +61,6 @@ export class AlbumEditComponent implements OnInit {
     this.form.get('title').setValue(this.album.title);
 
     this.getUsers();
-    // console.log(observable);
-    // observable.subscribe(data => {
-    //   console.log(data);
-    // });
 
     this.isLoading = false;
   }
@@ -76,19 +76,34 @@ export class AlbumEditComponent implements OnInit {
     }
 
     const observable = from(this.users).subscribe(() => {
-      return this.users;
+      this.filteredUsers = [];
+      const userLength = this.users.length;
+      for (let i = 0; i < userLength; i++) {
+        const user = { _id: this.users[i]._id, firstname: this.users[i].firstname, lastname: this.users[i].lastname };
+        this.filteredUsers.push(user);
+      }
     });
-    this.users.map(user => {
-      delete user.password;
-      delete user.imagePath;
-      delete user.email;
-      return user;
-    });
+  }
+
+    /**
+   * filter users with input value for autocomplete
+   *
+   * @param {string} value
+   * @returns {string[]}
+   */
+  filterFriend(value: string): string[] {
+    if (!value) {
+      value = '';
+    }
+    const filterValue = value.toLowerCase();
+
+    return this.users.filter((user) => user.toLowerCase().includes(filterValue));
   }
 
   buildForm(): void {
     this.form = this.formBuilder.group({
       title: [null, [Validators.required, Validators.minLength(4)]],
+      friendId: null
     });
   }
 
@@ -99,7 +114,6 @@ export class AlbumEditComponent implements OnInit {
 
   async saveAlbum(): Promise<void> {
     this.isLoading = true;
-    console.log(this.form.value);
 
     if (this.form.valid) {
 
@@ -115,7 +129,6 @@ export class AlbumEditComponent implements OnInit {
 
       this.album.title = this.form.get('title').value;
 
-      // console.log(this.album);
       try {
         await this.albumsService.updateAlbum(this.album);
       } catch (e) {

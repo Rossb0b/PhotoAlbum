@@ -64,11 +64,12 @@ exports.createAlbum = (req, res, next) => {
 
 exports.editAlbum = (req, res, next) => {
 
+  console.log(req.body);
   const formatedArrayOfFile = [];
-  let imagesPath = req.body.imagesPath;
+  let images = req.body.images;
 
   if(req.body.onAdd === 'true') {
-    imagesPath.forEach(file => {
+    images.forEach(file => {
       formatedArrayOfFile.push(file);
     });
     if(req.file) {
@@ -117,7 +118,7 @@ exports.editAlbum = (req, res, next) => {
     album = new Album({
       _id: req.body._id,
       title: req.body.title,
-      images: imagesPath,
+      images: images,
       creator: req.body.creator,
       linked_friendsId: req.body.linked_friendsId,
       created_date: req.body.created_date

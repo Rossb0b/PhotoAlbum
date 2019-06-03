@@ -55,7 +55,7 @@ export class AlbumsService {
     return this.http.get<Album>(env.apiUrl + '/albums/' + id).toPromise();
   }
 
-  addAlbum(title: string, images: any) {
+  addAlbum(title: string, images: any): Promise<any> {
     const albumData = new FormData();
     const files: Array<File> = images;
     albumData.append('title', title);
@@ -63,14 +63,11 @@ export class AlbumsService {
     for (let i = 0; i < files.length; i++) {
       albumData.append('uploads[]', files[i], title);
     }
-    this.http.post<{message: string, album: Album}>(env.apiUrl + '/albums/', albumData)
-      .subscribe(() => {
-        this.router.navigate(['/albums']);
-      });
+    return this.http.post<{message: string, album: Album}>(env.apiUrl + '/albums/', albumData).toPromise();
   }
 
-  deleteAlbum(albumId: string) {
-    return this.http.delete(env.apiUrl + '/albums/' + albumId);
+  deleteAlbum(albumId: string): Promise<any> {
+    return this.http.delete(env.apiUrl + '/albums/' + albumId).toPromise();
   }
 
   updateAlbum(album: Album): Promise<any> {
@@ -79,11 +76,12 @@ export class AlbumsService {
   }
 
   // tslint:disable-next-line: variable-name
-  addPhoto(id: string, title: string, creator: string, imagePath: any, created_date: any, imageToAddPath: string) {
-    let mData: Album | FormData;
+  addPhoto(_id: string, title: string, creator: string, imagePath: any, created_date: any, imageToAddPath: string): Promise<any> {
+    let albumData: Album | FormData;
     // mData.append('image', imageToAddPath, title);
     // albumData = new FormData();
     const onAdd = 'true';
+    const queryParams = [albumData, onAdd];
     // albumData.append('id', id);
     // albumData.append('title', title);
     // albumData.append('creator', creator);
@@ -91,27 +89,20 @@ export class AlbumsService {
     // albumData.append('created_date', created_date);
     // albumData.append('image', imageToAddPath, title);
     // albumData.append('onAdd', onAdd);
-    this.http.put(env.apiUrl + '/albums/' + id, mData)
-      .subscribe(() => {
-        localStorage.setItem('albumId', id);
-        this.router.navigate(['/albums/myAlbum']);
-      });
+    return this.http.put(env.apiUrl + '/albums/' + _id, queryParams).toPromise();
   }
 
   // tslint:disable-next-line: variable-name
-  deletePhoto(id: string, title: string, creator: string, imagePath: any, created_date: any, imageToDeletePath: string) {
+  deletePhoto(_id: string, title: string, creator: string, imagePath: any, created_date: any, imageToDeletePath: string): Promise<any> {
     let albumData: Album | FormData;
-    albumData = new FormData();
-    albumData.append('id', id);
-    albumData.append('title', title);
-    albumData.append('creator', creator);
-    albumData.append('imagePath', imagePath);
-    albumData.append('created_date', created_date);
-    albumData.append('imageToDeletePath', imageToDeletePath);
-    this.http.put(env.apiUrl + '/albums/' + id, albumData)
-      .subscribe(() => {
-        localStorage.setItem('albumId', id);
-        this.router.navigate(['/albums/myAlbum']);
-      });
+    const imageToDelete = imageToDeletePath;
+    const queryParams = [albumData, imageToDelete];
+    // albumData.append('id', id);
+    // albumData.append('title', title);
+    // albumData.append('creator', creator);
+    // albumData.append('imagePath', imagePath);
+    // albumData.append('created_date', created_date);
+    // albumData.append('imageToDeletePath', imageToDeletePath);
+    return this.http.put(env.apiUrl + '/albums/' + _id, albumData).toPromise();
   }
 }
