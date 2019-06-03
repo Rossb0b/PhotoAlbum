@@ -3,9 +3,9 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ArticleService } from '../article.service';
-import { Article } from '../article.model';
+import { Article } from '../article.interface';
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
-import { Album } from '../../album.model';
+import { Album } from '../../album.interface';
 import { AlbumsService } from '../../albums.service';
 import { PageEvent } from '@angular/material';
 

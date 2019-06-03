@@ -3,12 +3,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { AlbumListComponent } from 'src/app/albums/album-list/album-list.component';
 import { AlbumCreateComponent } from 'src/app/albums/album-create/album-create.component';
 import { AlbumShowComponent } from 'src/app/albums/album-show/album-show.component';
+import { AlbumEditComponent } from './album-edit/album-edit.component';
 
 const routes: Routes = [
   { path: '', component: AlbumListComponent },
   { path: 'create', component: AlbumCreateComponent },
   { path: 'myAlbum', component: AlbumShowComponent },
-  { path: 'edit/:albumId', component: AlbumCreateComponent },
+  { path: 'edit/:albumId', component: AlbumEditComponent },
 ];
 
 @NgModule({

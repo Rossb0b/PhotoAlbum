@@ -1,0 +1,78 @@
+<div class="row mt-3" *ngIf="isLoading || !album; else container">
+  <mat-spinner></mat-spinner>
+</div>
+
+<ng-template #container>
+  <div class="container">
+
+    <div class="row mt-3">
+      <div class="col-lg-8 col-12 col-md-10 mx-auto">
+        <mat-card>
+          <form [formGroup]="form" (ngSubmit)="saveAlbum()">
+            <div class="row">
+              <div class="col">
+                <mat-form-field>
+                  <input
+                  matInput
+                  type="text"
+                  formControlName="title"
+                  minLength="4"
+                  maxlength="18"
+                  placeholder="Album title">
+                  <mat-error *ngIf="form.get('title').invalid">Please enter an album title with at least 4 caracters and a max of 18.</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row mt-3" *ngIf="album.linked_friendsId.length > 0">
+              <div class="col-12">
+                <p>Select friend(s) that you want to unshare album with :</p>
+
+                <div class="row mt-2" *ngFor="let id of album.linked_friendsId">
+                  <div class="col">
+                    <button class="rmvButton" (click)="removeFriend(id)">
+                      {{ id }}
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col">
+                <mat-form-field>
+                  <input
+                  matInput
+                  type="text"
+                  formControlName="friendId"
+                  placeholder="Pick a person that you would want to add to friend list of this album"
+                  [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let user of users" [value]="users">
+                      {{user.firstname}} + {{user.lastname}}
+                    </mat-option>
+                  </mat-autocomplete>
+
+                </mat-form-field>
+
+
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col">
+                <button
+                mat-raised-button
+                color="accent"
+                type="submit"
+                style="margin-top:10px;">Save Album</button>
+              </div>
+            </div>
+          </form>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+</ng-template>

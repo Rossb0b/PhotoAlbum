@@ -28,12 +28,14 @@ exports.createAlbum = (req, res, next) => {
       const url = req.protocol + '://' + req.get("host");
       const files = req.files;
       files.forEach(file => {
-        file = url + '/images/photos/' + file.filename;
-        formatedArrayOfFile.push(file);
+        imagePath = url + '/images/photos/' + file.filename;
+        imageAlt = '-Image-' + file.filename;
+        let image = {path: imagePath, alt: imageAlt};
+        formatedArrayOfFile.push(image);
       });
       const album = new Album({
         title: req.body.title,
-        imagesPath: formatedArrayOfFile,
+        images: formatedArrayOfFile,
         linked_friendsId: [],
         creator: req.userData.userId,
       });
@@ -63,28 +65,30 @@ exports.createAlbum = (req, res, next) => {
 exports.editAlbum = (req, res, next) => {
 
   const formatedArrayOfFile = [];
-  let imagePath = req.body.imagePath.split(',');
+  let imagesPath = req.body.imagesPath;
 
   if(req.body.onAdd === 'true') {
-    imagePath.forEach(file => {
+    imagesPath.forEach(file => {
       formatedArrayOfFile.push(file);
     });
     if(req.file) {
       const url = req.protocol + "://" + req.get("host");
       imagePath = url + "/images/photos/" + req.file.filename;
-      // console.log(imagePath);
+      imageAlt = '-Image-' + req.file.filename;
+      let image = {path: imagePath, alt: imageAlt};
+      // console.log(imagesPath);
       if(formatedArrayOfFile.length <= 12) {
-        formatedArrayOfFile.push(imagePath);
+        formatedArrayOfFile.push(image);
       } else {
         res.status(403).json({ message: 'You can\'t upload more than 12 photos per album'});
       }
       // console.log(formatedArrayOfFile);
     }
     album = new Album({
-      _id: req.body.id,
+      _id: req.body._id,
       title: req.body.title,
-      imagesPath: formatedArrayOfFile,
-      creator: req.userData.userId
+      images: formatedArrayOfFile,
+      creator: req.body.creator
     });
     // console.log(album);
   }
@@ -96,34 +100,47 @@ exports.editAlbum = (req, res, next) => {
     let imageToDeleteFractionnalPath = req.body.imageToDeletePath.split("photos/").pop();
     let imageToDeleteFinalPath = "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/photos/" + imageToDeleteFractionnalPath;
     fs.unlinkSync(imageToDeleteFinalPath);
-    imagePath.forEach(file => {
+    imagesPath.forEach(file => {
       formatedArrayOfFile.push(file);
     })
     album = new Album({
-    _id: req.body.id,
+    _id: req.body._id,
     title: req.body.title,
-    imagesPath: formatedArrayOfFile,
-    creator: req.userData.userId
+    images: formatedArrayOfFile,
+    creator: req.body.creator
     });
     // console.log(formatedArrayOfFile);
   }
 
   // handle  title modification add new friends in list
   if(!req.body.imageToDeletePath && !req.body.onAdd && req.body.title.length >= 4 && req.body.title.length <= 18) {
-    console.log(req.body);
     album = new Album({
-      _id: req.body.id,
+      _id: req.body._id,
       title: req.body.title,
-      imagesPath: imagePath,
+      images: imagesPath,
+      creator: req.body.creator,
       linked_friendsId: req.body.linked_friendsId,
       created_date: req.body.created_date
     })
-    console.log(req.body.linked_friendsId);
-    console.log(album);
-  }
-
-  Album.updateOne({_id: req.params.id, creator: req.userData.userId}, album).then(result => {
-    if(result.n > 0) {
+    album.validate(function(error) {
+      if(error) {
+          res.status(500).json({ message: 'One or many ID share are not existing in our database' })
+      }
+      else {
+        Album.update({_id: req.body._id, creator: req.userData.userId}, album).then(result => {
+          if(result.n > 0) {
+            res.status(200).json({ message: 'update successfull' });
+          } else {
+            res.status(401).json({ message: 'Not authorized' });
+          }
+        }).catch(error => {
+          res.status(500).json({ message: 'Couldn\'t update post'})
+        })
+      }
+    })
+  } else {
+    Album.updateOne({_id: req.body._id, creator: req.userData.userId}, album).then(result => {
+      if(result.n > 0) {
       res.status(200).json({ message: 'update successfull' });
     } else {
       res.status(401).json({ message: 'Not authorized' });
@@ -132,6 +149,7 @@ exports.editAlbum = (req, res, next) => {
   .catch(error => {
     res.status(500).json({ message: 'Couldn\'t update post'})
   });
+}
 }
 
 exports.getAlbums = (req, res, next) => {
@@ -168,6 +186,8 @@ exports.getAlbum = (req, res, next) => {
 }
 
 exports.deleteAlbum = (req, res, next) => {
+  console.log(req.params.id);
+  console.log(req.body);
   Album.findByIdAndDelete({_id: req.params.id}).then(result => {
     if(result) {
       result.imagesPath.forEach(photo => {

@@ -3,43 +3,28 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { environment } from '../../environments/environment';
-import { User } from './user.model';
+import { User } from './user.interface';
 import { Observable } from 'rxjs';
 
-const BACKEND_URL = environment.apiUrl + '/user/';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
+  private BACKEND_URL = environment.apiUrl + '/user/';
   private error: string;
   private userExist: boolean;
 
   constructor(private http: HttpClient, private router: Router) {}
 
   getUser(id: string) {
-    return this.http.get<{
-      _id: string;
-      email: string;
-      firstname: string;
-      lastname: string;
-      imagePath: string;
-    }>(BACKEND_URL + id);
+    return this.http.get<User>(this.BACKEND_URL + id);
   }
 
-  // checkUser(id: string): boolean {
-  //   this.getUser(id).subscribe(response => {
-  //     console.log(response);
-  //     if (response) {
-  //       this.userExist = true;
-  //     } else {
-  //       this.userExist = false;
-  //     }
-  //   })
-  //   console.log(this.userExist);
-  //   return this.userExist;
-  // }
+  getUsers() {
+    return this.http.get(this.BACKEND_URL).toPromise();
+  }
 
   async checkUser(id: string) {
     return await this.isUserExisting(id);
@@ -59,7 +44,7 @@ export class UserService {
       userData.append('lastname', lastname);
       userData.append('image', image, id);
       userData.append('imagePath', imagePath);
-      this.http.put(BACKEND_URL + id, userData)
+      this.http.put(this.BACKEND_URL + id, userData)
         .subscribe(response => {
             this.router.navigate(['/']);
         });

@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription, empty } from 'rxjs';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Album } from '../album.model';
+import { Album } from '../album.interface';
 import { AlbumsService } from '../albums.service';
 import { AuthService } from '../../auth/auth.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
 import { PageEvent } from '@angular/material';
 import { ArticleService } from '../article/article.service';
-import { Article } from '../article/article.model';
+import { Article } from '../article/article.interface';
 
 @Component({
   selector: 'app-album-show',

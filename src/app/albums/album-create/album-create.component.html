@@ -1,7 +1,9 @@
 <div class="container">
 
   <div class="row mt-3" *ngIf="isLoading">
-    <mat-spinner></mat-spinner>
+    <div class="col mx-auto">
+      <mat-spinner></mat-spinner>
+    </div>
   </div>
 
   <div class="row mt-3">
@@ -21,7 +23,7 @@
                 <mat-error *ngIf="form.get('title').invalid">Please enter an album title with at least 4 caracters and a max of 18.</mat-error>
               </mat-form-field>
 
-              <div class="mt-4" *ngIf="mode == 'create'">
+              <div class="mt-4">
                 <button mat-stroked-button type="button" (click)="filePicker.click()">Pick An Image</button>
                 <input type="file" multiple #filePicker (change)="onImagePicked($event)">
               </div>
@@ -31,35 +33,6 @@
           <div class="row mt-2" *ngIf="imagePreview.length > 0">
             <div class="col-3 image-preview mx-auto p-2" *ngFor="let image of imagePreview">
               <img [src]="image" [alt]="form.value.title">
-            </div>
-          </div>
-
-          <div class="row mt-4" *ngIf="mode == 'edit'">
-            <div class="col-12">
-
-              <div class="row" *ngIf="form.controls.friendsShare.controls.length > 0">
-                <div class="col">
-                  <p>Select friend(s) that you want to unshare album with :</p>
-                  <label *ngFor="let friendId of form.controls.friendsShare.controls; let i = index" formArrayName="friendsShare">
-                    <input #checkbox type="checkbox" class="checkbox" [formControlName]="i">
-                    {{friendsShare[i]}}
-                  </label>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="row" *ngIf="mode == 'edit'">
-            <div class="col">
-              <mat-form-field>
-                <input
-                matInput
-                type="text"
-                formControlName="friendId"
-                placeholder="Friend ID to share album with">
-                <mat-error *ngIf="form.get('friendId').invalid">Please enter a valid with friend ID with 24 caracters.</mat-error>
-              </mat-form-field>
             </div>
           </div>
 

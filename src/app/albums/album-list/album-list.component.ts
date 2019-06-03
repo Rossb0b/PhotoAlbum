@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material';
 
-import { Album } from '../album.model';
+import { Album } from '../album.interface';
 import { AlbumsService } from '../albums.service';
 import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
@@ -33,7 +33,6 @@ export class AlbumListComponent implements OnInit, OnDestroy {
     });
     this.albumsSub = this.albumsService.getAlbumUpdatedListener()
       .subscribe((albumData: { albums: Album[], albumCount: number }) => {
-        this.isLoading = false;
         const albumsForDate = albumData.albums;
         albumsForDate.forEach(album => {
           const dateOfAlbum = new Date(album.created_date);
@@ -47,6 +46,8 @@ export class AlbumListComponent implements OnInit, OnDestroy {
           album.created_date = formatedDate;
         });
         this.albums = albumsForDate;
+        console.log(this.albums);
+        this.isLoading = false;
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
   }

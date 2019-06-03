@@ -4,10 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { environment } from '../../environments/environment';
-import { Album } from './album.model';
-
-const BACKEND_URL = environment.apiUrl + '/albums/';
+import { environment as env } from '../../environments/environment';
+import { Album } from './album.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -22,16 +20,16 @@ export class AlbumsService {
   getAlbums(userId: string) {
     const queryParams = `?userId=${userId}`;
     this.http
-      .get<{ message: string, albums: any, maxAlbums: number }>(BACKEND_URL + queryParams)
+      .get<{ message: string, albums: any, maxAlbums: number }>(env.apiUrl + '/albums/' + queryParams)
       .pipe(
           map((albumData) => {
             return {
               // tslint:disable-next-line: max-line-length
-              albums: albumData.albums.map((album: { _id: string; title: string; imagesPath: []; linked_friendsId: []; creator: string; created_date: Date; }) => {
+              albums: albumData.albums.map((album: { _id: string; title: string; images: [{path: string, alt: string}]; linked_friendsId: []; creator: string; created_date: Date; }) => {
                 return {
                   id: album._id,
                   title: album.title,
-                  imagesPath: album.imagesPath,
+                  images: album.images,
                   linked_friendsId: album.linked_friendsId,
                   creator: album.creator,
                   created_date: album.created_date
@@ -53,16 +51,8 @@ export class AlbumsService {
     return this.albumsUpdated.asObservable();
   }
 
-  getAlbum(id: string) {
-    return this.http.get<{
-      _id: string;
-      title: string;
-      content: string;
-      imagesPath: [];
-      linked_friendsId: [];
-      creator: string;
-      created_date: string;
-    }>(BACKEND_URL + id);
+  getAlbum(id: string): Promise<Album> {
+    return this.http.get<Album>(env.apiUrl + '/albums/' + id).toPromise();
   }
 
   addAlbum(title: string, images: any) {
@@ -73,52 +63,35 @@ export class AlbumsService {
     for (let i = 0; i < files.length; i++) {
       albumData.append('uploads[]', files[i], title);
     }
-    this.http.post<{message: string, album: Album}>(BACKEND_URL, albumData)
+    this.http.post<{message: string, album: Album}>(env.apiUrl + '/albums/', albumData)
       .subscribe(() => {
         this.router.navigate(['/albums']);
       });
   }
 
   deleteAlbum(albumId: string) {
-    return this.http.delete(BACKEND_URL + albumId);
+    return this.http.delete(env.apiUrl + '/albums/' + albumId);
   }
 
-  updateAlbum({
-    id,
-    title,
-    imagePath,
-    linked_friendsId,
-    creator,
-    created_date }: { id: string; title: string; creator: string; imagePath: any; linked_friendsId: any; created_date: any; }) {
-    let albumData: Album | FormData;
-    albumData = new FormData();
-    albumData.append('id', id);
-    albumData.append('title', title);
-    albumData.append('imagePath', imagePath);
-    for (let i = 0; i <= linked_friendsId.length - 1; i++) {
-      albumData.append('linked_friendsId[]', linked_friendsId[i]);
-    }
-    albumData.append('creator', creator);
-    albumData.append('created_date', created_date);
-    this.http.put(BACKEND_URL + id, albumData)
-      .subscribe(() => {
-        this.router.navigate(['/albums']);
-      });
+  updateAlbum(album: Album): Promise<any> {
+    console.log(album);
+    return this.http.put(env.apiUrl + '/albums/' + album._id, album).toPromise();
   }
 
   // tslint:disable-next-line: variable-name
   addPhoto(id: string, title: string, creator: string, imagePath: any, created_date: any, imageToAddPath: string) {
-    let albumData: Album | FormData;
-    albumData = new FormData();
+    let mData: Album | FormData;
+    // mData.append('image', imageToAddPath, title);
+    // albumData = new FormData();
     const onAdd = 'true';
-    albumData.append('id', id);
-    albumData.append('title', title);
-    albumData.append('creator', creator);
-    albumData.append('imagePath', imagePath);
-    albumData.append('created_date', created_date);
-    albumData.append('image', imageToAddPath, title);
-    albumData.append('onAdd', onAdd);
-    this.http.put(BACKEND_URL + id, albumData)
+    // albumData.append('id', id);
+    // albumData.append('title', title);
+    // albumData.append('creator', creator);
+    // albumData.append('imagePath', imagePath);
+    // albumData.append('created_date', created_date);
+    // albumData.append('image', imageToAddPath, title);
+    // albumData.append('onAdd', onAdd);
+    this.http.put(env.apiUrl + '/albums/' + id, mData)
       .subscribe(() => {
         localStorage.setItem('albumId', id);
         this.router.navigate(['/albums/myAlbum']);
@@ -135,7 +108,7 @@ export class AlbumsService {
     albumData.append('imagePath', imagePath);
     albumData.append('created_date', created_date);
     albumData.append('imageToDeletePath', imageToDeletePath);
-    this.http.put(BACKEND_URL + id, albumData)
+    this.http.put(env.apiUrl + '/albums/' + id, albumData)
       .subscribe(() => {
         localStorage.setItem('albumId', id);
         this.router.navigate(['/albums/myAlbum']);
