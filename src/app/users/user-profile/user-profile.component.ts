@@ -6,15 +6,16 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
 import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
 import { Router } from '@angular/router';
+import { User } from '../user.interface';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements OnInit, OnDestroy {
+export class UserProfileComponent implements OnInit {
 
-  user: {_id: string, email: string, firstname: string, lastname: string, imagePath: string};
+  user;
   isLoading = false;
   userId: string;
   form: FormGroup;
@@ -37,18 +38,18 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.form = new FormGroup({
       image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
     });
-    this.userSub = this.userService.getUser(this.userId).subscribe((userData: {
-      _id: string,
-      email: string,
-      firstname: string,
-      lastname: string,
-      imagePath: string}) => {
-      this.isLoading = false;
-      this.user = userData;
-      this.form.setValue({
-        image: ''
-      });
-    });
+    this.initialize();
+  }
+
+  async initialize(): Promise<void>
+  {
+    try {
+      this.user = await this.userService.getUser(this.userId);
+    } catch(e) {
+      console.error(e);
+    }
+
+    this.isLoading = false;
   }
 
   onImagePicked(event: Event) {
@@ -76,10 +77,5 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.user.imagePath
       );
     this.form.reset();
-  }
-
-  ngOnDestroy() {
-    this.authStatusSub.unsubscribe();
-    this.userSub.unsubscribe();
   }
 }

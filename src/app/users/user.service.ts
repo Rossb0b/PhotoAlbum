@@ -18,8 +18,8 @@ export class UserService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  getUser(id: string) {
-    return this.http.get<User>(this.BACKEND_URL + id);
+  async getUser(id: string): Promise<User> {
+    return this.http.get<User>(this.BACKEND_URL + id).toPromise();
   }
 
   getUsers() {

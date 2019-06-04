@@ -6,6 +6,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { UserService } from 'src/app/users/user.service';
 import { from, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-album-edit',
@@ -13,10 +14,13 @@ import { map, startWith } from 'rxjs/operators';
   styleUrls: ['./album-edit.component.css']
 })
 export class AlbumEditComponent implements OnInit {
+
   /** current album */
   album: Album;
   /** album id in url params used to retrieve album */
   private albumId: string;
+  /** Current ID of logged in user */
+  userId: string;
   /** define if front is communicating with api */
   isLoading = false;
   /** album form */
@@ -32,6 +36,7 @@ export class AlbumEditComponent implements OnInit {
     public route: ActivatedRoute,
     private router: Router,
     public albumsService: AlbumsService,
+    public authService: AuthService,
     public userService: UserService,
   ) {
     this.buildForm();
@@ -50,6 +55,7 @@ export class AlbumEditComponent implements OnInit {
     this.albumId = this.route.snapshot.params.albumId;
 
     try {
+      this.userId = await this.authService.getUserId();
       this.album = await this.albumsService.getAlbum(this.albumId);
     } catch (e) {
       /** debbuging */
@@ -79,8 +85,10 @@ export class AlbumEditComponent implements OnInit {
       this.filteredUsers = [];
       const userLength = this.users.length;
       for (let i = 0; i < userLength; i++) {
-        const user = { _id: this.users[i]._id, firstname: this.users[i].firstname, lastname: this.users[i].lastname };
-        this.filteredUsers.push(user);
+        if (this.users[i]._id !== this.userId) {
+          const user = { _id: this.users[i]._id, firstname: this.users[i].firstname, lastname: this.users[i].lastname };
+          this.filteredUsers.push(user);
+        }
       }
     });
   }

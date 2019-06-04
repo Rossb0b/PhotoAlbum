@@ -17,39 +17,46 @@ export class AlbumsService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getAlbums(userId: string) {
+  getAlbums(userId: string): Promise <any> {
     const queryParams = `?userId=${userId}`;
-    this.http
-      .get<{ message: string, albums: any, maxAlbums: number }>(env.apiUrl + '/albums/' + queryParams)
-      .pipe(
-          map((albumData) => {
-            return {
-              // tslint:disable-next-line: max-line-length
-              albums: albumData.albums.map((album: { _id: string; title: string; images: [{path: string, alt: string}]; linked_friendsId: []; creator: string; created_date: Date; }) => {
-                return {
-                  id: album._id,
-                  title: album.title,
-                  images: album.images,
-                  linked_friendsId: album.linked_friendsId,
-                  creator: album.creator,
-                  created_date: album.created_date
-                };
-              }), maxAlbums: albumData.maxAlbums
-            };
-          })
-      )
-      .subscribe(transformedAlbumData => {
-        this.albums = transformedAlbumData.albums;
-        this.albumsUpdated.next({
-          albums: [...this.albums],
-          albumCount: transformedAlbumData.maxAlbums
-      });
-   });
+    return this.http.get(env.apiUrl + '/albums/' + queryParams).toPromise();
   }
+
+  // getAlbums(userId: string) {
+  //   const queryParams = `?userId=${userId}`;
+  //   this.http
+  //     .get<{ message: string, albums: any, maxAlbums: number }>(env.apiUrl + '/albums/' + queryParams)
+  //     .pipe(
+  //         map((albumData) => {
+  //           return {
+  //             // tslint:disable-next-line: max-line-length
+  //             albums: albumData.albums.map((album: { _id: string; title: string; images: [{path: string, alt: string}]; linked_friendsId: []; creator: string; created_date: Date; }) => {
+  //               return {
+  //                 id: album._id,
+  //                 title: album.title,
+  //                 images: album.images,
+  //                 linked_friendsId: album.linked_friendsId,
+  //                 creator: album.creator,
+  //                 created_date: album.created_date
+  //               };
+  //             }), maxAlbums: albumData.maxAlbums
+  //           };
+  //         })
+  //     )
+  //     .subscribe(transformedAlbumData => {
+  //       this.albums = transformedAlbumData.albums;
+  //       this.albumsUpdated.next({
+  //         albums: [...this.albums],
+  //         albumCount: transformedAlbumData.maxAlbums
+  //     });
+  //  });
+  // }
 
   getAlbumUpdatedListener() {
     return this.albumsUpdated.asObservable();
   }
+
+
 
   getAlbum(id: string): Promise<Album> {
     return this.http.get<Album>(env.apiUrl + '/albums/' + id).toPromise();

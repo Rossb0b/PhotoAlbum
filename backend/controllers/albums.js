@@ -187,13 +187,13 @@ exports.getAlbum = (req, res, next) => {
 }
 
 exports.deleteAlbum = (req, res, next) => {
-  console.log(req.params.id);
-  console.log(req.body);
-  Album.findByIdAndDelete({_id: req.params.id}).then(result => {
+  console.log(req.params);
+  Album.findOneAndDelete({_id: req.params.id}).then(result => {
+    console.log(result);
     if(result) {
-      result.imagesPath.forEach(photo => {
+      result.images.forEach(photo => {
           async function deletePhoto(){
-            let imageToDeleteFractionnalPath = photo.split("photos/").pop();
+            let imageToDeleteFractionnalPath = photo.path.split("photos/").pop();
             let imageToDeleteFinalPath = "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/photos/" + imageToDeleteFractionnalPath;
             let promise = new Promise((resolve, reject) => {
               setTimeout(() => resolve(fs.unlink(imageToDeleteFinalPath, function(error) {
@@ -209,9 +209,6 @@ exports.deleteAlbum = (req, res, next) => {
     } else {
       res.status(401).json({ message: 'Not authorized' });
     }
-  })
-  .catch(error => {
-    res.status(500).json({ message: 'Deletion failed'})
   });
 }
 
