@@ -18,9 +18,9 @@ export class ArticleService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getArticleFromAlbumId(albumId: string): Observable<Article> {
+  getArticleFromAlbumId(albumId: string): Promise<Article> {
     const queryParams = `?albumId=${albumId}`;
-    return this.http.get<Article>(BACKEND_URL + queryParams);
+    return this.http.get<Article>(BACKEND_URL + queryParams).toPromise();
   }
 
   addArticle(title: string, paragraphs: any, albumId: string, owner: string) {

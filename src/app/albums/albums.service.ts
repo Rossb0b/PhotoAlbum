@@ -12,7 +12,9 @@ import { Album } from './album.interface';
 })
 export class AlbumsService {
 
+  /** current list of album fetched */
   private albums: Album[] = [];
+  /** subject listening fetching of albums */
   private albumsUpdated = new Subject<{ albums: Album[], albumCount: number }>();
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -52,9 +54,9 @@ export class AlbumsService {
   //  });
   // }
 
-  getAlbumUpdatedListener() {
-    return this.albumsUpdated.asObservable();
-  }
+  // getAlbumUpdatedListener() {
+  //   return this.albumsUpdated.asObservable();
+  // }
 
 
 

@@ -15,7 +15,7 @@ export class AlbumCreateComponent {
 
   /** current album to save */
   album: Album;
-  /** array of images previewsly selectionned */
+  /** array of images to add previewsly selected */
   imagePreview = [];
   /** define if front is communicating with api */
   isLoading = false;
