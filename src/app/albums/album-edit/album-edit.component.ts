@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Album } from './../album.interface';
-import { AlbumsService } from '../albums.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { UserService } from 'src/app/users/user.service';
-import { from, Subject } from 'rxjs';
+
+import { from } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+
+import { Album } from './../album.interface';
+import { AlbumsService } from '../albums.service';
+import { UserService } from 'src/app/users/user.service';
 import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
@@ -27,8 +29,8 @@ export class AlbumEditComponent implements OnInit {
   form: FormGroup;
   /** current list of all user */
   private users;
-
-  private filteredUsers = [];
+  /** current list of all user with filtered data */
+  private filteredUsers: {_id: string, firstname: string, lastname: string}[];
 
 
   constructor(

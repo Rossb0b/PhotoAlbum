@@ -9,7 +9,7 @@
   <div class="row mt-3">
     <div class="col-lg-8 col-12 col-md-10 mx-auto">
       <mat-card>
-        <form [formGroup]="form" (submit)="onSaveAlbum()" *ngIf="!isLoading">
+        <form [formGroup]="form" (submit)="saveAlbum()" *ngIf="!isLoading">
           <div class="row">
             <div class="col">
               <mat-form-field>
