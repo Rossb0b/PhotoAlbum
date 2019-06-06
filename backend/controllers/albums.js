@@ -195,8 +195,8 @@ exports.getAlbum = (req, res, next) => {
 };
 
 exports.deleteAlbum = (req, res, next) => {
-  console.log(req.body);
-  Album.findOneAndDelete({_id: req.body._id}).then(result => {
+  console.log(req.params);
+  Album.findOneAndDelete({_id: req.params.id}).then(result => {
     console.log(result);
     if(result) {
       result.images.forEach(photo => {

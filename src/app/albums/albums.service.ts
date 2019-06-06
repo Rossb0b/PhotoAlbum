@@ -80,7 +80,6 @@ export class AlbumsService {
   }
 
   updateAlbum(album: Album): Promise<any> {
-    console.log(album);
     return this.http.put(env.apiUrl + '/albums/' + album._id, album).toPromise();
   }
 
