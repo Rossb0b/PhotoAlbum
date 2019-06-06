@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PageEvent } from '@angular/material';
@@ -16,7 +16,7 @@ import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
   templateUrl: './album-show.component.html',
   styleUrls: ['./album-show.component.css']
 })
-export class AlbumShowComponent implements OnInit {
+export class AlbumShowComponent implements OnInit, OnDestroy {
 
   /** current album */
   album: Album;
@@ -79,8 +79,6 @@ export class AlbumShowComponent implements OnInit {
       this.getAlbum();
       this.getArticle();
 
-      console.log(this.albumId);
-
       this.isLoading = false;
     }
 
@@ -122,7 +120,7 @@ export class AlbumShowComponent implements OnInit {
      */
     handleStorage(): void {
       this.albumId = localStorage.getItem('albumId');
-      localStorage.removeItem('albumId');
+      // localStorage.removeItem('albumId');
 
       if (this.albumId === null) {
         this.router.navigate(['/albums']);
@@ -145,14 +143,28 @@ export class AlbumShowComponent implements OnInit {
 
     onShow(albumId: string) {
       localStorage.setItem('albumId', albumId);
-      this.router.navigate(['/albums/myAlbum/Article']);
+      if (localStorage.getItem('albumId') === null) {
+        this.router.navigate(['/albums/myAlbum/Article']);
+      } else {
+        this.router.navigate(['/albums/myAlbum']);
+      }
     }
 
     onAddArticle(albumId: string) {
       localStorage.setItem('albumId', albumId);
-      this.router.navigate(['/albums/myAlbum/newArticle']);
+      if (localStorage.getItem('albumId') === null) {
+        this.router.navigate(['/albums/myAlbum/newArticle']);
+      } else {
+        this.router.navigate(['/albums/myAlbum']);
+      }
     }
 
+    /**
+     *
+     * @param pageData data from pagination
+     * display images in fonction of pageData information
+     * @returns void
+     */
     onChangedPage(pageData: PageEvent) {
       this.isLoading = true;
       this.addPhoto = false;
@@ -169,6 +181,12 @@ export class AlbumShowComponent implements OnInit {
       this.isLoading = false;
     }
 
+    /**
+     *
+     * @param event on pick image
+     * handle the image preview on image select
+     * @returns void
+     */
     onPhotoPicked(event: Event) {
       const file = (event.target as HTMLInputElement).files[0];
       this.form.patchValue({image: file});
@@ -180,69 +198,48 @@ export class AlbumShowComponent implements OnInit {
       reader.readAsDataURL(file);
     }
 
-    onAddPhoto() {
+    async AddPhoto(): Promise<void> {
       this.isLoading = true;
       this.addPhoto = false;
+
       if (this.form.invalid) {
         return;
       }
-      // this.albumsService.addPhoto(
-      //   this.album.id,
-      //   this.album.title,
-      //   this.album.creator,
-      //   this.album.imagePath,
-      //   this.album.created_date,
-      //   this.form.value.image
-      // );
-      // this.albumsService.getAlbum(this.albumId).subscribe(albumData => {
-      //   this.isLoading = false;
-      //   this.album = {
-      //     id: albumData._id,
-      //     title: albumData.title,
-      //     imagePath: albumData.imagesPath,
-      //     linked_friendsId: albumData.linked_friendsId,
-      //     creator: albumData.creator,
-      //     created_date: albumData.created_date,
-      //   };
-      //   this.photosToDisplay = [];
-      //   for (let i = 0; i <= this.album.imagePath.length; i++) {
-      //     if (this.album.imagePath[i]) {
-      //       this.photosToDisplay.push(this.album.imagePath[i]);
-      //     }
-      //   }
-      //   this.totalPhotos = this.photosToDisplay.length;
-      // });
+
+      try {
+        await this.albumService.addPhoto(this.album, this.form.value.image);
+      } catch (e) {
+        /** debugging */
+        console.error(e);
+        alert('Adding a photo to the album failed');
+      }
+
+      this.getAlbum();
       this.form.reset();
       this.isLoading = false;
     }
 
-    onDelete(photo: string) {
+    async deletePhoto(photo: string): Promise<void> {
       this.isLoading = true;
-      const photoToDelete = photo;
-      // for (let i = this.album.imagePath.length - 1; i >= 0; i--) {
-      //   if (this.album.imagePath[i] === photoToDelete) {
-      //       this.album.imagePath.splice(i, 1);
-      //   }
-      // }
-      // this.albumsService.deletePhoto(
-      //   this.albumId,
-      //   this.album.title,
-      //   this.album.creator,
-      //   this.album.imagePath,
-      //   this.album.created_date,
-      //   photoToDelete
-      // );
-      // for (let i = 0; i <= this.photosToDisplay.length; i++) {
-      //   if (this.photosToDisplay[i] === photoToDelete) {
-      //     this.photosToDisplay.splice(i, 1);
-      //   }
-      // }
-      // this.albumsService.getAlbum(this.albumId).subscribe(() => {
-      //     this.isLoading = false;
-      //     this.photosToDisplay = [];
-      // });
-      this.totalPhotos = this.photosToDisplay.length;
+
+      for (let i = 0; i < this.album.images.length; i++) {
+        if (this.album.images[i].path === photo) {
+            this.album.images.splice(i, 1);
+        }
+      }
+
+      try {
+        await this.albumService.deletePhoto(this.album, photo);
+      } catch (e) {
+        /** debugging */
+        console.error(e);
+      }
+
+      this.getAlbum();
       this.isLoading = false;
     }
 
+    ngOnDestroy(): void {
+      localStorage.removeItem('albumId');
+    }
   }

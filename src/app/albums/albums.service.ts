@@ -85,33 +85,37 @@ export class AlbumsService {
   }
 
   // tslint:disable-next-line: variable-name
-  addPhoto(_id: string, title: string, creator: string, imagePath: any, created_date: any, imageToAddPath: string): Promise<any> {
-    let albumData: Album | FormData;
-    // mData.append('image', imageToAddPath, title);
-    // albumData = new FormData();
+  addPhoto(
+    album: Album,
+    imageToAdd: string
+    ): Promise<any> {
+    const albumData = new FormData();
     const onAdd = 'true';
-    const queryParams = [albumData, onAdd];
-    // albumData.append('id', id);
-    // albumData.append('title', title);
-    // albumData.append('creator', creator);
-    // albumData.append('imagePath', imagePath);
-    // albumData.append('created_date', created_date);
-    // albumData.append('image', imageToAddPath, title);
-    // albumData.append('onAdd', onAdd);
-    return this.http.put(env.apiUrl + '/albums/' + _id, queryParams).toPromise();
+    albumData.append('_id', album._id);
+    albumData.append('title', album.title);
+    albumData.append('creator', album.creator);
+    album.images.forEach(image => {
+      albumData.append('imagesPath[]', image.path);
+      albumData.append('imagesAlt[]', image.alt);
+    });
+    albumData.append('created_date', album.created_date);
+    albumData.append('image', imageToAdd, album.title);
+    albumData.append('onAdd', onAdd);
+    return this.http.put(env.apiUrl + '/albums/' + album._id, albumData).toPromise();
   }
 
   // tslint:disable-next-line: variable-name
-  deletePhoto(_id: string, title: string, creator: string, imagePath: any, created_date: any, imageToDeletePath: string): Promise<any> {
-    let albumData: Album | FormData;
-    const imageToDelete = imageToDeletePath;
-    const queryParams = [albumData, imageToDelete];
-    // albumData.append('id', id);
-    // albumData.append('title', title);
-    // albumData.append('creator', creator);
-    // albumData.append('imagePath', imagePath);
-    // albumData.append('created_date', created_date);
-    // albumData.append('imageToDeletePath', imageToDeletePath);
-    return this.http.put(env.apiUrl + '/albums/' + _id, albumData).toPromise();
+  deletePhoto(album: Album, imageToDeletePath: string): Promise<any> {
+    let albumData = new FormData();
+    albumData.append('_id', album._id);
+    albumData.append('title', album.title);
+    albumData.append('creator', album.creator);
+    album.images.forEach(image => {
+      albumData.append('imagesPath[]', image.path);
+      albumData.append('imagesAlt[]', image.alt);
+    });
+    albumData.append('created_date', album.created_date);
+    albumData.append('imageToDeletePath', imageToDeletePath);
+    return this.http.put(env.apiUrl + '/albums/' + album._id, albumData).toPromise();
   }
 }
