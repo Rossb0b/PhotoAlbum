@@ -66,10 +66,14 @@ exports.editAlbum = (req, res, next) => {
 
   // console.log(req.body);
   const formatedArrayOfFile = [];
-  const images = [];
-  for (let i = 0; i < req.body.imagesPath.length; i++) {
-    const image = { path: req.body.imagesPath[i], alt: req.body.imagesAlt[i] };
-    images.push(image);
+  let images = [];
+  if (req.body.imagesPath) {
+    for (let i = 0; i < req.body.imagesPath.length; i++) {
+      const image = { path: req.body.imagesPath[i], alt: req.body.imagesAlt[i] };
+      images.push(image);
+    }
+  } else {
+    images = req.body.images;
   }
   // console.log(images);d
 

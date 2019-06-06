@@ -83,7 +83,6 @@ export class AlbumsService {
     return this.http.put(env.apiUrl + '/albums/' + album._id, album).toPromise();
   }
 
-  // tslint:disable-next-line: variable-name
   addPhoto(
     album: Album,
     imageToAdd: string
