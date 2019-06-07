@@ -42,7 +42,7 @@ exports.createAlbum = (req, res, next) => {
       album.save().then(createdAlbum => {
         res.status(201).json({
           message: 'Album added successfully',
-          post: {
+          album: {
             ...createdAlbum,
             id: createdAlbum._id
           }
@@ -75,7 +75,7 @@ exports.editAlbum = (req, res, next) => {
   } else {
     images = req.body.images;
   }
-  // console.log(images);d
+  // console.log(images);
 
   if(req.body.onAdd === 'true') {
     images.forEach(image => {

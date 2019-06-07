@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PageEvent } from '@angular/material';
@@ -7,8 +7,8 @@ import { PageEvent } from '@angular/material';
 import { Album } from '../album.interface';
 import { Article } from '../article/article.interface';
 import { AlbumsService } from '../albums.service';
-import { AuthService } from '../../auth/auth.service';
 import { ArticleService } from '../article/article.service';
+import { AuthService } from '../../auth/auth.service';
 import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
 
 @Component({
@@ -16,11 +16,11 @@ import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
   templateUrl: './album-show.component.html',
   styleUrls: ['./album-show.component.css']
 })
-export class AlbumShowComponent implements OnInit, OnDestroy {
+export class AlbumShowComponent implements OnInit {
 
   /** current album */
   album: Album;
-  /** ID of the current album */
+  /** ID of current album */
   albumId: string;
   /** current article if exist */
   article: Article;
@@ -107,9 +107,11 @@ export class AlbumShowComponent implements OnInit, OnDestroy {
         console.error(e);
       }
 
-      if (this.article) {
+      if (Object.entries(this.article).length > 0) {
         this.articleExist = true;
         this.articleId = this.article.id;
+      } else {
+        this.articleExist = false;
       }
     }
 
@@ -120,7 +122,7 @@ export class AlbumShowComponent implements OnInit, OnDestroy {
      */
     handleStorage(): void {
       this.albumId = localStorage.getItem('albumId');
-      // localStorage.removeItem('albumId');
+      localStorage.removeItem('albumId');
 
       if (this.albumId === null) {
         this.router.navigate(['/albums']);
@@ -143,16 +145,17 @@ export class AlbumShowComponent implements OnInit, OnDestroy {
 
     onShow(albumId: string) {
       localStorage.setItem('albumId', albumId);
-      if (localStorage.getItem('albumId') === null) {
+      if (localStorage.getItem('albumId') !== null) {
         this.router.navigate(['/albums/myAlbum/Article']);
       } else {
         this.router.navigate(['/albums/myAlbum']);
       }
     }
 
-    onAddArticle(albumId: string) {
+    addArticle(albumId: string) {
       localStorage.setItem('albumId', albumId);
-      if (localStorage.getItem('albumId') === null) {
+      console.log(localStorage.getItem('albumId'));
+      if (localStorage.getItem('albumId') !== null) {
         this.router.navigate(['/albums/myAlbum/newArticle']);
       } else {
         this.router.navigate(['/albums/myAlbum']);
@@ -237,9 +240,5 @@ export class AlbumShowComponent implements OnInit, OnDestroy {
 
       this.getAlbum();
       this.isLoading = false;
-    }
-
-    ngOnDestroy(): void {
-      localStorage.removeItem('albumId');
     }
   }

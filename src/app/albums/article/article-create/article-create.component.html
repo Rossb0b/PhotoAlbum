@@ -1,11 +1,12 @@
 <div class="container">
+
   <div class="row mt-4">
     <div class="offset-3 col-6">
       <mat-spinner *ngIf="isLoading"></mat-spinner>
     </div>
   </div>
 
-  <form [formGroup]="form" (submit)="onSaveArticle()" *ngIf="!isLoading">
+  <form [formGroup]="form" (submit)="saveArticle()" *ngIf="!isLoading">
     <div class="row">
       <div class="col-6 mx-auto">
         <mat-form-field>
@@ -41,7 +42,7 @@
             <div *ngIf="photosToDisplay.length == 4" class="row mt-3">
               <div class="col-3 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
                 <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
-                  <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo" [alt]="album.imagePath">
+                  <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo.path" [alt]="photo.alt">
                 </mat-card>
               </div>
             </div>
@@ -49,7 +50,7 @@
             <div *ngIf="photosToDisplay.length == 3" class="row mt-3">
               <div class="col-4 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
                 <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
-                  <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo" [alt]="album.imagePath">
+                  <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo.path" [alt]="photo.alt">
                 </mat-card>
               </div>
             </div>
@@ -57,7 +58,7 @@
             <div *ngIf="photosToDisplay.length == 2" class="row mt-3">
               <div class="col-5 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
                 <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
-                  <img mat-card-image class="mx-auto mt-1 medium-picture" [src]="photo" [alt]="album.imagePath">
+                  <img mat-card-image class="mx-auto mt-1 medium-picture" [src]="photo.path" [alt]="photo.alt">
                 </mat-card>
               </div>
             </div>
@@ -65,7 +66,7 @@
             <div *ngIf="photosToDisplay.length == 1" class="row mt-3">
               <div class="col-8 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
                 <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
-                  <img mat-card-image class="mx-auto mt-1 big-picture" [src]="photo" [alt]="album.imagePath">
+                  <img mat-card-image class="mx-auto mt-1 big-picture" [src]="photo.path" [alt]="photo.alt">
                 </mat-card>
               </div>
             </div>
@@ -78,7 +79,7 @@
 
           <div>
             <mat-card class="col-3 mx-auto" *ngIf="p.controls.path.value !== null">
-              <img mat-card-image class="ml-2 little-picture" [src]="p.controls.path.value">
+              <img mat-card-image class="ml-2 little-picture" [src]="p.controls.path.value" [alt]="p.controls.alt.value">
             </mat-card>
           </div>
         </div>

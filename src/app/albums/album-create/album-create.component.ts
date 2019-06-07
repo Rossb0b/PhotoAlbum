@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 import { Album } from '../album.interface';
@@ -64,9 +64,9 @@ export class AlbumCreateComponent {
           await this.albumService.addAlbum(
             this.form.value.title,
             this.filesToUpload
-            );
-
-          this.router.navigate(['/albums/']);
+          ).then(() => {
+            this.router.navigate(['/albums/']);
+          });
         } catch (e) {
             /** debugging */
             console.error(e);

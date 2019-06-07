@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { environment as env } from '../../environments/environment';
+import { Subject } from 'rxjs';
+
 import { Album } from './album.interface';
+import { environment as env } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -104,7 +104,7 @@ export class AlbumsService {
 
   // tslint:disable-next-line: variable-name
   deletePhoto(album: Album, imageToDeletePath: string): Promise<any> {
-    let albumData = new FormData();
+    const albumData = new FormData();
     albumData.append('_id', album._id);
     albumData.append('title', album.title);
     albumData.append('creator', album.creator);

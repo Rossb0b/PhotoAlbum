@@ -27,7 +27,7 @@
 
     <div class="col-2">
         <button *ngIf='articleExist' mat-raised-button color="primary" class="ml-3" (click)="onShow(albumId)" style="position:absolute; right:0;">Show Article</button>
-        <button *ngIf='!articleExist && userId == album.creator' mat-raised-button color="primary" class="ml-3" (click)="onAddArticle(albumId)" style="position:absolute; right:0;">Create Article</button>
+        <button *ngIf='!articleExist && userId == album.creator' mat-raised-button color="primary" class="ml-3" (click)="addArticle(albumId)" style="position:absolute; right:0;">Create Article</button>
     </div>
   </div>
 
