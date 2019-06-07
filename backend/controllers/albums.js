@@ -122,7 +122,6 @@ exports.editAlbum = (req, res, next) => {
     images: formatedArrayOfFile,
     creator: req.body.creator
     });
-    console.log(formatedArrayOfFile);
   }
 
   // handle  title modification add new friends in list
@@ -181,7 +180,7 @@ exports.getAlbums = (req, res, next) => {
       });
     })
     .catch(error => {
-      res.status(500).json({ message: 'Fetching posts failed'});
+      res.status(500).json({ message: 'Fetching albums failed'});
     });
 };
 
@@ -199,9 +198,7 @@ exports.getAlbum = (req, res, next) => {
 };
 
 exports.deleteAlbum = (req, res, next) => {
-  console.log(req.params);
   Album.findOneAndDelete({_id: req.params.id}).then(result => {
-    console.log(result);
     if(result) {
       result.images.forEach(photo => {
           async function deletePhoto(){

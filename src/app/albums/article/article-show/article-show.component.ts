@@ -49,8 +49,18 @@ export class ArticleShowComponent implements OnInit {
       console.error(e);
     }
 
+    this.getUserId();
 
     this.isLoading = false;
+  }
+
+  async getUserId(): Promise<void> {
+    try {
+      this.userId = await this.authService.getUserId();
+    } catch (e) {
+      /** debugging */
+      console.error(e);
+    }
   }
 
   /**

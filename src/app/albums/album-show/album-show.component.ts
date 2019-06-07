@@ -109,7 +109,7 @@ export class AlbumShowComponent implements OnInit {
 
       if (Object.entries(this.article).length > 0) {
         this.articleExist = true;
-        this.articleId = this.article.id;
+        this.articleId = this.article._id;
       } else {
         this.articleExist = false;
       }

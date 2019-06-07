@@ -11,7 +11,7 @@
       <div class="row mt-4 title">
         <div class="col-12 text-center">
           <h1>{{article.title}}</h1>
-          <button *ngIf="userId == article.creator" mat-raised-button class="text-center align-right" color="warn" (click)="delete(article.id)">Delete Article</button>
+          <button *ngIf="userId == article.creator" mat-raised-button class="text-center align-right" color="warn" (click)="delete(article._id)">Delete Article</button>
         </div>
       </div>
 
