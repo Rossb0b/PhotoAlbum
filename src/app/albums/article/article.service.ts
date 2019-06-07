@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { environment } from '../../../environments/environment';
-import { Article } from './article.model';
+import { Article } from './article.interface';
 
 const BACKEND_URL = environment.apiUrl + '/article/';
 
@@ -18,26 +16,23 @@ export class ArticleService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getArticleFromAlbumId(albumId: string): Observable<Article> {
+  getArticleFromAlbumId(albumId: string): Promise<Article> {
     const queryParams = `?albumId=${albumId}`;
-    return this.http.get<Article>(BACKEND_URL + queryParams);
+    return this.http.get<Article>(BACKEND_URL + queryParams).toPromise();
   }
 
-  addArticle(title: string, paragraphs: any, albumId: string, owner: string) {
+  addArticle(title: string, paragraphs: any, albumId: string, owner: string): Promise<{message: string, article: Article}> {
     const articleData = {
       title,
       paragraphs,
       albumId,
       owner
     };
-    this.http.post<{message: string, article: Article}>(BACKEND_URL, articleData)
-      .subscribe(() => {
-        this.router.navigate(['/albums']);
-      });
+    return this.http.post<{message: string, article: Article}>(BACKEND_URL, articleData).toPromise();
   }
 
-  deleteArticle(articleId: string) {
-    return this.http.delete(BACKEND_URL + articleId);
+  deleteArticle(articleId: string): Promise<any> {
+    return this.http.delete(BACKEND_URL + articleId).toPromise();
   }
 
 }

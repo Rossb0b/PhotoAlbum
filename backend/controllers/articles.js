@@ -12,7 +12,7 @@ exports.createArticle = (req, res, next) => {
     article.save().then(createdArticle => {
       res.status(201).json({
         message: 'Article added successfully',
-        post: {
+        article: {
           ...createdArticle,
           id: createdArticle._id
         }
@@ -21,25 +21,25 @@ exports.createArticle = (req, res, next) => {
     .catch(error => {
       res.status(500).json({
         message: 'Creating an Article failed'
-      })
+      });
     });
   } else {
     res.status(401).json({ message: 'Not authorized'});
   }
-}
+};
 
 exports.getArticle = (req, res, next) => {
   Article.find({albumId: req.query.albumId}).then(article => {
     if (article) {
       res.status(200).json(article);
       } else {
-        res.status(404).json({message: "article not find"})
+        res.status(404).json({message: "article not find"});
       }
     })
     .catch(error => {
-      res.status(500).json({ message: 'Fetching article failed'})
+      res.status(500).json({ message: 'Fetching article failed'});
     });
-}
+};
 
 exports.deleteArticle = (req, res, next) => {
   Article.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
@@ -50,9 +50,9 @@ exports.deleteArticle = (req, res, next) => {
     }
   })
   .catch(error => {
-    res.status(500).json({ message: 'Fetching posts failed'})
-  });;
-}
+    res.status(500).json({ message: 'Fetching posts failed'});
+  });
+};
 
 
 

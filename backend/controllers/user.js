@@ -71,11 +71,24 @@ exports.getUser = (req, res, next) => {
     if(User) {
       res.status(200).json(user);
     } else {
-      res.status(401).json({message: 'User not find'})
+      res.status(401).json({ message: 'User not find' })
     }
   })
   .catch(error => {
-    res.status(401).json({message: 'Fetching user failed'})
+    res.status(401).json({ message: 'Fetching user failed' })
+  })
+}
+
+exports.getUsers = (req,res, next) => {
+  User.find().then(users => {
+    if(users) {
+      res.status(200).json(users);
+    } else {
+      res.status(401).json({ message: 'No user find' });
+    }
+  })
+  .catch(error => {
+    res.status(401).json({ message: 'Fetching users failed'});
   })
 }
 

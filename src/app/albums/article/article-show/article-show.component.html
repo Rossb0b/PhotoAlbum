@@ -1,13 +1,17 @@
 <div class="article">
   <div class="container">
 
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <div class="row mt-3" *ngIf="isLoading">
+      <div class="col mx-auto">
+        <mat-spinner></mat-spinner>
+      </div>
+    </div>
 
-    <div *ngIf="articleExist && !isLoading">
+    <div *ngIf="!isLoading">
       <div class="row mt-4 title">
         <div class="col-12 text-center">
           <h1>{{article.title}}</h1>
-          <button *ngIf="userId == article.creator" mat-raised-button class="text-center align-right" color="warn" (click)="onDelete(article.id)">Delete Article</button>
+          <button *ngIf="userId == article.creator" mat-raised-button class="text-center align-right" color="warn" (click)="delete(article.id)">Delete Article</button>
         </div>
       </div>
 
@@ -16,7 +20,7 @@
       <div *ngIf="paragraphsLength >= 1" class="row mt-4">
         <div class="col-10 mx-auto">
           <p>
-            <img [src]="article.paragraphs[0].path" [alt]="article.paragraphs[0].alt" class="p-2 paragraphs-image float-right">
+            <img [src]="article.paragraphs[0].path" [alt]="article.paragraphs[0].alt" class="paragraphs-image float-right m-3">
             <span class="paragraphs-text">{{article.paragraphs[0].content}}</span>
           </p>
         </div>
@@ -25,8 +29,8 @@
       <div *ngIf="paragraphsLength >= 2" class="row mt-4">
         <div class="col-10 mx-auto">
           <p>
-            <img [src]="article.paragraphs[1].path" [alt]="article.paragraphs[1].alt" class="paragraphs-image float-left mr-3">
-            {{article.paragraphs[1].content}}
+            <img [src]="article.paragraphs[1].path" [alt]="article.paragraphs[1].alt" class="paragraphs-image float-left m-3">
+            <span class="paragraphs-text">{{article.paragraphs[1].content}}</span>
           </p>
         </div>
       </div>
@@ -34,8 +38,8 @@
       <div *ngIf="paragraphsLength >= 3" class="row mt-4">
         <div class="col-10 mx-auto">
           <p>
-            <img [src]="article.paragraphs[2].path" [alt]="article.paragraphs[2].alt" class="paragraphs-image float-right">
-            <span class="mr-3">{{article.paragraphs[2].content}}</span>
+            <img [src]="article.paragraphs[2].path" [alt]="article.paragraphs[2].alt" class="paragraphs-image float-right m-3">
+            <span class="paragraphs-text">{{article.paragraphs[2].content}}</span>
           </p>
         </div>
       </div>
@@ -43,8 +47,8 @@
       <div *ngIf="paragraphsLength >= 4" class="row mt-4">
         <div class="col-10 mx-auto">
           <p>
-            <img [src]="article.paragraphs[3].path" [alt]="article.paragraphs[3].alt" class="paragraphs-image float-left mr-3">
-            {{article.paragraphs[3].content}}
+            <img [src]="article.paragraphs[3].path" [alt]="article.paragraphs[3].alt" class="paragraphs-image float-left m-3">
+            <span class="paragraphs-text">{{article.paragraphs[3].content}}</span>
           </p>
         </div>
       </div>

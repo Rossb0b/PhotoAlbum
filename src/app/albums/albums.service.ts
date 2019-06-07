@@ -1,71 +1,70 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { environment } from '../../environments/environment';
-import { Album } from './album.model';
+import { Subject } from 'rxjs';
 
-const BACKEND_URL = environment.apiUrl + '/albums/';
+import { Album } from './album.interface';
+import { environment as env } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlbumsService {
 
+  /** current list of album fetched */
   private albums: Album[] = [];
+  /** subject listening fetching of albums */
   private albumsUpdated = new Subject<{ albums: Album[], albumCount: number }>();
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getAlbums(userId: string) {
+  getAlbums(userId: string): Promise <any> {
     const queryParams = `?userId=${userId}`;
-    this.http
-      .get<{ message: string, albums: any, maxAlbums: number }>(BACKEND_URL + queryParams)
-      .pipe(
-          map((albumData) => {
-            return {
-              // tslint:disable-next-line: max-line-length
-              albums: albumData.albums.map((album: { _id: string; title: string; imagesPath: []; linked_friendsId: []; creator: string; created_date: Date; }) => {
-                return {
-                  id: album._id,
-                  title: album.title,
-                  imagesPath: album.imagesPath,
-                  linked_friendsId: album.linked_friendsId,
-                  creator: album.creator,
-                  created_date: album.created_date
-                };
-              }), maxAlbums: albumData.maxAlbums
-            };
-          })
-      )
-      .subscribe(transformedAlbumData => {
-        this.albums = transformedAlbumData.albums;
-        this.albumsUpdated.next({
-          albums: [...this.albums],
-          albumCount: transformedAlbumData.maxAlbums
-      });
-   });
+    return this.http.get(env.apiUrl + '/albums/' + queryParams).toPromise();
   }
 
-  getAlbumUpdatedListener() {
-    return this.albumsUpdated.asObservable();
+  // getAlbums(userId: string) {
+  //   const queryParams = `?userId=${userId}`;
+  //   this.http
+  //     .get<{ message: string, albums: any, maxAlbums: number }>(env.apiUrl + '/albums/' + queryParams)
+  //     .pipe(
+  //         map((albumData) => {
+  //           return {
+  //             // tslint:disable-next-line: max-line-length
+  //             albums: albumData.albums.map((album: { _id: string; title: string; images: [{path: string, alt: string}]; linked_friendsId: []; creator: string; created_date: Date; }) => {
+  //               return {
+  //                 id: album._id,
+  //                 title: album.title,
+  //                 images: album.images,
+  //                 linked_friendsId: album.linked_friendsId,
+  //                 creator: album.creator,
+  //                 created_date: album.created_date
+  //               };
+  //             }), maxAlbums: albumData.maxAlbums
+  //           };
+  //         })
+  //     )
+  //     .subscribe(transformedAlbumData => {
+  //       this.albums = transformedAlbumData.albums;
+  //       this.albumsUpdated.next({
+  //         albums: [...this.albums],
+  //         albumCount: transformedAlbumData.maxAlbums
+  //     });
+  //  });
+  // }
+
+  // getAlbumUpdatedListener() {
+  //   return this.albumsUpdated.asObservable();
+  // }
+
+
+
+  getAlbum(id: string): Promise<Album> {
+    return this.http.get<Album>(env.apiUrl + '/albums/' + id).toPromise();
   }
 
-  getAlbum(id: string) {
-    return this.http.get<{
-      _id: string;
-      title: string;
-      content: string;
-      imagesPath: [];
-      linked_friendsId: [];
-      creator: string;
-      created_date: string;
-    }>(BACKEND_URL + id);
-  }
-
-  addAlbum(title: string, images: any) {
+  addAlbum(title: string, images: any): Promise<any> {
     const albumData = new FormData();
     const files: Array<File> = images;
     albumData.append('title', title);
@@ -73,72 +72,48 @@ export class AlbumsService {
     for (let i = 0; i < files.length; i++) {
       albumData.append('uploads[]', files[i], title);
     }
-    this.http.post<{message: string, album: Album}>(BACKEND_URL, albumData)
-      .subscribe(() => {
-        this.router.navigate(['/albums']);
-      });
+    return this.http.post<{message: string, album: Album}>(env.apiUrl + '/albums/', albumData).toPromise();
   }
 
-  deleteAlbum(albumId: string) {
-    return this.http.delete(BACKEND_URL + albumId);
+  deleteAlbum(albumId: string): Promise<any> {
+    return this.http.delete(env.apiUrl + '/albums/' + albumId).toPromise();
   }
 
-  updateAlbum({
-    id,
-    title,
-    imagePath,
-    linked_friendsId,
-    creator,
-    created_date }: { id: string; title: string; creator: string; imagePath: any; linked_friendsId: any; created_date: any; }) {
-    let albumData: Album | FormData;
-    albumData = new FormData();
-    albumData.append('id', id);
-    albumData.append('title', title);
-    albumData.append('imagePath', imagePath);
-    for (let i = 0; i <= linked_friendsId.length - 1; i++) {
-      albumData.append('linked_friendsId[]', linked_friendsId[i]);
-    }
-    albumData.append('creator', creator);
-    albumData.append('created_date', created_date);
-    this.http.put(BACKEND_URL + id, albumData)
-      .subscribe(() => {
-        this.router.navigate(['/albums']);
-      });
+  updateAlbum(album: Album): Promise<any> {
+    return this.http.put(env.apiUrl + '/albums/' + album._id, album).toPromise();
   }
 
-  // tslint:disable-next-line: variable-name
-  addPhoto(id: string, title: string, creator: string, imagePath: any, created_date: any, imageToAddPath: string) {
-    let albumData: Album | FormData;
-    albumData = new FormData();
+  addPhoto(
+    album: Album,
+    imageToAdd: string
+    ): Promise<any> {
+    const albumData = new FormData();
     const onAdd = 'true';
-    albumData.append('id', id);
-    albumData.append('title', title);
-    albumData.append('creator', creator);
-    albumData.append('imagePath', imagePath);
-    albumData.append('created_date', created_date);
-    albumData.append('image', imageToAddPath, title);
+    albumData.append('_id', album._id);
+    albumData.append('title', album.title);
+    albumData.append('creator', album.creator);
+    album.images.forEach(image => {
+      albumData.append('imagesPath[]', image.path);
+      albumData.append('imagesAlt[]', image.alt);
+    });
+    albumData.append('created_date', album.created_date);
+    albumData.append('image', imageToAdd, album.title);
     albumData.append('onAdd', onAdd);
-    this.http.put(BACKEND_URL + id, albumData)
-      .subscribe(() => {
-        localStorage.setItem('albumId', id);
-        this.router.navigate(['/albums/myAlbum']);
-      });
+    return this.http.put(env.apiUrl + '/albums/' + album._id, albumData).toPromise();
   }
 
   // tslint:disable-next-line: variable-name
-  deletePhoto(id: string, title: string, creator: string, imagePath: any, created_date: any, imageToDeletePath: string) {
-    let albumData: Album | FormData;
-    albumData = new FormData();
-    albumData.append('id', id);
-    albumData.append('title', title);
-    albumData.append('creator', creator);
-    albumData.append('imagePath', imagePath);
-    albumData.append('created_date', created_date);
+  deletePhoto(album: Album, imageToDeletePath: string): Promise<any> {
+    const albumData = new FormData();
+    albumData.append('_id', album._id);
+    albumData.append('title', album.title);
+    albumData.append('creator', album.creator);
+    album.images.forEach(image => {
+      albumData.append('imagesPath[]', image.path);
+      albumData.append('imagesAlt[]', image.alt);
+    });
+    albumData.append('created_date', album.created_date);
     albumData.append('imageToDeletePath', imageToDeletePath);
-    this.http.put(BACKEND_URL + id, albumData)
-      .subscribe(() => {
-        localStorage.setItem('albumId', id);
-        this.router.navigate(['/albums/myAlbum']);
-      });
+    return this.http.put(env.apiUrl + '/albums/' + album._id, albumData).toPromise();
   }
 }

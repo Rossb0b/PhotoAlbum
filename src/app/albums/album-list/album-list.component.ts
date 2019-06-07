@@ -1,73 +1,76 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { PageEvent } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { Album } from '../album.model';
+import { Album } from '../album.interface';
 import { AlbumsService } from '../albums.service';
 import { AuthService } from '../../auth/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-album-list',
   templateUrl: './album-list.component.html',
   styleUrls: ['./album-list.component.css']
 })
-export class AlbumListComponent implements OnInit, OnDestroy {
+export class AlbumListComponent implements OnInit {
 
+  /** define if front is communicating with api */
+  isLoading: boolean;
+  /** Current list of albums */
   albums: Album[] = [];
-  isLoading = false;
+  /** Current ID of logged in user */
   userId: string;
-  public userIsAuthenticated: boolean;
-  private albumsSub: Subscription;
-  private authStatusSub: Subscription;
 
-  constructor(public albumsService: AlbumsService, private authService: AuthService, private router: Router) { }
+  constructor(
+    public albumsService: AlbumsService,
+    private authService: AuthService,
+    private router: Router
+    ) { }
 
   ngOnInit() {
-    this.isLoading = true;
-    this.userId = this.authService.getUserId();
-    this.albumsService.getAlbums(this.userId);
-    this.authStatusSub = this.authService.getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-    });
-    this.albumsSub = this.albumsService.getAlbumUpdatedListener()
-      .subscribe((albumData: { albums: Album[], albumCount: number }) => {
-        this.isLoading = false;
-        const albumsForDate = albumData.albums;
-        albumsForDate.forEach(album => {
-          const dateOfAlbum = new Date(album.created_date);
-          const dateMonth = dateOfAlbum.getMonth() + 1;
-          let formatedDate: string;
-          if (dateMonth >= 10) {
-            formatedDate = dateMonth + '/' + dateOfAlbum.getFullYear();
-          } else {
-            formatedDate = '0' + dateMonth + '/' + dateOfAlbum.getFullYear();
-          }
-          album.created_date = formatedDate;
-        });
-        this.albums = albumsForDate;
-      });
-    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.initialize();
   }
 
+  async initialize(): Promise<void> {
+    this.isLoading = true;
+
+    try {
+      this.userId = await this.authService.getUserId();
+    } catch(e) {
+      /** debbuging */
+      console.error(e);
+      alert('checking userId failed');
+    }
+
+    this.getAlbums();
+    this.isLoading = false;
+  }
+
+  async getAlbums(): Promise<void> {
+    try {
+      this.albums = await this.albumsService.getAlbums(this.userId);
+    } catch(e) {
+      /** debbuging */
+      console.error(e);
+      alert('fetching albums failed');
+    }
+  }
 
   onShow(albumId: string) {
     localStorage.setItem('albumId', albumId);
     this.router.navigate(['/albums/myAlbum']);
   }
 
-  onDelete(albumId: string, imageToDeletePath: any) {
+  async deleteAlbum(albumId: string): Promise<void> {
     this.isLoading = true;
-    this.albumsService.deleteAlbum(albumId).subscribe(() => {
-      this.albumsService.getAlbums(this.userId);
-    }, () => {
-      this.isLoading = false;
-    });
-  }
 
-  ngOnDestroy() {
-    this.albumsSub.unsubscribe();
-    this.authStatusSub.unsubscribe();
+    try {
+      await this.albumsService.deleteAlbum(albumId);
+    } catch(e) {
+      /** debbuging */
+      console.error(e);
+      alert('Server couldn\'t delete album');
+    }
+
+    this.getAlbums();
+    this.isLoading = false;
   }
 }

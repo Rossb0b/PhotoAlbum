@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/auth.service';
-import { ArticleService } from '../article.service';
-import { Article } from '../article.model';
-import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from '@angular/forms';
-import { Album } from '../../album.model';
-import { AlbumsService } from '../../albums.service';
+import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { PageEvent } from '@angular/material';
+
+import { Album } from '../../album.interface';
+import { Article } from '../article.interface';
+import { ArticleService } from '../article.service';
+import { AlbumsService } from '../../albums.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 
 @Component({
@@ -17,32 +17,36 @@ import { PageEvent } from '@angular/material';
 })
 export class ArticleCreateComponent implements OnInit {
 
-  isLoading = false;
-  private mode = 'create';
-  results = [];
-  userId: string;
-  albumId: string;
+  /** current album */
   album: Album;
-  totalPhotos = 0;
-  photosPerPage = 4;
-  currentPage = 1;
-  pageSizeOptions = [4];
-  photosToDisplay = [];
-  selectedPhoto: string;
-
+  /** current article */
   article: Article;
+  /** ID of current album */
+  albumId: string;
+  /** ID of current logged in user */
+  userId: string;
+  /** define if front is communicating with api */
+  isLoading = false;
+  /** current value of total photo to load */
+  totalPhotos = 0;
+  /** value of total photo to load wanted */
+  photosPerPage = 4;
+  /** current page of photo pagination */
+  currentPage = 1;
+  /** options for number of photo to display */
+  pageSizeOptions = [4];
+  /** array of current photos to display */
+  private photosToDisplay = [];
+  /** album form */
   form: FormGroup;
-  public userIsAuthenticated: boolean;
-  private authStatusSub: Subscription;
-
-  imagePreview: string;
+  /** define if form for add a photo pop in view */
   addPhoto = false;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private articleService: ArticleService,
-    private albumsService: AlbumsService,
+    private albumService: AlbumsService,
     private fb: FormBuilder,
   ) {
     this.form = this.fb.group({
@@ -59,28 +63,44 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userId = this.authService.getUserId();
+    this.initialize();
+  }
+
+  async initialize(): Promise<void> {
+    this.isLoading = true;
+
+    this.handleStorage();
+    this.getAlbum();
+
+    this.isLoading = false;
+  }
+
+  async getAlbum(): Promise<void> {
+    try {
+      this.album = await this.albumService.getAlbum(this.albumId);
+    } catch (e) {
+      /** debugging */
+      console.error(e);
+    }
+
+    this.totalPhotos = this.album.images.length;
+    for (let i = 0; i < this.photosPerPage; i++) {
+      if (this.album.images[i]) {
+        this.photosToDisplay.push(this.album.images[i]);
+      }
+    }
+  }
+
+  /**
+   * definie albumId saved in localstorage
+   * clean localstorage form 'albumId'
+   * @returns void
+   */
+  handleStorage(): void {
     this.albumId = localStorage.getItem('albumId');
     localStorage.removeItem('albumId');
-    if (this.albumId !== null) {
-      this.albumsService.getAlbum(this.albumId).subscribe(albumData => {
-        this.isLoading = false;
-        this.album = {
-          id: albumData._id,
-          title: albumData.title,
-          imagePath: albumData.imagesPath,
-          linked_friendsId: albumData.linked_friendsId,
-          creator: albumData.creator,
-          created_date: albumData.created_date,
-        };
-        this.totalPhotos = this.album.imagePath.length;
-        for (let i = 0; i <= this.photosPerPage - 1; i++) {
-          if (this.album.imagePath[i]) {
-            this.photosToDisplay.push(this.album.imagePath[i]);
-          }
-        }
-      });
-    } else {
+
+    if (this.albumId === null) {
       this.router.navigate(['/albums']);
     }
   }
@@ -88,14 +108,13 @@ export class ArticleCreateComponent implements OnInit {
   onChangedPage(pageData: PageEvent) {
     this.isLoading = true;
     this.addPhoto = false;
-    this.imagePreview = '';
     this.currentPage = pageData.pageIndex + 1;
     this.photosPerPage = pageData.pageSize;
     this.photosToDisplay = [];
     const newIndex = this.photosPerPage * pageData.pageIndex;
     for (let i = newIndex; i <= newIndex + this.photosPerPage - 1; i++) {
-      if (this.album.imagePath[i]) {
-        this.photosToDisplay.push(this.album.imagePath[i]);
+      if (this.album.images[i]) {
+        this.photosToDisplay.push(this.album.images[i]);
       }
     }
     this.isLoading = false;
@@ -142,38 +161,38 @@ export class ArticleCreateComponent implements OnInit {
     this.goToView();
   }
 
-  selectImage(index: number, photo: string): void {
+  selectImage(index: number, photo: {path: string, alt: string}): void {
     const p = this.form.controls.paragraphs as FormArray;
     // p.controls[index].setValue
-    console.log(p.controls[index]);
-    p.controls[index].get('path').setValue(photo);
-    p.controls[index].get('alt').setValue('image');
+    // console.log(p.controls[index]);
+    p.controls[index].get('path').setValue(photo.path);
+    p.controls[index].get('alt').setValue(photo.alt);
     this.goToView();
   }
 
-  onSaveArticle() {
-    // if (this.form.invalid) {
-    //     return;
-    // }
+  async saveArticle(): Promise<void> {
     this.isLoading = true;
-    if (this.mode === 'create') {
-      this.isLoading = false;
-      this.articleService.addArticle(
+
+    try {
+      await this.articleService.addArticle(
         this.form.value.title,
         this.form.value.paragraphs,
-        this.album.id,
+        this.album._id,
         this.album.creator
-        );
-    } else {
-      console.log('edit');
-      // this.albumsService.updateAlbum({
-      //   id: this.albumId,
-      //   title: this.form.value.title,
-      //   creator: this.album.creator,
-      //   imagePath: this.album.imagePath,
-      //   created_date: this.album.created_date
-      // });
+      ).then(result => {
+        localStorage.setItem('albumId', result.article.albumId);
+        if (localStorage.getItem('albumId') !== null) {
+          this.router.navigate(['/albums/myAlbum/Article']);
+        } else {
+          this.router.navigate(['/albums']);
+        }
+      });
+    } catch (e) {
+      /** debugging */
+      console.error(e);
     }
-    this.form.reset();
+
+    // this.form.reset();
+    this.isLoading = false;
   }
 }
