@@ -180,12 +180,12 @@ export class ArticleCreateComponent implements OnInit {
         this.album._id,
         this.album.creator
       ).then(result => {
-      localStorage.setItem('albumId', result.article.albumId);
-      if (localStorage.getItem('albumId') !== null) {
-        this.router.navigate(['/albums/myAlbum/Article']);
-      } else {
-        this.router.navigate(['/albums']);
-      }
+        localStorage.setItem('albumId', result.article.albumId);
+        if (localStorage.getItem('albumId') !== null) {
+          this.router.navigate(['/albums/myAlbum/Article']);
+        } else {
+          this.router.navigate(['/albums']);
+        }
       });
     } catch (e) {
       /** debugging */
