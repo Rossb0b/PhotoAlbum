@@ -38,3 +38,17 @@ input[type="file"] {
   width:220px;
   height:200px;
 }
+
+@media (min-width: 768px) {
+  .medium-picture {
+    width:100%;
+    height:240px;
+  }
+}
+
+@media (min-width: 992px) {
+  .medium-picture {
+    width: 100%;
+    height:380px;
+  }
+}

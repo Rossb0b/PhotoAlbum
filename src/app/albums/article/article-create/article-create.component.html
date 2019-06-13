@@ -1,8 +1,8 @@
 <div class="container">
 
   <div class="row mt-3" *ngIf="isLoading">
-    <div class="col mx-auto">
-      <mat-spinner></mat-spinner>
+    <div class="col">
+      <mat-spinner class="mx-auto"></mat-spinner>
     </div>
   </div>
 
@@ -87,9 +87,12 @@
     </div>
 
     <div class="row">
-      <div class="col">
-        <button mat-raised-button color="primary" type="button" (click)="addparagraph()" *ngIf="form.get('paragraphs').controls.length < 4">Add a paragraph</button>
-        <button mat-raised-button class="ml-3" color="primary" type="button" (click)="deleteparagraph()" *ngIf="form.get('paragraphs').controls.length > 1">Delete a paragraph</button>
+      <div class="col-2" *ngIf="form.get('paragraphs').controls.length < 4">
+        <button mat-raised-button color="primary" type="button" (click)="addparagraph()">Add a paragraph</button>
+      </div>
+
+      <div class="col-2" *ngIf="form.get('paragraphs').controls.length > 1">
+        <button mat-raised-button color="primary" type="button" (click)="deleteparagraph()">Delete a paragraph</button>
       </div>
     </div>
 
