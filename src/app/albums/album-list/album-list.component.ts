@@ -34,7 +34,7 @@ export class AlbumListComponent implements OnInit {
 
     try {
       this.userId = await this.authService.getUserId();
-    } catch(e) {
+    } catch (e) {
       /** debbuging */
       console.error(e);
       alert('checking userId failed');
@@ -44,6 +44,12 @@ export class AlbumListComponent implements OnInit {
     this.isLoading = false;
   }
 
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof AlbumListComponent
+   */
   async getAlbums(): Promise<void> {
     try {
       this.albums = await this.albumsService.getAlbums(this.userId);
@@ -54,11 +60,24 @@ export class AlbumListComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   *
+   * @param {string} albumId
+   * @memberof AlbumListComponent
+   */
   onShow(albumId: string) {
     localStorage.setItem('albumId', albumId);
     this.router.navigate(['/albums/myAlbum']);
   }
 
+  /**
+   *
+   *
+   * @param {string} albumId
+   * @returns {Promise<void>}
+   * @memberof AlbumListComponent
+   */
   async deleteAlbum(albumId: string): Promise<void> {
     this.isLoading = true;
 

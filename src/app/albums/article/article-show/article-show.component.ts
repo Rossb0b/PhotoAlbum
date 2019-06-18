@@ -34,6 +34,12 @@ export class ArticleShowComponent implements OnInit {
     this.initialize();
   }
 
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof ArticleShowComponent
+   */
   async initialize(): Promise<void> {
     this.isLoading = true;
 
@@ -54,6 +60,12 @@ export class ArticleShowComponent implements OnInit {
     this.isLoading = false;
   }
 
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof ArticleShowComponent
+   */
   async getUserId(): Promise<void> {
     try {
       this.userId = await this.authService.getUserId();
@@ -77,6 +89,13 @@ export class ArticleShowComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   *
+   * @param {string} articleId
+   * @returns {Promise<void>}
+   * @memberof ArticleShowComponent
+   */
   async delete(articleId: string): Promise<void> {
     this.isLoading = true;
 

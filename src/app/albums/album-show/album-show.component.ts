@@ -65,6 +65,12 @@ export class AlbumShowComponent implements OnInit {
       this.initialize();
     }
 
+    /**
+     *
+     *
+     * @returns {Promise<void>}
+     * @memberof AlbumShowComponent
+     */
     async initialize(): Promise<void> {
       this.isLoading = true;
 
@@ -82,6 +88,12 @@ export class AlbumShowComponent implements OnInit {
       this.isLoading = false;
     }
 
+    /**
+     *
+     *
+     * @returns {Promise<void>}
+     * @memberof AlbumShowComponent
+     */
     async getAlbum(): Promise<void> {
       try {
         this.album = await this.albumService.getAlbum(this.albumId);
@@ -99,6 +111,12 @@ export class AlbumShowComponent implements OnInit {
       }
     }
 
+    /**
+     *
+     *
+     * @returns {Promise<void>}
+     * @memberof AlbumShowComponent
+     */
     async getArticle(): Promise<void> {
       try {
         this.article = await this.articleService.getArticleFromAlbumId(this.albumId);
@@ -129,12 +147,22 @@ export class AlbumShowComponent implements OnInit {
       }
     }
 
+    /**
+     *
+     *
+     * @memberof AlbumShowComponent
+     */
     buildForm(): void {
       this.form = this.formBuilder.group({
         image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
       });
     }
 
+    /**
+     *
+     *
+     * @memberof AlbumShowComponent
+     */
     onAdd() {
       if (this.addPhoto === false) {
         this.addPhoto = true;
@@ -143,6 +171,12 @@ export class AlbumShowComponent implements OnInit {
       }
     }
 
+    /**
+     *
+     *
+     * @param {string} albumId
+     * @memberof AlbumShowComponent
+     */
     onShow(albumId: string) {
       localStorage.setItem('albumId', albumId);
       if (localStorage.getItem('albumId') !== null) {
@@ -152,6 +186,12 @@ export class AlbumShowComponent implements OnInit {
       }
     }
 
+    /**
+     *
+     *
+     * @param {string} albumId
+     * @memberof AlbumShowComponent
+     */
     addArticle(albumId: string) {
       localStorage.setItem('albumId', albumId);
       console.log(localStorage.getItem('albumId'));
@@ -201,6 +241,12 @@ export class AlbumShowComponent implements OnInit {
       reader.readAsDataURL(file);
     }
 
+    /**
+     *
+     *
+     * @returns {Promise<void>}
+     * @memberof AlbumShowComponent
+     */
     async AddPhoto(): Promise<void> {
       this.isLoading = true;
       this.addPhoto = false;
@@ -222,6 +268,13 @@ export class AlbumShowComponent implements OnInit {
       this.isLoading = false;
     }
 
+    /**
+     *
+     *
+     * @param {string} photo
+     * @returns {Promise<void>}
+     * @memberof AlbumShowComponent
+     */
     async deletePhoto(photo: string): Promise<void> {
       this.isLoading = true;
 

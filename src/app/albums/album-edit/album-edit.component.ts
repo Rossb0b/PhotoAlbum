@@ -53,6 +53,12 @@ export class AlbumEditComponent implements OnInit {
     this.initialize();
   }
 
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof AlbumEditComponent
+   */
   async initialize(): Promise<void> {
     this.albumId = this.route.snapshot.params.albumId;
 
@@ -73,6 +79,12 @@ export class AlbumEditComponent implements OnInit {
     this.isLoading = false;
   }
 
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof AlbumEditComponent
+   */
   async getUsers(): Promise<void> {
     try {
       this.users = await this.userService.getUsers();
@@ -110,6 +122,11 @@ export class AlbumEditComponent implements OnInit {
     return this.users.filter((user) => user.toLowerCase().includes(filterValue));
   }
 
+  /**
+   *
+   *
+   * @memberof AlbumEditComponent
+   */
   buildForm(): void {
     this.form = this.formBuilder.group({
       title: [null, [Validators.required, Validators.minLength(4)]],
@@ -117,11 +134,23 @@ export class AlbumEditComponent implements OnInit {
     });
   }
 
+  /**
+   *
+   *
+   * @param {string} id
+   * @memberof AlbumEditComponent
+   */
   removeFriend(id: string): void {
     const index = this.album.linked_friendsId.indexOf(id);
     this.album.linked_friendsId.splice(index, 1);
   }
 
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof AlbumEditComponent
+   */
   async saveAlbum(): Promise<void> {
     this.isLoading = true;
 
@@ -140,6 +169,7 @@ export class AlbumEditComponent implements OnInit {
       this.album.title = this.form.get('title').value;
 
       try {
+
         await this.albumsService.updateAlbum(this.album);
       } catch (e) {
         /** debbuging */
