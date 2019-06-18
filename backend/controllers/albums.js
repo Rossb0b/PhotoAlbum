@@ -2,63 +2,53 @@ const Album = require('../models/album');
 const fs = require('fs');
 
 
-exports.createAlbum = (req, res, next) => {
+exports.createAlbum = async (req, res, next) => {
   const formatedArrayOfFile = [];
-  Album.countDocuments({creator: req.userData.userId}, function(err, count) {
-    //handle possible errors
-    if (err) {
-      res.status(500).json({
-      message: 'Creating an Album failed'
-      });
-    }
-    //handle max limit of albums
-    if (count >= 3) {
-      res.status(403).json({
-        message: 'You can\'t have more than 3 albums'
-      });
-    } else {
-    // First check Album properties
-    let titleLength = req.body.title.length;
-    if (titleLength < 4 || titleLength > 18 ) {
-      res.status(403).json({
+  const url = req.protocol + '://' + req.get("host");
+
+  req.files.forEach(file => {
+    imagePath = url + '/images/photos/' + file.filename;
+    imageAlt = '-Image-' + file.filename;
+    let image = {path: imagePath, alt: imageAlt};
+    formatedArrayOfFile.push(image);
+  });
+
+  if (req.body.title) {
+    if (req.body.title.length < 4 || req.body.title.length > 18 ) {
+      res.status(406).json({
         message: 'Your title must have 4 caracters at least and less than 18.'
       });
     } else {
-      // Then handle files and save Album
-      const url = req.protocol + '://' + req.get("host");
-      const files = req.files;
-      files.forEach(file => {
-        imagePath = url + '/images/photos/' + file.filename;
-        imageAlt = '-Image-' + file.filename;
-        let image = {path: imagePath, alt: imageAlt};
-        formatedArrayOfFile.push(image);
-      });
       const album = new Album({
         title: req.body.title,
         images: formatedArrayOfFile,
         linked_friendsId: [],
         creator: req.userData.userId,
       });
-      album.save().then(createdAlbum => {
-        res.status(201).json({
-          message: 'Album added successfully',
-          album: {
-            ...createdAlbum,
-            id: createdAlbum._id
-          }
+
+      try {
+        album.save().then(createdAlbum => {
+          res.status(201).json({
+              message: 'Album added successfully',
+              album: {
+                ...createdAlbum,
+                id: createdAlbum._id
+              }
+          });
         });
-      })
-      .catch(error => {
+      } catch (e) {
+        /** debugging */
+        console.error(e);
         res.status(500).json({
-          message: 'Creating an Album failed'
+            message: 'Creating an Album failed'
         });
-      });
+      }
     }
-  }}).catch(error => {
-    res.status(500).json({
-      message: 'Creating an Album failed'
+  } else {
+    res.status(204).json({
+      message: 'Req without expected content'
     });
-  });
+  }
 };
 
 
