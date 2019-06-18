@@ -1,4 +1,5 @@
 const Album = require('../models/album');
+const Article = require('../models/article');
 const fs = require('fs');
 
 
@@ -188,6 +189,7 @@ exports.deleteAlbum = async (req, res, next) => {
   try {
     Album.findOneAndDelete({ _id: req.params.id }).then(result => {
       if (result) {
+        deleteArticleForThisAlbum(result._id);
         result.images.forEach(photo => {
           deletePhoto(photo);
         });
@@ -212,4 +214,15 @@ deletePhoto = async (photo) => {
   });
 
   let result = await promise; // wait till the promise resolves (*)
+};
+
+deleteArticleForThisAlbum = async (albumId) => {
+  try {
+    Article.findOneAndDelete({ albumId: albumId }).then(() => {
+      return status(200).json({ message: 'article has been deleted aswell' });
+    });
+  } catch (e) {
+    /** debugging */
+    console.error(e);
+  }
 };
