@@ -42,8 +42,6 @@ exports.getArticle = (req, res, next) => {
 };
 
 exports.deleteArticle = (req, res, next) => {
-  console.log(req.userData.userId);
-  console.log(req.params);
   Article.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
     if(result.n > 0) {
       res.status(200).json({ message: 'deletion successfull' });

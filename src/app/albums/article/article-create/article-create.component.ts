@@ -66,6 +66,12 @@ export class ArticleCreateComponent implements OnInit {
     this.initialize();
   }
 
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof ArticleCreateComponent
+   */
   async initialize(): Promise<void> {
     this.isLoading = true;
 
@@ -75,6 +81,12 @@ export class ArticleCreateComponent implements OnInit {
     this.isLoading = false;
   }
 
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof ArticleCreateComponent
+   */
   async getAlbum(): Promise<void> {
     try {
       this.album = await this.albumService.getAlbum(this.albumId);
@@ -105,6 +117,12 @@ export class ArticleCreateComponent implements OnInit {
     }
   }
 
+  /**
+   *
+   *
+   * @param {PageEvent} pageData
+   * @memberof ArticleCreateComponent
+   */
   onChangedPage(pageData: PageEvent) {
     this.isLoading = true;
     this.addPhoto = false;
@@ -120,6 +138,11 @@ export class ArticleCreateComponent implements OnInit {
     this.isLoading = false;
   }
 
+  /**
+   *
+   *
+   * @memberof ArticleCreateComponent
+   */
   goToView(): void {
     const element = document.getElementById('submit-button');
     const y = element.getBoundingClientRect().top + window.scrollY;
@@ -129,6 +152,11 @@ export class ArticleCreateComponent implements OnInit {
     });
   }
 
+  /**
+   *
+   *
+   * @memberof ArticleCreateComponent
+   */
   addparagraph(): void {
     console.log('1', this.form.get('paragraphs'));
     const p = this.form.controls.paragraphs as FormArray;
@@ -149,6 +177,12 @@ export class ArticleCreateComponent implements OnInit {
     this.goToView();
   }
 
+  /**
+   *
+   *
+   * @param {number} index
+   * @memberof ArticleCreateComponent
+   */
   displayChooseImg(index: number): void {
     const div = document.getElementsByClassName('choose-image') as any;
     for (let i = 0; i < div.length; i++) {
@@ -161,6 +195,13 @@ export class ArticleCreateComponent implements OnInit {
     this.goToView();
   }
 
+  /**
+   *
+   *
+   * @param {number} index
+   * @param {{path: string, alt: string}} photo
+   * @memberof ArticleCreateComponent
+   */
   selectImage(index: number, photo: {path: string, alt: string}): void {
     const p = this.form.controls.paragraphs as FormArray;
     // p.controls[index].setValue
@@ -170,6 +211,12 @@ export class ArticleCreateComponent implements OnInit {
     this.goToView();
   }
 
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof ArticleCreateComponent
+   */
   async saveArticle(): Promise<void> {
     this.isLoading = true;
 

@@ -30,50 +30,67 @@ export class AlbumCreateComponent {
     private router: Router,
     ) {
       this.buildForm();
-     }
-
-    buildForm(): void {
-      this.form = this.formBuilder.group({
-        title: new FormControl(null, {validators: [Validators.required, Validators.minLength(4), Validators.maxLength(18)]}),
-        image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
-      });
     }
 
-    onImagePicked(event: Event): void {
-      this.filesToUpload = (event.target as HTMLInputElement).files as unknown as Array<File>;
-      this.imagePreview = [];
-      const fileList = this.filesToUpload.length;
-      for (let i = 0; i <= fileList - 1; i++) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result.toString();
-          if (result.startsWith('data:image/jpeg') || result.startsWith('data:image/jpg') || result.startsWith('data:image/png')) {
-            this.imagePreview.push(reader.result);
-          }
-        };
-        reader.readAsDataURL(this.filesToUpload[i]);
-      }
-    }
+  /**
+   *
+   *
+   * @memberof AlbumCreateComponent
+   */
+  buildForm(): void {
+    this.form = this.formBuilder.group({
+      title: new FormControl(null, {validators: [Validators.required, Validators.minLength(4), Validators.maxLength(18)]}),
+      image: new FormControl(null, {validators: [Validators.required], asyncValidators: [mimeType]})
+    });
+  }
 
-    async saveAlbum(): Promise<void> {
-      this.isLoading = true;
-
-      /** checking that form is correctly filled */
-      if (this.form.value.title && this.form.value.title !== 'null' && this.filesToUpload.length > 0) {
-        try {
-          await this.albumService.addAlbum(
-            this.form.value.title,
-            this.filesToUpload
-          ).then(() => {
-            this.router.navigate(['/albums/']);
-          });
-        } catch (e) {
-            /** debugging */
-            console.error(e);
+  /**
+   *
+   *
+   * @param {Event} event
+   * @memberof AlbumCreateComponent
+   */
+  onImagePicked(event: Event): void {
+    this.filesToUpload = (event.target as HTMLInputElement).files as unknown as Array<File>;
+    this.imagePreview = [];
+    const fileList = this.filesToUpload.length;
+    for (let i = 0; i <= fileList - 1; i++) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result.toString();
+        if (result.startsWith('data:image/jpeg') || result.startsWith('data:image/jpg') || result.startsWith('data:image/png')) {
+          this.imagePreview.push(reader.result);
         }
-      }
-
-      this.form.reset();
-      this.isLoading = false;
+      };
+      reader.readAsDataURL(this.filesToUpload[i]);
     }
+  }
+
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof AlbumCreateComponent
+   */
+  async saveAlbum(): Promise<void> {
+    this.isLoading = true;
+
+    /** checking that form is correctly filled */
+    if (this.form.value.title && this.form.value.title !== 'null' && this.filesToUpload.length > 0) {
+      try {
+        await this.albumService.addAlbum(
+          this.form.value.title,
+          this.filesToUpload
+        ).then(() => {
+          this.router.navigate(['/albums/']);
+        });
+      } catch (e) {
+          /** debugging */
+          console.error(e);
+      }
+    }
+
+    this.form.reset();
+    this.isLoading = false;
+  }
 }

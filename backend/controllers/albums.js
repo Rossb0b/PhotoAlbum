@@ -1,64 +1,57 @@
 const Album = require('../models/album');
+const Article = require('../models/article');
 const fs = require('fs');
 
-
-exports.createAlbum = (req, res, next) => {
+/**
+ * @returns {json({message<string>, album<Album> if success})}
+ */
+exports.createAlbum = async (req, res, next) => {
   const formatedArrayOfFile = [];
-  Album.countDocuments({creator: req.userData.userId}, function(err, count) {
-    //handle possible errors
-    if (err) {
-      res.status(500).json({
-      message: 'Creating an Album failed'
-      });
-    }
-    //handle max limit of albums
-    if (count >= 3) {
-      res.status(403).json({
-        message: 'You can\'t have more than 3 albums'
-      });
-    } else {
-    // First check Album properties
-    let titleLength = req.body.title.length;
-    if (titleLength < 4 || titleLength > 18 ) {
-      res.status(403).json({
+  const url = req.protocol + '://' + req.get("host");
+
+  req.files.forEach(file => {
+    imagePath = url + '/images/photos/' + file.filename;
+    imageAlt = '-Image-' + file.filename;
+    let image = {path: imagePath, alt: imageAlt};
+    formatedArrayOfFile.push(image);
+  });
+
+  if (req.body.title) {
+    if (req.body.title.length < 4 || req.body.title.length > 18 ) {
+      res.status(406).json({
         message: 'Your title must have 4 caracters at least and less than 18.'
       });
     } else {
-      // Then handle files and save Album
-      const url = req.protocol + '://' + req.get("host");
-      const files = req.files;
-      files.forEach(file => {
-        imagePath = url + '/images/photos/' + file.filename;
-        imageAlt = '-Image-' + file.filename;
-        let image = {path: imagePath, alt: imageAlt};
-        formatedArrayOfFile.push(image);
-      });
       const album = new Album({
         title: req.body.title,
         images: formatedArrayOfFile,
         linked_friendsId: [],
         creator: req.userData.userId,
       });
-      album.save().then(createdAlbum => {
-        res.status(201).json({
-          message: 'Album added successfully',
-          album: {
-            ...createdAlbum,
-            id: createdAlbum._id
-          }
+
+      try {
+        await album.save().then(createdAlbum => {
+          res.status(201).json({
+              message: 'Album added successfully',
+              album: {
+                ...createdAlbum,
+                id: createdAlbum._id
+              }
+          });
         });
-      })
-      .catch(error => {
+      } catch (e) {
+        /** debugging */
+        console.error(e);
         res.status(500).json({
-          message: 'Creating an Album failed'
+            message: 'Creating an Album failed'
         });
-      });
+      }
     }
-  }}).catch(error => {
-    res.status(500).json({
-      message: 'Creating an Album failed'
+  } else {
+    res.status(204).json({
+      message: 'Req without expected content'
     });
-  });
+  }
 };
 
 
@@ -164,60 +157,84 @@ exports.editAlbum = (req, res, next) => {
 }
 };
 
-exports.getAlbums = (req, res, next) => {
-  const albumQuery = Album.find({ $or:[{ creator: req.query.userId }, { linked_friendsId: { "$in" : [req.query.userId] } }] });
-  let fetchedAlbums;
-  albumQuery.find({ $or:[{ creator: req.query.userId }, { linked_friendsId: { "$in" : [req.query.userId] } }] })
-    .then(documents => {
-      fetchedAlbums = documents;
-      return Album.count({ $or:[{ creator: req.query.userId }, { linked_friendsId: { "$in" : [req.query.userId] } }] });
-    })
-    .then(count => {
-      res.status(200).json({
-        message: "Albums fetched succefully !",
-        albums: fetchedAlbums,
-        maxAlbums: count
-      });
-    })
-    .catch(error => {
-      res.status(500).json({ message: 'Fetching albums failed'});
+/**
+ * @returns {json({message<string>, albums<Album[]> if success})}
+ */
+exports.getAlbums = async (req, res, next) => {
+  try {
+    const albums = await Album.find({ $or:[{ creator: req.query.userId }, { linked_friendsId: { "$in" : [req.query.userId] } }] });
+    res.status(200).json({
+      message: 'Albums successfully fetched',
+      albums: albums
     });
+  } catch (e) {
+    /** debugging */
+    console.error(e);
+    res.status(500).json({ message: 'Fetching albums failed' });
+  }
 };
 
-exports.getAlbum = (req, res, next) => {
-  Album.findById(req.params.id).then(album => {
-    if (album) {
-      res.status(200).json(album);
-    } else {
-      res.status(404).json({message: "album not find"});
-    }
-  })
-  .catch(error => {
-    res.status(500).json({ message: 'Fetching album failed'});
-  });
+/**
+ * @returns {json({album<Album>})}
+ */
+exports.getAlbum = async (req, res, next) => {
+  try {
+    const album = await Album.findById(req.params.id);
+    res.status(200).json(album);
+  } catch (e) {
+    /** debugging */
+    console.error(e);
+    res.status(500).json({ message: 'Fetching album failed' });
+  }
 };
 
-exports.deleteAlbum = (req, res, next) => {
-  Album.findOneAndDelete({_id: req.params.id}).then(result => {
-    if(result) {
-      result.images.forEach(photo => {
-          async function deletePhoto(){
-            let imageToDeleteFractionnalPath = photo.path.split("photos/").pop();
-            let imageToDeleteFinalPath = "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/photos/" + imageToDeleteFractionnalPath;
-            let promise = new Promise((resolve, reject) => {
-              setTimeout(() => resolve(fs.unlink(imageToDeleteFinalPath, function(error) {
-                console.log(error);
-              })), 1000);
-            });
-
-            let result = await promise; // wait till the promise resolves (*)
-            }
-            deletePhoto();
-      });
+/**
+ * @returns {json({messsage<string>})}
+ */
+exports.deleteAlbum = async (req, res, next) => {
+  try {
+    await Album.findOneAndDelete({ _id: req.params.id }).then(result => {
+      if (result) {
+        deleteArticleForThisAlbum(result._id);
+        result.images.forEach(photo => {
+          deletePhoto(photo);
+        });
+      }
+    }).then(() => {
       res.status(200).json({ message: 'deletion successfull' });
-    } else {
-      res.status(401).json({ message: 'Not authorized' });
-    }
-  });
+    });
+  } catch (e) {
+    /** debugging */
+    console.error(e);
+    res.status(401).json({ message: 'Not authorized' });
+  }
 };
 
+/**
+ * Async method that delete a photo.
+ * @param {string} photo
+ */
+deletePhoto = async (photo) => {
+  let imageToDeleteFractionnalPath = photo.path.split("photos/").pop();
+  let imageToDeleteFinalPath = "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/photos/" + imageToDeleteFractionnalPath;
+  let promise = new Promise((resolve, reject) => {
+    setTimeout(() => resolve(fs.unlink(imageToDeleteFinalPath, function(error) {
+      console.error(error);
+    })), 1000);
+  });
+
+  let result = await promise; // wait till the promise resolves (*)
+};
+
+/**
+ * Async method that delete Article linked to album if exist.
+ * @param {string} albumId
+ */
+deleteArticleForThisAlbum = async (albumId) => {
+  try {
+    await Article.findOneAndDelete({ albumId: albumId });
+  } catch (e) {
+    /** debugging */
+    console.error(e);
+  }
+};

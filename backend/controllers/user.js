@@ -28,7 +28,7 @@ exports.createUser = (req, res, next) => {
                   });
               });
       });
-}
+};
 
 exports.userLogin = (req, res, next) => {
   let fetchedUser;
@@ -40,7 +40,7 @@ exports.userLogin = (req, res, next) => {
               });
           }
           fetchedUser = user;
-          return bcrypt.compare(req.body.password, user.password)
+          return bcrypt.compare(req.body.password, user.password);
       })
       .then(result => {
           if (!result) {
@@ -63,21 +63,21 @@ exports.userLogin = (req, res, next) => {
           return res.status(401).json({
               message: 'Invalid authentification credentials!'
           });
-      })
-}
+      });
+};
 
 exports.getUser = (req, res, next) => {
   User.findById(req.params.id).then(user => {
     if(User) {
       res.status(200).json(user);
     } else {
-      res.status(401).json({ message: 'User not find' })
+      res.status(401).json({ message: 'User not find' });
     }
   })
   .catch(error => {
-    res.status(401).json({ message: 'Fetching user failed' })
-  })
-}
+    res.status(401).json({ message: 'Fetching user failed' });
+  });
+};
 
 exports.getUsers = (req,res, next) => {
   User.find().then(users => {
@@ -89,8 +89,8 @@ exports.getUsers = (req,res, next) => {
   })
   .catch(error => {
     res.status(401).json({ message: 'Fetching users failed'});
-  })
-}
+  });
+};
 
 exports.editUser = (req, res, next) => {
   let imageToDelete = req.body.imagePath;
@@ -121,7 +121,7 @@ exports.editUser = (req, res, next) => {
   })
   .catch(error => {
     res.status(401).json({message: 'Update failed'});
-  })
-}
+  });
+};
 
 

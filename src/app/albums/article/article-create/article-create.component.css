@@ -6,19 +6,17 @@ mat-card {
   width:100%;
 }
 
-
 mat-form-field {
   width:100%;
 }
 
 .little-picture {
   width:100%;
-  height:155px;
-  max-width:225px;
+  height:170px;
 }
 
 .medium-picture {
-  width: 410px;
+  width: 100%;
   height:380px;
 }
 
