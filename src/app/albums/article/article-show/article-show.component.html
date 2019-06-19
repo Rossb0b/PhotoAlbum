@@ -8,10 +8,19 @@
     </div>
 
     <div *ngIf="!isLoading">
-      <div class="row mt-4 title">
-        <div class="col-12 text-center">
-          <h1>{{article.title}}</h1>
-          <button *ngIf="article && userId == article.creator" mat-raised-button class="text-center align-right" color="warn" (click)="delete(article._id)">Delete Article</button>
+      <div class="row mt-4 title p-2">
+        <div class="col-12">
+          <div class="row">
+            <div class="col text-center">
+              <h1>{{article.title}}</h1>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <button *ngIf="article && userId == article.creator" mat-raised-button class="align-right m-2" color="warn" (click)="delete(article._id)">Delete Article</button>
+            </div>
+          </div>
         </div>
       </div>
 
