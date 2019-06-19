@@ -1,24 +1,34 @@
-<div class="container" *ngIf="album">
+<div class="container" *ngIf="isLoading">
+  <div class="row mt-3">
+      <div class="col mx-auto">
+        <mat-spinner></mat-spinner>
+      </div>
+    </div>
+</div>
+
+<div class="container" *ngIf="album && !isLoading">
   <div class="row title">
     <div class="col-12 text-center mt-3">
-      <h1>{{album.title}}</h1>
+      <h1 class="h3">{{album.title}}</h1>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-3 col-md-2 col-lg-3">
+    <!-- Button that make appear and disappear the container to add a photo -->
+    <div class="col-3 col-md-2 col-lg-3 mx-auto">
       <button *ngIf="album && userId == album.creator" mat-raised-button class="text-center" color="primary" (click)="onAdd()">Add a Photo</button>
     </div>
 
-    <div class="col-6 col-md-8 col-lg-6" *ngIf="!isLoading && addPhoto">
+    <!-- Container for add photo, only exist with a min-width of 576px, and if user wants to add a photo -->
+    <div class="col-6 col-md-8 col-lg-6 mx-auto add-photo-container" *ngIf="addPhoto">
       <form [formGroup]="form" (submit)="AddPhoto()">
         <div class="row">
-          <div class="col-6 mx-auto">
+          <div class="col-6 mx-auto text-center">
             <button mat-stroked-button type="button" (click)="filePicker.click()">Pick Image</button>
             <input type="file" #filePicker (change)="onPhotoPicked($event)">
           </div>
 
-          <div class="col-6 mx-auto">
+          <div class="col-6 mx-auto text-center">
             <button
             mat-raised-button
             color="accent"
@@ -28,36 +38,56 @@
       </form>
     </div>
 
-    <div *ngIf="!addPhoto" class="offset-6 offset-md-8 offset-lg-6"></div>
+    <!-- Empty containers for layout -->
+    <!-- <div *ngIf="addPhoto" class="offset-4 empty-container-cellphone"></div> -->
+    <div *ngIf="!addPhoto" class="offset-md-8 offset-lg-6 empty-container"></div>
 
-    <div class="col-3 col-md-2 col-lg-3">
+    <!-- Buttons for redirect to article's components -->
+    <div class="col-3 col-md-2 col-lg-3 mx-auto text-right">
         <button
         *ngIf='articleExist'
         mat-raised-button
         color="primary"
-        class="ml-3"
-        (click)="onShow(albumId)"
-        style="position:absolute; right:0;">Show Article</button>
+        (click)="onShow(albumId)">Show Article</button>
 
         <button
         *ngIf='!articleExist && userId == album.creator'
         mat-raised-button color="primary"
-        class="ml-3"
-        (click)="addArticle(albumId)"
-        style="position:absolute; right:0;">Create Article</button>
+        (click)="addArticle(albumId)">Create article</button>
+    </div>
+  </div>
+
+  <!-- Container for add photo, only exist for a max-width of 576px, and if user wants to add a photo -->
+  <div *ngIf="addPhoto" class="row mt-2 add-photo-container-cellphone">
+    <div class="col-10 mx-auto">
+        <form [formGroup]="form" (submit)="AddPhoto()">
+          <div class="row">
+            <div class="col-6 mx-auto text-center">
+              <button mat-stroked-button type="button" (click)="filePicker.click()">Pick photo</button>
+              <input type="file" #filePicker (change)="onPhotoPicked($event)">
+            </div>
+
+            <div class="col-6 mx-auto text-center">
+              <button
+              mat-raised-button
+              color="accent"
+              type="submit">Submit photo</button>
+            </div>
+          </div>
+        </form>
     </div>
   </div>
 
   <div class="row mt-2" *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid && addPhoto && !isLoading">
-    <div class="col-4 mx-auto">
-        <div class="image-preview">
-            <img [src]="imagePreview" [alt]="form.value.title">
-        </div>
+    <div class="col-10 col-md-6 col-lg-5 mx-auto">
+        <mat-card class="image-preview">
+            <img mat-card-image class="mx-auto mt-1" [src]="imagePreview" [alt]="form.value.title">
+        </mat-card>
     </div>
   </div>
 
-  <div *ngIf="photosToDisplay.length == 4" class="row mt-3">
-    <div class="col-3 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+  <div class="image-paginator" *ngIf="photosToDisplay.length == 4" class="row mt-3">
+    <div class="col-11 col-md-3 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
       <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
       <mat-card>
         <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo.path" [alt]="photo.alt">
@@ -65,8 +95,8 @@
     </div>
   </div>
 
-  <div *ngIf="photosToDisplay.length == 3" class="row mt-3">
-    <div class="col-4 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+  <div class="image-paginator" *ngIf="photosToDisplay.length == 3" class="row mt-3">
+    <div class="col-11 col-md-4 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
       <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
       <mat-card>
         <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo.path" [alt]="photo.alt">
@@ -74,8 +104,8 @@
     </div>
   </div>
 
-  <div *ngIf="photosToDisplay.length == 2" class="row mt-3">
-    <div class="col-5 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+  <div class="image-paginator" *ngIf="photosToDisplay.length == 2" class="row mt-3">
+    <div class="col-11 col-md-5 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
       <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
       <mat-card>
         <img mat-card-image class="mx-auto mt-1 medium-picture" [src]="photo.path" [alt]="photo.alt">
@@ -83,8 +113,8 @@
     </div>
   </div>
 
-  <div *ngIf="photosToDisplay.length == 1" class="row mt-3">
-    <div class="col-8 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+  <div class="image-paginator" *ngIf="photosToDisplay.length == 1" class="row mt-3">
+    <div class="col-11 col-md-7 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
       <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
       <mat-card>
         <img mat-card-image class="mx-auto mt-1 big-picture" [src]="photo.path" [alt]="photo.alt">

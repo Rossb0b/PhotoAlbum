@@ -231,14 +231,14 @@ deletePhoto = async (photo) => {
  * @param {string} albumId
  * @returns {json({message<string>})}
  */
-deleteArticleForThisAlbum = async (albumId) => {
+deleteArticleForThisAlbum = async (albumId, res, next) => {
   try {
     Article.findOneAndDelete({ albumId: albumId }).then(() => {
-      return status(200).json({ message: 'Article has been deleted aswell' });
+      return res.status(200).json({ message: 'Article has been deleted aswell' });
     });
   } catch (e) {
     /** debugging */
     console.error(e);
-    return status(500).json({ message: 'There is no article found for this album' });
+    return res.status(500).json({ message: 'There is no article found for this album' });
   }
 };
