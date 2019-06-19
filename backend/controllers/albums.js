@@ -2,7 +2,9 @@ const Album = require('../models/album');
 const Article = require('../models/article');
 const fs = require('fs');
 
-
+/**
+ * @returns {json({message<string>, album<Album> if success})}
+ */
 exports.createAlbum = async (req, res, next) => {
   const formatedArrayOfFile = [];
   const url = req.protocol + '://' + req.get("host");
@@ -155,15 +157,16 @@ exports.editAlbum = (req, res, next) => {
 }
 };
 
+/**
+ * @returns {json({message<string>, albums<Album[]> if success})}
+ */
 exports.getAlbums = async (req, res, next) => {
   try {
-    await Album.find({ $or:[{ creator: req.query.userId }, { linked_friendsId: { "$in" : [req.query.userId] } }] })
-      .then(albums => {
-        res.status(200).json({
-          message: 'Albums fetched seccessfully ! ',
-          albums: albums,
-        });
-      });
+    const albums = await Album.find({ $or:[{ creator: req.query.userId }, { linked_friendsId: { "$in" : [req.query.userId] } }] });
+    res.status(200).json({
+      message: 'Albums successfully fetched',
+      albums: albums
+    });
   } catch (e) {
     /** debugging */
     console.error(e);
@@ -171,23 +174,26 @@ exports.getAlbums = async (req, res, next) => {
   }
 };
 
-exports.getAlbum = (req, res, next) => {
-  Album.findById(req.params.id).then(album => {
-    if (album) {
-      res.status(200).json(album);
-    } else {
-      res.status(404).json({message: "album not find"});
-    }
-  })
-  .catch(error => {
-    res.status(500).json({ message: 'Fetching album failed'});
-  });
+/**
+ * @returns {json({album<Album>})}
+ */
+exports.getAlbum = async (req, res, next) => {
+  try {
+    const album = await Album.findById(req.params.id);
+    res.status(200).json(album);
+  } catch (e) {
+    /** debugging */
+    console.error(e);
+    res.status(500).json({ message: 'Fetching album failed' });
+  }
 };
 
-
+/**
+ * @returns {json({messsage<string>})}
+ */
 exports.deleteAlbum = async (req, res, next) => {
   try {
-    Album.findOneAndDelete({ _id: req.params.id }).then(result => {
+    await Album.findOneAndDelete({ _id: req.params.id }).then(result => {
       if (result) {
         deleteArticleForThisAlbum(result._id);
         result.images.forEach(photo => {
@@ -204,6 +210,10 @@ exports.deleteAlbum = async (req, res, next) => {
   }
 };
 
+/**
+ * Async method that delete a photo.
+ * @param {string} photo
+ */
 deletePhoto = async (photo) => {
   let imageToDeleteFractionnalPath = photo.path.split("photos/").pop();
   let imageToDeleteFinalPath = "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/photos/" + imageToDeleteFractionnalPath;
@@ -216,13 +226,19 @@ deletePhoto = async (photo) => {
   let result = await promise; // wait till the promise resolves (*)
 };
 
+/**
+ * Async method that delete Article linked to album if exist.
+ * @param {string} albumId
+ * @returns {json({message<string>})}
+ */
 deleteArticleForThisAlbum = async (albumId) => {
   try {
     Article.findOneAndDelete({ albumId: albumId }).then(() => {
-      return status(200).json({ message: 'article has been deleted aswell' });
+      return status(200).json({ message: 'Article has been deleted aswell' });
     });
   } catch (e) {
     /** debugging */
     console.error(e);
+    return status(500).json({ message: 'There is no article found for this album' });
   }
 };

@@ -6,11 +6,11 @@
   </div>
 
   <div class="row">
-    <div class="col-md-2 col-lg-3">
+    <div class="col-3 col-md-2 col-lg-3">
       <button *ngIf="album && userId == album.creator" mat-raised-button class="text-center" color="primary" (click)="onAdd()">Add a Photo</button>
     </div>
 
-    <div class="col-md-8 col-lg-6" *ngIf="!isLoading && addPhoto">
+    <div class="col-6 col-md-8 col-lg-6" *ngIf="!isLoading && addPhoto">
       <form [formGroup]="form" (submit)="AddPhoto()">
         <div class="row">
           <div class="col-6 mx-auto">
@@ -28,9 +28,9 @@
       </form>
     </div>
 
-    <div *ngIf="!addPhoto" class="offset-md-8 offset-lg-6"></div>
+    <div *ngIf="!addPhoto" class="offset-6 offset-md-8 offset-lg-6"></div>
 
-    <div class="col-md-2 col-lg-3">
+    <div class="col-3 col-md-2 col-lg-3">
         <button
         *ngIf='articleExist'
         mat-raised-button
