@@ -22,7 +22,7 @@ export class UserService {
     return this.http.get<User>(this.BACKEND_URL + id).toPromise();
   }
 
-  getUsers() {
+  async getUsers(): Promise<any> {
     return this.http.get(this.BACKEND_URL).toPromise();
   }
 

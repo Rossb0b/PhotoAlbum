@@ -15,7 +15,7 @@
 
   <div class="row">
     <!-- Button that make appear and disappear the container to add a photo -->
-    <div class="col-3 col-md-2 col-lg-3 mx-auto">
+    <div class="col-5 col-md-2 col-lg-3 mx-auto">
       <button *ngIf="album && userId == album.creator" mat-raised-button class="text-center" color="primary" (click)="onAdd()">Add a Photo</button>
     </div>
 
@@ -39,11 +39,10 @@
     </div>
 
     <!-- Empty containers for layout -->
-    <!-- <div *ngIf="addPhoto" class="offset-4 empty-container-cellphone"></div> -->
     <div *ngIf="!addPhoto" class="offset-md-8 offset-lg-6 empty-container"></div>
 
     <!-- Buttons for redirect to article's components -->
-    <div class="col-3 col-md-2 col-lg-3 mx-auto text-right">
+    <div class="col-5 col-md-2 col-lg-3 mx-auto text-right">
         <button
         *ngIf='articleExist'
         mat-raised-button
@@ -78,7 +77,7 @@
     </div>
   </div>
 
-  <div class="row mt-2" *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid && addPhoto && !isLoading">
+  <div class="row mt-2" *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid && addPhoto">
     <div class="col-10 col-md-6 col-lg-5 mx-auto">
         <mat-card class="image-preview">
             <img mat-card-image class="mx-auto mt-1" [src]="imagePreview" [alt]="form.value.title">

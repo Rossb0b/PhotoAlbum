@@ -2,7 +2,7 @@ const Album = require('../models/album');
 
 module.exports = (req, res, next) => {
     try {
-      Album.countDocuments({ creator: req.userData.userId }, function(err, count) {
+      Album.countDocuments({ creator: req.userData.userId }, (err, count) => {
         if (err) {
           res.status(500).json({
             message: 'Cannot find and count album for this user'
@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
         }
       });
     } catch (e) {
-      //** debugging */
+      /** debugging */
       console.error(e);
     }
 };
