@@ -118,19 +118,23 @@ export class AlbumShowComponent implements OnInit {
      * @memberof AlbumShowComponent
      */
     async getArticle(): Promise<void> {
+      this.articleExist = false;
+
       try {
         this.article = await this.articleService.getArticleFromAlbumId(this.albumId);
+        this.articleExist = true;
+        this.articleId = this.article._id;
       } catch (e) {
         /** debugging */
         console.error(e);
       }
 
-      if (Object.entries(this.article).length > 0) {
-        this.articleExist = true;
-        this.articleId = this.article._id;
-      } else {
-        this.articleExist = false;
-      }
+      // if (Object.entries(this.article).length > 0) {
+      //   this.articleExist = true;
+      //   this.articleId = this.article._id;
+      // } else {
+      //   this.articleExist = false;
+      // }
     }
 
     /**

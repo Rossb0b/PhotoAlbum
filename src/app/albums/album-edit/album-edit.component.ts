@@ -58,7 +58,7 @@ export class AlbumEditComponent implements OnInit {
    *
    * @returns {Promise<void>}
    * @memberof AlbumEditComponent
-   */
+    */
   async initialize(): Promise<void> {
     this.albumId = this.route.snapshot.params.albumId;
 
@@ -107,7 +107,7 @@ export class AlbumEditComponent implements OnInit {
     });
   }
 
-    /**
+  /**
    * filter users with input value for autocomplete
    *
    * @param {string} value

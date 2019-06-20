@@ -1,57 +1,63 @@
 const Article = require('../models/article');
 
-exports.createArticle = (req, res, next) => {
+exports.createArticle = async (req, res, next) => {
   if (req.body.owner == req.userData.userId) {
     const url = req.protocol + '://' + req.get("host");
-    const article = new Article({
-    title: req.body.title,
-    paragraphs: req.body.paragraphs,
-    creator: req.userData.userId,
-    albumId: req.body.albumId
-    });
-    article.save().then(createdArticle => {
+    const article = new Article(req.body);
+
+    try {
+      const createdArticle = await article.save();
       res.status(201).json({
         message: 'Article added successfully',
         article: {
           ...createdArticle,
           id: createdArticle._id
-        }
+        },
       });
-    })
-    .catch(error => {
+    } catch (e) {
       res.status(500).json({
         message: 'Creating an Article failed'
       });
-    });
+    }
   } else {
-    res.status(401).json({ message: 'Not authorized'});
+    res.status(401).json({
+      message: 'Not authorized'
+    });
   }
 };
 
-exports.getArticle = (req, res, next) => {
-  Article.find({albumId: req.query.albumId}).then(article => {
-    if (article) {
-      res.status(200).json(article);
-      } else {
-        res.status(404).json({message: "article not find"});
-      }
-    })
-    .catch(error => {
-      res.status(500).json({ message: 'Fetching article failed'});
+exports.getArticle = async (req, res, next) => {
+  try {
+    const article = await Article.find({ albumId: req.query.albumId });
+    res.status(200).json(article);
+  } catch (e) {
+    res.status(500).json({
+      message: 'Fetching article failed'
     });
+  }
 };
 
-exports.deleteArticle = (req, res, next) => {
-  Article.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
+exports.deleteArticle = async (req, res, next) => {
+  try {
+    const result = await Article.deleteOne({
+      _id: req.params.id,
+      creator: req.userData.userId
+    });
+
     if(result.n > 0) {
-      res.status(200).json({ message: 'deletion successfull' });
+      res.status(200).json({
+        message: 'deletion successfull'
+      });
     } else {
-      res.status(401).json({ message: 'Not authorized' });
+      res.status(401).json({
+        message: 'Not authorized'
+      });
     }
-  })
-  .catch(error => {
-    res.status(500).json({ message: 'Delete article failed'});
-  });
+  } catch (e) {
+    res.status(500).json({
+      message: 'Delete article failed'
+    });
+  }
 };
 
 
