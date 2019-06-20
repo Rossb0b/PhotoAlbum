@@ -58,7 +58,7 @@ export class AlbumEditComponent implements OnInit {
    *
    * @returns {Promise<void>}
    * @memberof AlbumEditComponent
-    */
+   */
   async initialize(): Promise<void> {
     this.albumId = this.route.snapshot.params.albumId;
 
@@ -88,6 +88,16 @@ export class AlbumEditComponent implements OnInit {
   async getUsers(): Promise<void> {
     try {
       this.users = await this.userService.getUsers();
+
+      for (let i = 0; i < this.users.length; i++) {
+        // tslint:disable-next-line: prefer-for-of
+        for (let j = 0; j < this.album.linked_friendsId.length; j++) {
+          if (this.users[i]._id === this.album.linked_friendsId[j]) {
+            this.users.splice(i, 1);
+            i--;
+          }
+        }
+      }
     } catch (e) {
       /** debbuging */
       console.error(e);

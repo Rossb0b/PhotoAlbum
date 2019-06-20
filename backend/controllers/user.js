@@ -50,8 +50,7 @@ exports.userLogin = async (req, res, next) => {
       });
     }
 
-    const token = jwtSign(user);
-    console.log(token);
+    const token = jwtSign({ email: user.email, userId: user._id });
 
     res.status(200).json({
       token: token,

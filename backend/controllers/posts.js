@@ -20,9 +20,9 @@ exports.createPost = (req, res, next) => {
   .catch(error => {
     res.status(500).json({
       message: 'Creating a post failed'
-    })
+    });
   });
-}
+};
 
 exports.editPost = (req, res, next) => {
   let imagePath = req.body.imagePath;
@@ -45,9 +45,9 @@ exports.editPost = (req, res, next) => {
     }
   })
   .catch(error => {
-    res.status(500).json({ message: 'Couldn\' update post'})
+    res.status(500).json({ message: 'Couldn\' update post'});
   });
-}
+};
 
 exports.getPosts = (req, res, next) => {
   const pageSize = +req.query.pagesize;
@@ -69,25 +69,25 @@ exports.getPosts = (req, res, next) => {
         message: "Posts fetched succefully !",
         posts: fetchedPosts,
         maxPosts: count
-      })
+      });
     })
     .catch(error => {
-      res.status(500).json({ message: 'Fetching posts failed'})
+      res.status(500).json({ message: 'Fetching posts failed'});
     });
-}
+};
 
 exports.getPost = (req, res, next) => {
   Post.findById(req.params.id).then(post => {
     if (post) {
       res.status(200).json(post);
     } else {
-      res.status(404).json({message: "post not find"})
+      res.status(404).json({message: "post not find"});
     }
   })
   .catch(error => {
-    res.status(500).json({ message: 'Fetching post failed'})
+    res.status(500).json({ message: 'Fetching post failed'});
   });
-}
+};
 
 exports.deletePost = (req, res, next) => {
   Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
@@ -98,7 +98,6 @@ exports.deletePost = (req, res, next) => {
     }
   })
   .catch(error => {
-    res.status(500).json({ message: 'Fetching posts failed'})
-  });;
-}
-
+    res.status(500).json({ message: 'Fetching posts failed'});
+  });
+};
