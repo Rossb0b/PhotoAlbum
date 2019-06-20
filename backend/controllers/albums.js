@@ -117,11 +117,14 @@ exports.editAlbum = (req, res, next) => {
 
   album.validate(async (error) => {
     if(error) {
-        res.status(500).json({ message: 'not valid album', error });
+        res.status(500).json({
+          message: 'not valid album',
+          error: error,
+        });
     }
     else {
       try {
-        let result = await Album.update({
+        let result = await Album.updateOne({
           _id: req.body._id,
           creator: req.userData.userId
         }, album);
