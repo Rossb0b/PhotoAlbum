@@ -6,6 +6,7 @@ const fs = require('fs');
  * @returns {json({message<string>, album<Album> if success})}
  */
 exports.createAlbum = async (req, res, next) => {
+
   const formatedArrayOfFile = [];
   const url = req.protocol + '://' + req.get("host");
 
@@ -29,21 +30,31 @@ exports.createAlbum = async (req, res, next) => {
         creator: req.userData.userId,
       });
 
-      try {
-        await album.save().then(createdAlbum => {
-          res.status(201).json({
-              message: 'Album added successfully',
-              album: {
-                ...createdAlbum,
-                id: createdAlbum._id
-              }
-          });
-        });
-      } catch (e) {
-        res.status(500).json({
-            message: 'Creating an Album failed'
-        });
-      }
+      /** checking that we got a valid album, that he respects Album's model */
+      album.validate(async (error) => {
+        if(error) {
+            res.status(500).json({
+              message: 'not valid album',
+              error: error,
+            });
+        } else {
+          try {
+            await album.save().then(createdAlbum => {
+              res.status(201).json({
+                  message: 'Album added successfully',
+                  album: {
+                    ...createdAlbum,
+                    id: createdAlbum._id
+                  }
+              });
+            });
+          } catch (e) {
+            res.status(500).json({
+                message: 'Creating an Album failed'
+            });
+          }
+        }
+      });
     }
   } else {
     res.status(204).json({
@@ -94,10 +105,11 @@ exports.editAlbum = (req, res, next) => {
   // Manipulate Data in case of deleting single image request
   // First check if the request's body holds imageToDeletePath const
   if(req.body.imageToDeletePath) {
-    // Then do some fancy stuff
+    /** Then do some fancy stuff */
     let imageToDeleteFractionnalPath = req.body.imageToDeletePath.split("photos/").pop();
     let imageToDeleteFinalPath = "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/photos/" + imageToDeleteFractionnalPath;
 
+    /** Delete this image with synchrone function from fs library */
     fs.unlinkSync(imageToDeleteFinalPath);
 
     images.forEach(image => {
@@ -110,11 +122,12 @@ exports.editAlbum = (req, res, next) => {
     album.images = formatedArrayOfFile;
   }
 
-  // handle  title modification add new friends in list
+  /** Handle  title modification add new friends in list */
   if(!req.body.imageToDeletePath && !req.body.onAdd && req.body.title.length >= 4 && req.body.title.length <= 18) {
     album = new Album(req.body);
   }
 
+  /** Checking that we got a valid album, that he respects Album's model */
   album.validate(async (error) => {
     if(error) {
         res.status(500).json({
@@ -153,6 +166,7 @@ exports.editAlbum = (req, res, next) => {
  */
 exports.getAlbums = async (req, res, next) => {
   try {
+    /** Find albums where creator = connected userID, or, where connected userID is in linked_friendsID array */
     const albums = await Album.find({
       $or:[
         { creator: req.query.userId },
@@ -214,15 +228,19 @@ exports.deleteAlbum = async (req, res, next) => {
 
 /**
  * Async method that delete a photo.
+ *
  * @param {string} photo
  */
 deletePhoto = async (photo) => {
+
   let imageToDeleteFractionnalPath = photo.path.split("photos/").pop();
   let imageToDeleteFinalPath = "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/photos/" + imageToDeleteFractionnalPath;
 
   let promise = new Promise((resolve, reject) => {
     setTimeout(() => resolve(fs.unlink(imageToDeleteFinalPath, function(error) {
-      console.log(error);
+      if (error) {
+        console.log(error);
+      }
     })), 1000);
   });
 
@@ -232,6 +250,7 @@ deletePhoto = async (photo) => {
 
 /**
  * Async method that delete Article linked to album if exist.
+ *
  * @param {string} albumId
  */
 deleteArticleForThisAlbum = async (albumId) => {
