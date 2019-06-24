@@ -179,7 +179,6 @@ export class AlbumEditComponent implements OnInit {
       this.album.title = this.form.get('title').value;
 
       try {
-
         await this.albumsService.updateAlbum(this.album);
       } catch (e) {
         /** debbuging */

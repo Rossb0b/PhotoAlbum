@@ -138,7 +138,7 @@ exports.editAlbum = (req, res, next) => {
     else {
       try {
         let result = await Album.updateOne({
-          _id: req.body._id,
+          _id: album._id,
           creator: req.userData.userId
         }, album);
 
@@ -153,7 +153,7 @@ exports.editAlbum = (req, res, next) => {
         }
       } catch (e) {
         res.status(500).json({
-          message: 'Couldn\'t update post'
+          message: 'Couldn\'t update album'
         });
       }
     }

@@ -74,16 +74,16 @@ export class AlbumShowComponent implements OnInit {
     async initialize(): Promise<void> {
       this.isLoading = true;
 
+      this.handleStorage();
+      this.getAlbum();
+      this.getArticle();
+
       try {
         this.userId = await this.authService.getUserId();
       } catch (e) {
         /** debbuging */
         console.error(e);
       }
-
-      this.handleStorage();
-      this.getAlbum();
-      this.getArticle();
 
       this.isLoading = false;
     }
@@ -129,12 +129,12 @@ export class AlbumShowComponent implements OnInit {
         console.error(e);
       }
 
-      // if (Object.entries(this.article).length > 0) {
-      //   this.articleExist = true;
-      //   this.articleId = this.article._id;
-      // } else {
-      //   this.articleExist = false;
-      // }
+      if (Object.entries(this.article).length > 0) {
+        this.articleExist = true;
+        this.articleId = this.article._id;
+      } else {
+        this.articleExist = false;
+      }
     }
 
     /**
@@ -200,7 +200,7 @@ export class AlbumShowComponent implements OnInit {
       localStorage.setItem('albumId', albumId);
       console.log(localStorage.getItem('albumId'));
       if (localStorage.getItem('albumId') !== null) {
-        this.router.navigate(['/albums/myAlbum/newArticle']);
+        this.router.navigate(['/albums/myAlbum/Article/create']);
       } else {
         this.router.navigate(['/albums/myAlbum']);
       }

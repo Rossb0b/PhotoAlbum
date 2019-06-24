@@ -48,6 +48,10 @@ export class ArticleService {
     return this.http.post<{message: string, article: Article}>(BACKEND_URL, articleData).toPromise();
   }
 
+  updateArticle(article: Article): Promise<any> {
+    return this.http.put(BACKEND_URL + article._id, article).toPromise();
+  }
+
   /**
    *
    *

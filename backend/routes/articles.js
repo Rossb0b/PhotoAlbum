@@ -1,6 +1,7 @@
 const express = require('express');
 
 const checkAuth = require('../middlewares/check-auth');
+const checkArticleExistance = require('../middlewares/article/check-articleDosntExistOnAlbum');
 const ArticleController = require('../controllers/articles');
 
 const router = express.Router();
@@ -8,9 +9,7 @@ const router = express.Router();
 
 router.post("", checkAuth, ArticleController.createArticle);
 
-// router.put("/:id", checkAuth, extractFile, AlbumController.editAlbum);
-
-// router.get("", AlbumController.getAlbums);
+router.put("/:id", checkAuth, checkArticleExistance, ArticleController.editArticle);
 
 router.get("", ArticleController.getArticle);
 

@@ -10,7 +10,10 @@
 
     <div class="row">
       <div class="offset-1 col">
-        <a mat-raised-button color="primary" routerLink="/albums/create">New Album</a>
+        <a
+        mat-raised-button
+        color="primary"
+        routerLink="/albums/create">New Album</a>
       </div>
     </div>
 
@@ -33,15 +36,28 @@
           <div class="col-lg-12 col-md-12 col-10 mx-auto">
             <div class="row">
               <div class="col-5 col-sm-4 col-md-4 col-lg-4 mx-auto text-center">
-                <a *ngIf="userId == album.creator" [routerLink]="['/albums/edit', album._id]" class="mx-auto" mat-raised-button color="primary" style="padding:0!important;">Edit</a>
+                <a
+                *ngIf="userId == album.creator"
+                [routerLink]="['/albums/edit', album._id]"
+                class="mx-auto"
+                mat-raised-button
+                color="primary"
+                style="padding:0!important;">Edit</a>
               </div>
 
               <div class="col-5 col-sm-4 col-md-4 col-lg-4 mx-auto text-center">
-                <button mat-raised-button color="primary" (click)="onShow(album._id)">Show</button>
+                <button
+                mat-raised-button
+                color="primary"
+                (click)="onShow(album._id)">Show</button>
               </div>
 
               <div class="col col-sm-4 col-md-4 col-lg-4 mx-auto text-center">
-                <button *ngIf="userId == album.creator" mat-raised-button color="warn" (click)="deleteAlbum(album._id)">Delete</button>
+                <button
+                *ngIf="userId == album.creator"
+                mat-raised-button
+                color="warn"
+                (click)="deleteAlbum(album._id)">Delete</button>
               </div>
             </div>
           </div>

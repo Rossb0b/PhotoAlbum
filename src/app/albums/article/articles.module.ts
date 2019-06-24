@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AngularMaterialModule } from '../../angular-material.module';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+
 import { ArticleShowComponent } from './article-show/article-show.component';
 import { ArticleCreateComponent } from './article-create/article-create.component';
+import { ArticleEditComponent } from './article-edit/article-edit.component';
+import { AngularMaterialModule } from '../../angular-material.module';
+import { ArticlesRoutingModule } from './articles-routing.module';
 
 
 
@@ -13,13 +16,14 @@ import { ArticleCreateComponent } from './article-create/article-create.componen
   declarations: [
     ArticleShowComponent,
     ArticleCreateComponent,
-
+    ArticleEditComponent,
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     AngularMaterialModule,
-    RouterModule
+    ArticlesRoutingModule,
+    RouterModule,
   ]
 })
-export class ArticleModule {}
+export class ArticlesModule {}

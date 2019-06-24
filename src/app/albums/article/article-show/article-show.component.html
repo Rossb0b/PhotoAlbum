@@ -18,7 +18,19 @@
 
           <div class="row">
             <div class="col">
-              <button *ngIf="article && userId == article.creator" mat-raised-button class="align-right m-2" color="warn" (click)="delete(article._id)">Delete Article</button>
+              <a
+              *ngIf="article && userId === article.creator"
+              mat-raised-button
+              class="align-left"
+              color="primary"
+              [routerLink]="['/albums/myAlbum/Article/edit', albumId]">Edit Article</a>
+
+              <button
+              *ngIf="article && userId === article.creator"
+              mat-raised-button 
+              class="align-right"
+              color="warn"
+              (click)="delete(article._id)">Delete Article</button>
             </div>
           </div>
         </div>

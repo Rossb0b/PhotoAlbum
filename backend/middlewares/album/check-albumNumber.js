@@ -1,4 +1,4 @@
-const Album = require('../models/album');
+const Album = require('../../models/album');
 
 module.exports = (req, res, next) => {
     try {

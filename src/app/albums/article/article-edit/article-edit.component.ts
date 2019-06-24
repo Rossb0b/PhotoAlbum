@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { PageEvent } from '@angular/material';
 
@@ -11,11 +11,11 @@ import { AuthService } from 'src/app/auth/auth.service';
 
 
 @Component({
-  selector: 'app-article-create',
-  templateUrl: './article-create.component.html',
-  styleUrls: ['./article-create.component.css']
+  selector: 'app-article-edit',
+  templateUrl: './article-edit.component.html',
+  styleUrls: ['./article-edit.component.css']
 })
-export class ArticleCreateComponent implements OnInit {
+export class ArticleEditComponent implements OnInit {
 
   /** current album */
   album: Album;
@@ -44,23 +44,24 @@ export class ArticleCreateComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    public route: ActivatedRoute,
     private router: Router,
     private articleService: ArticleService,
     private albumService: AlbumsService,
     private fb: FormBuilder,
   ) {
-    this.form = this.fb.group({
-      title: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(34)]],
-      paragraphs: this.fb.array([])
-    });
+      // this.form = this.fb.group({
+      //   title: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(34)]],
+      //   paragraphs: this.fb.array([])
+      // });
 
-    const p = this.form.controls.paragraphs as FormArray;
-    p.push(this.fb.group({
-      content: [null, Validators.required],
-      path: [null],
-      alt: [null],
-    }));
-  }
+      // const p = this.form.controls.paragraphs as FormArray;
+      // p.push(this.fb.group({
+      //   content: [null, Validators.required],
+      //   path: [null],
+      //   alt: [null],
+      // }));
+   }
 
   ngOnInit() {
     this.initialize();
@@ -70,13 +71,23 @@ export class ArticleCreateComponent implements OnInit {
    *
    *
    * @returns {Promise<void>}
-   * @memberof ArticleCreateComponent
+   * @memberof ArticleEditComponent
    */
   async initialize(): Promise<void> {
     this.isLoading = true;
+    this.albumId = this.route.snapshot.params.albumId;
 
-    this.handleStorage();
     this.getAlbum();
+
+    try {
+      this.article = await this.articleService.getArticleFromAlbumId(this.albumId);
+    } catch (e) {
+      /** Debugging */
+      console.error(e);
+    }
+
+
+    this.buildForm();
 
     this.isLoading = false;
   }
@@ -85,7 +96,7 @@ export class ArticleCreateComponent implements OnInit {
    *
    *
    * @returns {Promise<void>}
-   * @memberof ArticleCreateComponent
+   * @memberof ArticleEditComponent
    */
   async getAlbum(): Promise<void> {
     try {
@@ -104,16 +115,23 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   * definie albumId saved in localstorage
-   * clean localstorage form 'albumId'
-   * @returns void
+   *
+   *
+   * @memberof ArticleEditComponent
    */
-  handleStorage(): void {
-    this.albumId = localStorage.getItem('albumId');
-    localStorage.removeItem('albumId');
+  buildForm(): void {
+    this.form = this.fb.group({
+      title: [this.article[0].title, [Validators.required, Validators.minLength(4), Validators.maxLength(34)]],
+      paragraphs: this.fb.array([])
+    });
 
-    if (this.albumId === null) {
-      this.router.navigate(['/albums']);
+    for (let i = 0; i < this.article[0].paragraphs.length; i++) {
+      const p = this.form.controls.paragraphs as FormArray;
+      p.push(this.fb.group({
+        content: [this.article[0].paragraphs[i].content, Validators.required],
+        path: [this.article[0].paragraphs[i].path],
+        alt: [this.article[0].paragraphs[i].alt],
+      }));
     }
   }
 
@@ -121,7 +139,7 @@ export class ArticleCreateComponent implements OnInit {
    *
    *
    * @param {PageEvent} pageData
-   * @memberof ArticleCreateComponent
+   * @memberof ArticleEditComponent
    */
   onChangedPage(pageData: PageEvent) {
     this.isLoading = true;
@@ -141,7 +159,7 @@ export class ArticleCreateComponent implements OnInit {
   /**
    *
    *
-   * @memberof ArticleCreateComponent
+   * @memberof ArticleEditComponent
    */
   goToView(): void {
     const element = document.getElementById('submit-button');
@@ -155,7 +173,7 @@ export class ArticleCreateComponent implements OnInit {
   /**
    *
    *
-   * @memberof ArticleCreateComponent
+   * @memberof ArticleEditComponent
    */
   addparagraph(): void {
     console.log('1', this.form.get('paragraphs'));
@@ -169,9 +187,7 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   *
-   *
-   * @memberof ArticleCreateComponent
+   * @memberof ArticleEditComponent
    */
   deleteparagraph(): void {
     const p = this.form.controls.paragraphs as FormArray;
@@ -186,7 +202,7 @@ export class ArticleCreateComponent implements OnInit {
    *
    *
    * @param {number} index
-   * @memberof ArticleCreateComponent
+   * @memberof ArticleEditComponent
    */
   displayChooseImg(index: number): void {
     const div = document.getElementsByClassName('choose-image') as any;
@@ -205,7 +221,7 @@ export class ArticleCreateComponent implements OnInit {
    *
    * @param {number} index
    * @param {{path: string, alt: string}} photo
-   * @memberof ArticleCreateComponent
+   * @memberof ArticleEditComponent
    */
   selectImage(index: number, photo: {path: string, alt: string}): void {
     const p = this.form.controls.paragraphs as FormArray;
@@ -218,31 +234,26 @@ export class ArticleCreateComponent implements OnInit {
    *
    *
    * @returns {Promise<void>}
-   * @memberof ArticleCreateComponent
+   * @memberof ArticleEditComponent
    */
   async saveArticle(): Promise<void> {
     this.isLoading = true;
 
-    try {
-      await this.articleService.addArticle(
-        this.form.value.title,
-        this.form.value.paragraphs,
-        this.album._id,
-        this.album.creator
-      ).then(result => {
-        localStorage.setItem('albumId', result.article.albumId);
-        if (localStorage.getItem('albumId') === result.article.albumId) {
-          this.router.navigate(['/albums/myAlbum/Article']);
-        } else {
-          this.router.navigate(['/albums']);
-        }
-      });
-    } catch (e) {
-      /** debugging */
-      console.error(e);
+    if (this.form.valid) {
+
+      this.article[0].title = this.form.value.title;
+      this.article[0].paragraphs = this.form.value.paragraphs;
+
+      try {
+        await this.articleService.updateArticle(this.article[0]);
+      } catch (e) {
+        /** debugging */
+        console.error(e);
+      }
+
     }
 
-    // this.form.reset();
+    this.form.reset();
     this.isLoading = false;
   }
 }

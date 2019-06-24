@@ -15,7 +15,7 @@ import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
 import { AlbumsService } from './albums/albums.service';
 import { HomeComponent } from './home/home.component';
-import { ArticleModule } from './albums/article/article.module';
+import { ArticlesModule } from './albums/article/articles.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +33,7 @@ import { ArticleModule } from './albums/article/article.module';
     AngularMaterialModule,
     PostsModule,
     UsersModule,
-    ArticleModule,
+    ArticlesModule,
   ],
   providers: [
     AlbumsService,
