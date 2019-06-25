@@ -1,5 +1,6 @@
 const Album = require('../models/album');
 const Article = require('../models/article');
+const User = require('../models/user');
 const fs = require('fs');
 
 /**
@@ -197,10 +198,27 @@ exports.getAlbums = async (req, res, next) => {
 exports.getAlbum = async (req, res, next) => {
   try {
     const album = await Album.findById(req.params.id);
+    const users = await findUsersShareWithThisAlbum(album.linked_friendsId);
+    album.linked_friendsId = users;
+    console.log(album);
     res.status(200).json(album);
   } catch (e) {
     res.status(500).json({
       message: 'Fetching album failed'
+    });
+  }
+};
+
+findUsersShareWithThisAlbum = async (friendsId) => {
+  try {
+    return await User.find({
+      "_id": {
+        "$in": friendsId,
+      }
+    });
+  } catch (e) {
+    res.status(500).json({
+      message: 'Cannot fetch users',
     });
   }
 };
