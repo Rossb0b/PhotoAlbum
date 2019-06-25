@@ -26,12 +26,14 @@
 
             <div class="row mt-3" *ngIf="album.linked_friendsId.length > 0">
               <div class="col-12">
-                <p>Select friend(s) that you want to unshare album with :</p>
+                <p>
+                  Select friend(s) that you want to unshare album with :
+                </p>
 
-                <div class="row mt-2" *ngFor="let id of album.linked_friendsId">
+                <div class="row mt-2" *ngFor="let friend of friends">
                   <div class="col">
-                    <button class="rmvButton" (click)="removeFriend(id)">
-                      {{ id }}
+                    <button class="rmvButton" (click)="removeFriend(friend._id)">
+                      {{ friend.firstname + ' ' + friend.lastname | titlecase }}
                     </button>
                   </div>
                 </div>
@@ -39,7 +41,7 @@
               </div>
             </div>
 
-            <div class="row mt-2" *ngIf="users">
+            <div class="row mt-3" *ngIf="users">
               <div class="col">
                 <mat-form-field>
                   <input
@@ -49,7 +51,7 @@
                   [matAutocomplete]="auto">
                   <mat-autocomplete #auto="matAutocomplete">
                     <mat-option *ngFor="let user of filteredUsers" [value]="user._id">
-                      {{user.firstname | lowercase}} {{user.lastname | lowercase }}
+                      {{ user.firstname | titlecase }} {{ user.lastname | titlecase }}
                     </mat-option>
                   </mat-autocomplete>
 

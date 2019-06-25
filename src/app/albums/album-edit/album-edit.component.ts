@@ -9,6 +9,7 @@ import { Album } from './../album.interface';
 import { AlbumsService } from '../albums.service';
 import { UserService } from 'src/app/users/user.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { User } from 'src/app/users/user.interface';
 
 @Component({
   selector: 'app-album-edit',
@@ -27,6 +28,8 @@ export class AlbumEditComponent implements OnInit {
   isLoading = false;
   /** album form */
   form: FormGroup;
+  /** current list of all user share in album */
+  friends: User[] = [];
   /** current list of all user */
   private users;
   /** current list of all user with filtered data */
@@ -64,7 +67,9 @@ export class AlbumEditComponent implements OnInit {
 
     try {
       this.userId = await this.authService.getUserId();
-      this.album = await this.albumsService.getAlbum(this.albumId);
+      const result = await this.albumsService.getAlbum(this.albumId);
+      this.album = result.album;
+      this.friends = result.users;
     } catch (e) {
       /** debbuging */
       console.error(e);
@@ -185,9 +190,11 @@ export class AlbumEditComponent implements OnInit {
         console.error(e);
         alert('Server couldn\'t update album, try again later');
       }
+
+      this.router.navigate(['/albums/']);
+
     }
 
-    this.form.reset();
     this.isLoading = false;
   }
 }

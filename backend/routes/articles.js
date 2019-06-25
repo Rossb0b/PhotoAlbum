@@ -7,9 +7,9 @@ const ArticleController = require('../controllers/articles');
 const router = express.Router();
 
 
-router.post("", checkAuth, ArticleController.createArticle);
+router.post("", checkAuth, checkArticleExistance, ArticleController.createArticle);
 
-router.put("/:id", checkAuth, checkArticleExistance, ArticleController.editArticle);
+router.put("/:id", checkAuth, ArticleController.editArticle);
 
 router.get("", ArticleController.getArticle);
 

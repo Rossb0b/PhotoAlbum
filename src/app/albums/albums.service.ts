@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { Album } from './album.interface';
 import { environment as env } from '../../environments/environment';
+import { User } from '../users/user.interface';
 
 const BACKEND_URL = env.apiUrl + '/albums/';
 
@@ -37,8 +38,8 @@ export class AlbumsService {
    * @returns {Promise<Album>}
    * @memberof AlbumsService
    */
-  getAlbum(id: string): Promise<Album> {
-    return this.http.get<Album>(BACKEND_URL + id).toPromise();
+  getAlbum(id: string): Promise<any> {
+    return this.http.get<{album: Album, users: User[]}>(BACKEND_URL + id).toPromise();
   }
 
   /**

@@ -193,15 +193,16 @@ exports.getAlbums = async (req, res, next) => {
 };
 
 /**
- * @returns {json({album<Album>})}
+ * @returns {json({album})}
  */
 exports.getAlbum = async (req, res, next) => {
   try {
     const album = await Album.findById(req.params.id);
     const users = await findUsersShareWithThisAlbum(album.linked_friendsId);
-    album.linked_friendsId = users;
-    console.log(album);
-    res.status(200).json(album);
+    res.status(200).json({
+      album: album,
+      users: users
+    });
   } catch (e) {
     res.status(500).json({
       message: 'Fetching album failed'

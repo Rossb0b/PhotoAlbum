@@ -100,7 +100,8 @@ export class ArticleEditComponent implements OnInit {
    */
   async getAlbum(): Promise<void> {
     try {
-      this.album = await this.albumService.getAlbum(this.albumId);
+      const result = await this.albumService.getAlbum(this.albumId);
+      this.album = result.album;
     } catch (e) {
       /** debugging */
       console.error(e);
@@ -125,14 +126,14 @@ export class ArticleEditComponent implements OnInit {
       paragraphs: this.fb.array([])
     });
 
-    for (let i = 0; i < this.article[0].paragraphs.length; i++) {
+    this.article[0].paragraphs.forEach(paragraph => {
       const p = this.form.controls.paragraphs as FormArray;
       p.push(this.fb.group({
-        content: [this.article[0].paragraphs[i].content, Validators.required],
-        path: [this.article[0].paragraphs[i].path],
-        alt: [this.article[0].paragraphs[i].alt],
+        content: [paragraph.content, Validators.required],
+        path: [paragraph.path],
+        alt: [paragraph.alt],
       }));
-    }
+    });
   }
 
   /**
@@ -251,9 +252,10 @@ export class ArticleEditComponent implements OnInit {
         console.error(e);
       }
 
+      this.router.navigate(['/albums']);
+
     }
 
-    this.form.reset();
     this.isLoading = false;
   }
 }

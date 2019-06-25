@@ -96,7 +96,8 @@ export class AlbumShowComponent implements OnInit {
      */
     async getAlbum(): Promise<void> {
       try {
-        this.album = await this.albumService.getAlbum(this.albumId);
+        const result = await this.albumService.getAlbum(this.albumId);
+        this.album = result.album;
       } catch (e) {
         /** debugging */
         console.error(e);

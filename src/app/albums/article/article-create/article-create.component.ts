@@ -89,7 +89,8 @@ export class ArticleCreateComponent implements OnInit {
    */
   async getAlbum(): Promise<void> {
     try {
-      this.album = await this.albumService.getAlbum(this.albumId);
+      const result = await this.albumService.getAlbum(this.albumId);
+      this.album = result.album;
     } catch (e) {
       /** debugging */
       console.error(e);
@@ -230,8 +231,8 @@ export class ArticleCreateComponent implements OnInit {
         this.album._id,
         this.album.creator
       ).then(result => {
-        localStorage.setItem('albumId', result.article.albumId);
-        if (localStorage.getItem('albumId') === result.article.albumId) {
+        localStorage.setItem('albumId', result.article._doc.albumId);
+        if (localStorage.getItem('albumId') === result.article._doc.albumId) {
           this.router.navigate(['/albums/myAlbum/Article']);
         } else {
           this.router.navigate(['/albums']);
