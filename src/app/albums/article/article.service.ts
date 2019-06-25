@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { environment } from '../../../environments/environment';
+import { environment as env } from '../../../environments/environment';
 import { Article } from './article.interface';
 
-const BACKEND_URL = environment.apiUrl + '/article/';
+const BACKEND_URL = env.apiUrl + '/article/';
 
 @Injectable({
   providedIn: 'root'

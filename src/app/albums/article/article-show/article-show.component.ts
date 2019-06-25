@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Article } from '../article.interface';
 import { ArticleService } from '../article.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { Comment } from './comment.interface';
+import { CommentService } from './comment.service';
 
 
 @Component({
@@ -19,6 +21,8 @@ export class ArticleShowComponent implements OnInit {
   albumId: string;
   /** current ID of logged in user */
   userId: string;
+  /** current list of comments */
+  comments: Comment[] = [];
   /** define if front is communicating with API */
   isLoading = false;
   /** define of many paragraphs view as to generate */
@@ -27,7 +31,8 @@ export class ArticleShowComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private articleService: ArticleService
+    private articleService: ArticleService,
+    private commentService: CommentService,
     ) {  }
 
   ngOnInit() {
@@ -56,8 +61,23 @@ export class ArticleShowComponent implements OnInit {
     }
 
     this.getUserId();
+    this.getComments();
 
     this.isLoading = false;
+  }
+
+  /**
+   * definie albumId saved in localstorage
+   * clean localstorage form 'albumId'
+   * @returns void
+   */
+  handleStorage(): void {
+    this.albumId = localStorage.getItem('albumId');
+    localStorage.removeItem('albumId');
+
+    if (this.albumId === null) {
+      this.router.navigate(['/albums']);
+    }
   }
 
   /**
@@ -75,17 +95,14 @@ export class ArticleShowComponent implements OnInit {
     }
   }
 
-  /**
-   * definie albumId saved in localstorage
-   * clean localstorage form 'albumId'
-   * @returns void
-   */
-  handleStorage(): void {
-    this.albumId = localStorage.getItem('albumId');
-    localStorage.removeItem('albumId');
-
-    if (this.albumId === null) {
-      this.router.navigate(['/albums']);
+  
+  async getComments(): Promise<void> {
+    try {
+      this.comments = await this.commentService.getCommentsFromArticleId(this.article._id);
+      console.log(this.comments);
+    } catch (e) {
+      /** debugging */
+      console.error(e);
     }
   }
 

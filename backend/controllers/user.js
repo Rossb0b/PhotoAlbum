@@ -6,14 +6,11 @@ const User = require('../models/user');
 
 exports.createUser = async (req, res, next) => {
   const url = req.protocol + '://' + req.get("host");
-
-  hashPassword(req.body.password, hash => {
-    const user = new User(req.body);
-    user.password = hash;
-    user.imagePath = url +"/images/avatars/default.png";
-  });
+  const user = new User(req.body);
+  user.imagePath = url + '/images/avatars/default.png';
 
   try {
+    user.password = await hashPassword(req.body.password);
     const result = await user.save();
     res.status(201).json({
       message: 'User created',
@@ -116,22 +113,24 @@ exports.editUser = async (req, res, next) => {
     }, user);
 
     if (result.n > 0) {
+
       if (imageToDeleteFinalPath !== "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/avatars/default.png") {
         /** Delete the image with synchron function after removing the album successfully */
         fs.unlinkSync(imageToDeleteFinalPath);
       }
+
       res.status(200).json({
         message: 'update successfull'
       });
     } else {
       res.status(401).json({
         message: 'Not authorized'
-    });
+      });
     }
   } catch (e) {
     res.status(401).json({
       message: 'Update failed'
-  });
+    });
   }
 };
 

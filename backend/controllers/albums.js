@@ -32,6 +32,7 @@ exports.createAlbum = async (req, res, next) => {
 
       /** checking that we got a valid album, that he respects Album's model */
       album.validate(async (error) => {
+
         if(error) {
             res.status(500).json({
               message: 'not valid album',
@@ -54,6 +55,7 @@ exports.createAlbum = async (req, res, next) => {
             });
           }
         }
+
       });
     }
   } else {
@@ -129,6 +131,7 @@ exports.editAlbum = (req, res, next) => {
 
   /** Checking that we got a valid album, that he respects Album's model */
   album.validate(async (error) => {
+
     if(error) {
         res.status(500).json({
           message: 'not valid album',
@@ -157,6 +160,7 @@ exports.editAlbum = (req, res, next) => {
         });
       }
     }
+
   });
 
 };
@@ -232,7 +236,6 @@ exports.deleteAlbum = async (req, res, next) => {
  * @param {string} photo
  */
 deletePhoto = async (photo) => {
-
   let imageToDeleteFractionnalPath = photo.path.split("photos/").pop();
   let imageToDeleteFinalPath = "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/photos/" + imageToDeleteFractionnalPath;
 
