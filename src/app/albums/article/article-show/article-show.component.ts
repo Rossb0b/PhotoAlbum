@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 import { Article } from '../article.interface';
 import { ArticleService } from '../article.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Comment } from './comment.interface';
 import { CommentService } from './comment.service';
+import { User } from 'src/app/users/user.interface';
+import { UserService } from 'src/app/users/user.service';
 
 
 @Component({
@@ -21,26 +24,35 @@ export class ArticleShowComponent implements OnInit {
   albumId: string;
   /** current ID of logged in user */
   userId: string;
+  /** current list of all user */
+  users: User[] = [];
+  /** current list of all user with filtered data */
+  filteredUsers: {_id: string, firstname: string, lastname: string}[] = [];
   /** current list of comments */
   comments: Comment[] = [];
   /** define if front is communicating with API */
   isLoading = false;
+  /** comment form */
+  form: FormGroup;
   /** define of many paragraphs view as to generate */
   paragraphsLength: number;
 
   constructor(
+    private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
     private articleService: ArticleService,
     private commentService: CommentService,
-    ) {  }
+    private userService: UserService,
+    ) {
+      this.buildForm();
+     }
 
   ngOnInit() {
     this.initialize();
   }
 
   /**
-   *
    *
    * @returns {Promise<void>}
    * @memberof ArticleShowComponent
@@ -51,24 +63,26 @@ export class ArticleShowComponent implements OnInit {
     this.handleStorage();
 
     try {
-      await this.articleService.getArticleFromAlbumId(this.albumId).then(result => {
-        this.article = result[0];
-        this.paragraphsLength = this.article.paragraphs.length;
-      });
+      const result = await this.articleService.getArticleFromAlbumId(this.albumId);
+      this.article = result[0];
+      this.paragraphsLength = this.article.paragraphs.length;
     } catch (e) {
       /** debugging */
       console.error(e);
     }
 
     this.getUserId();
+    this.getUsers();
     this.getComments();
 
     this.isLoading = false;
   }
 
   /**
+   *
    * definie albumId saved in localstorage
    * clean localstorage form 'albumId'
+   *
    * @returns void
    */
   handleStorage(): void {
@@ -82,6 +96,15 @@ export class ArticleShowComponent implements OnInit {
 
   /**
    *
+   * @memberof ArticleShowComponent
+   */
+  buildForm(): void {
+    this.form = this.formBuilder.group({
+      content: new FormControl(null, {validators: [Validators.required, Validators.minLength(1), Validators.maxLength(80)]}),
+    });
+  }
+
+  /**
    *
    * @returns {Promise<void>}
    * @memberof ArticleShowComponent
@@ -95,10 +118,41 @@ export class ArticleShowComponent implements OnInit {
     }
   }
 
-  
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof ArticleShowComponent
+   */
+  async getUsers(): Promise<void> {
+    try {
+      this.users = await this.userService.getUsers();
+
+      this.users.forEach(fetchedUser => {
+        const filteredUser = {
+          _id: fetchedUser._id,
+          firstname: fetchedUser.firstname,
+          lastname: fetchedUser.lastname,
+          imagePath: fetchedUser.imagePath,
+        };
+        this.filteredUsers.push(filteredUser);
+      });
+    } catch (e) {
+      /** debugging */
+      console.error(e);
+    }
+  }
+
+  /**
+   *
+   *
+   * @returns {Promise<void>}
+   * @memberof ArticleShowComponent
+   */
   async getComments(): Promise<void> {
     try {
-      this.comments = await this.commentService.getCommentsFromArticleId(this.article._id);
+      const result = await this.commentService.getCommentsFromArticleId(this.article._id);
+      this.comments = result.comments;
       console.log(this.comments);
     } catch (e) {
       /** debugging */
@@ -109,11 +163,56 @@ export class ArticleShowComponent implements OnInit {
   /**
    *
    *
+   * @memberof ArticleShowComponent
+   */
+  async createComment(): Promise<void> {
+    this.isLoading = true;
+
+    if (this.form.valid) {
+      try {
+        await this.commentService.addComment(
+          this.form.value.content,
+          this.userId,
+          this.article._id,
+        ).then(() => {
+          this.getComments();
+        });
+      } catch (e) {
+        /** debugging */
+        console.error(e);
+      }
+    }
+
+    this.isLoading = false;
+  }
+
+  /**
+   *
+   * @param commentId
+   */
+  async deleteComment(commentId: string): Promise<void> {
+    this.isLoading = true;
+
+    try {
+      await this.commentService.deleteComment(commentId).then(() => {
+        this.getComments();
+      });
+    } catch (e) {
+      /** debugging */
+      console.error(e);
+    }
+
+    this.isLoading = false;
+  }
+
+  /**
+   *
+   *
    * @param {string} articleId
    * @returns {Promise<void>}
    * @memberof ArticleShowComponent
    */
-  async delete(articleId: string): Promise<void> {
+  async deleteArticle(articleId: string): Promise<void> {
     this.isLoading = true;
 
     try {

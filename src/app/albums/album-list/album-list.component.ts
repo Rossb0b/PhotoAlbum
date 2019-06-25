@@ -53,7 +53,7 @@ export class AlbumListComponent implements OnInit {
   async getAlbums(): Promise<void> {
     try {
       this.albums = await this.albumsService.getAlbums(this.userId);
-    } catch(e) {
+    } catch (e) {
       /** debbuging */
       console.error(e);
       alert('fetching albums failed');
@@ -83,7 +83,7 @@ export class AlbumListComponent implements OnInit {
 
     try {
       await this.albumsService.deleteAlbum(albumId);
-    } catch(e) {
+    } catch (e) {
       /** debbuging */
       console.error(e);
       alert('Server couldn\'t delete album');

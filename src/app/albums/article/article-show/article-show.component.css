@@ -42,3 +42,12 @@
 .float-left {
   float:left;
 }
+
+.avatar {
+  width:100%;
+  max-width:120px;
+}
+
+mat-card-content {
+  height:80%;
+}

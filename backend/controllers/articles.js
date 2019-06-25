@@ -8,7 +8,7 @@ exports.createArticle = async (req, res, next) => {
 
 
     article.validate(async (error) => {
-      
+
       if (error) {
         res.status(500).json({
           message: 'not valid article',
@@ -54,7 +54,7 @@ exports.editArticle = async (req, res, next) => {
         let result = await Article.updateOne({
           _id: article._id,
           creator: req.userData.userId,
-        }, article)  
+        }, article);
 
         if (result.n > 0) {
           res.status(200).json({
@@ -73,7 +73,7 @@ exports.editArticle = async (req, res, next) => {
     }
 
   });
-}
+};
 
 exports.getArticle = async (req, res, next) => {
   try {

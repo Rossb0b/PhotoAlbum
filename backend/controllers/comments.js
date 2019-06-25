@@ -9,7 +9,7 @@ exports.createComment = async (req, res, next) => {
   });
 
   comment.validate(async (error) => {
-    
+
     if (error) {
       res.status(500).json({
         message: 'not valid comment',
@@ -20,8 +20,8 @@ exports.createComment = async (req, res, next) => {
         res.status(201).json({
           message: 'Comment added successfully',
           comments: {
-            ...createComment,
-            _id: createComment._id,
+            ...createdComment,
+            _id: createdComment._id,
           },
         });
       } catch (e) {
@@ -44,14 +44,14 @@ exports.createComment = async (req, res, next) => {
 //       res.status(500).json({
 //         message: 'not valid comment',
 //       });
-//     } else { 
+//     } else {
 //       try {
 //         const result = await Comment.updateOne({
 //           _id: req.body._id,
 //           creator: req.userData.userId,
 //           articleId: req.body.articleId,
 //         });
-        
+
 //         if (result.n > 0) {
 //           res.status(200).json({
 //             message: 'Updated comment successfully',
@@ -61,7 +61,7 @@ exports.createComment = async (req, res, next) => {
 //             message: 'Not authorized',
 //           });
 //         }
-        
+
 //       } catch (e) {
 //         res.status(500).json({
 //           message: 'Couldn\'t update comment',
@@ -75,7 +75,7 @@ exports.createComment = async (req, res, next) => {
 exports.getCommentsForThisArticle = async (req, res, next) => {
   try {
     const comments = await Comment.find({
-      articleId: req.body.articleId,
+      articleId: req.query.articleId,
     });
     res.status(200).json({
       message: 'Fetched comments successfully',
@@ -90,11 +90,11 @@ exports.getCommentsForThisArticle = async (req, res, next) => {
 
 exports.deleteComment = async (req, res, next) => {
   try {
-    const result = Comment.deleteOne({ 
+    const result = Comment.deleteOne({
       _id: req.params.id,
       creator: req.userData.userId
     });
-    
+
     if (result.n > 0) {
       res.status(200).json({
         message: 'deletion successfull',

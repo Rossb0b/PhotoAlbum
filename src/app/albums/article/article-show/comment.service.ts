@@ -23,7 +23,7 @@ export class CommentService {
         return this.http.get(BACKEND_URL + queryParams).toPromise();
     }
 
-    addComment(content: string, creator: string, articleId, string): Promise<any> {
+    addComment(content: string, creator: string, articleId: string): Promise<any> {
         const commentData = {
             content,
             creator,

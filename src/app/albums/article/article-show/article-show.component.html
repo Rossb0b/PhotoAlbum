@@ -8,8 +8,10 @@
     </div>
 
     <div *ngIf="!isLoading">
+
       <div class="row mt-4 title p-2">
         <div class="col-12">
+
           <div class="row">
             <div class="col text-center">
               <h1>{{article.title}}</h1>
@@ -27,12 +29,13 @@
 
               <button
               *ngIf="article && userId === article.creator"
-              mat-raised-button 
+              mat-raised-button
               class="align-right"
               color="warn"
-              (click)="delete(article._id)">Delete Article</button>
+              (click)="deleteArticle(article._id)">Delete Article</button>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -73,6 +76,84 @@
           </p>
         </div>
       </div>
+
+      <div class="row mt-5">
+        <div class="col-10 mx-auto">
+          <mat-card>
+
+            <ng-container *ngIf="comments.length > 0">
+              <div class="row mt-3" *ngFor="let comment of comments">
+
+                <ng-container *ngFor="let user of filteredUsers">
+                  <mat-card class="col-3 mx-auto" *ngIf="user._id === comment.creator">
+
+                    <div class="row">
+                      <div class="col-8 mx-auto">
+                        <img class="avatar" [src]="user.imagePath" alt="user avatar">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col text-center">
+                        {{ user.firstname + ' ' + user.lastname }}
+                      </div>
+                    </div>
+
+                  </mat-card>
+                </ng-container>
+
+                <mat-card class="col-8 mx-auto">
+                  <mat-card-content class="text-center text-justify">
+                    <p>
+                      {{ comment.content }}
+                    </p>
+                  </mat-card-content>
+
+
+                  <mat-card-footer class="text-center" style="position:relative; bottom:0;">
+                    <p>
+                      {{ comment.created_date | date: 'dd/MM/yyyy' }}
+                    </p>
+                  </mat-card-footer>
+                </mat-card>
+
+              </div>
+            </ng-container>
+
+            <div class="create-comment">
+              <form [formGroup]="form" (submit)="createComment()">
+
+                <div class="row mt-3">
+                  <div class="col-10 mx-auto">
+                    <mat-form-field>
+                      <input
+                      matInput
+                      type="text"
+                      formControlName="content"
+                      minlength="1"
+                      maxlength="80"
+                      placeholder="Leave your comments for {{article.title}} article">
+                      <mat-error *ngIf="form.get('content').invalid">Please enter a comment content with at least 1 caracters and a max of 80.</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-10">
+                      <button
+                      class="align-right"
+                      mat-raised-button
+                      color="accent"
+                      type="submit">Save commentary</button>
+                    </div>
+                </div>
+              </form>
+            </div>
+
+          </mat-card>
+        </div>
+      </div>
+
     </div>
 
   </div>

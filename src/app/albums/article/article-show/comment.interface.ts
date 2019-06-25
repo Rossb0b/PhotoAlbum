@@ -3,4 +3,5 @@ export interface Comment {
   content: string;
   creator: string;
   articleId: string;
+  created_date: any;
 }
