@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { Subject } from 'rxjs';
 
 import { Album } from './album.interface';
 import { environment as env } from '../../environments/environment';
+
+const BACKEND_URL = env.apiUrl + '/albums/';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,6 @@ export class AlbumsService {
 
   /** current list of album fetched */
   private albums: Album[] = [];
-  /** subject listening fetching of albums */
-  private albumsUpdated = new Subject<{ albums: Album[], albumCount: number }>();
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -28,7 +27,7 @@ export class AlbumsService {
    */
   getAlbums(userId: string): Promise <any> {
     const queryParams = `?userId=${userId}`;
-    return this.http.get(env.apiUrl + '/albums/' + queryParams).toPromise();
+    return this.http.get(BACKEND_URL + queryParams).toPromise();
   }
 
   /**
@@ -39,7 +38,7 @@ export class AlbumsService {
    * @memberof AlbumsService
    */
   getAlbum(id: string): Promise<Album> {
-    return this.http.get<Album>(env.apiUrl + '/albums/' + id).toPromise();
+    return this.http.get<Album>(BACKEND_URL + id).toPromise();
   }
 
   /**
@@ -58,7 +57,7 @@ export class AlbumsService {
     for (let i = 0; i < files.length; i++) {
       albumData.append('uploads[]', files[i], title);
     }
-    return this.http.post<{message: string, album: Album}>(env.apiUrl + '/albums/', albumData).toPromise();
+    return this.http.post<{message: string, album: Album}>(BACKEND_URL, albumData).toPromise();
   }
 
   /**
@@ -69,7 +68,7 @@ export class AlbumsService {
    * @memberof AlbumsService
    */
   deleteAlbum(albumId: string): Promise<any> {
-    return this.http.delete(env.apiUrl + '/albums/' + albumId).toPromise();
+    return this.http.delete(BACKEND_URL + albumId).toPromise();
   }
 
   /**
@@ -80,7 +79,7 @@ export class AlbumsService {
    * @memberof AlbumsService
    */
   updateAlbum(album: Album): Promise<any> {
-    return this.http.put(env.apiUrl + '/albums/' + album._id, album).toPromise();
+    return this.http.put(BACKEND_URL + album._id, album).toPromise();
   }
 
   /**
@@ -107,7 +106,7 @@ export class AlbumsService {
     albumData.append('created_date', album.created_date);
     albumData.append('image', imageToAdd, album.title);
     albumData.append('onAdd', onAdd);
-    return this.http.put(env.apiUrl + '/albums/' + album._id, albumData).toPromise();
+    return this.http.put(BACKEND_URL + album._id, albumData).toPromise();
   }
 
   /**
@@ -129,6 +128,6 @@ export class AlbumsService {
     });
     albumData.append('created_date', album.created_date);
     albumData.append('imageToDeletePath', imageToDeletePath);
-    return this.http.put(env.apiUrl + '/albums/' + album._id, albumData).toPromise();
+    return this.http.put(BACKEND_URL + album._id, albumData).toPromise();
   }
 }

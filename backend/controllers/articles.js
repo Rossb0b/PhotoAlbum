@@ -8,13 +8,13 @@ exports.createArticle = async (req, res, next) => {
 
 
     article.validate(async (error) => {
+
       if (error) {
         res.status(500).json({
           message: 'not valid article',
           error: error,
         });
       } else {
-
         try {
           const createdArticle = await article.save();
           res.status(201).json({
@@ -29,8 +29,8 @@ exports.createArticle = async (req, res, next) => {
             message: 'Creating an Article failed'
           });
         }
-
       }
+
     });
   } else {
     res.status(401).json({
@@ -43,18 +43,18 @@ exports.editArticle = async (req, res, next) => {
   const article = new Article(req.body);
 
   article.validate(async (error) => {
+
     if (error) {
       res.status(500).json({
         message: 'not valid article',
         error: error,
       });
     } else {
-
       try {
         let result = await Article.updateOne({
           _id: article._id,
           creator: req.userData.userId,
-        }, article)  
+        }, article);
 
         if (result.n > 0) {
           res.status(200).json({
@@ -70,10 +70,10 @@ exports.editArticle = async (req, res, next) => {
           message: 'Couldn\'t update article'
         });
       }
-
     }
+
   });
-}
+};
 
 exports.getArticle = async (req, res, next) => {
   try {

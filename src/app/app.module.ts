@@ -11,7 +11,6 @@ import { AuthInterceptor } from './auth/auth-interceptor';
 import { ErrorInterceptor } from './error-interceptor';
 import { ErrorComponent } from './error/error.component';
 import { AngularMaterialModule } from './angular-material.module';
-import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
 import { AlbumsService } from './albums/albums.service';
 import { HomeComponent } from './home/home.component';
@@ -31,7 +30,6 @@ import { ArticlesModule } from './albums/article/articles.module';
     BrowserAnimationsModule,
     HttpClientModule,
     AngularMaterialModule,
-    PostsModule,
     UsersModule,
     ArticlesModule,
   ],
