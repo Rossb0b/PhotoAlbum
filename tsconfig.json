@@ -1,7 +1,18 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "src",
+    "paths": {
+      "@component/*": [ "app/shared/component/*" ],
+      "@guard/*": [ "app/shared/guard/*" ],
+      "@helper/*": [ "app/shared/helper/*" ],
+      "@interface/*": [ "app/shared/interface/*" ],
+      "@service/*": [ "app/shared/service/*" ],
+      "@feature/*": [ "app/core/feature/*" ],
+      "@layout/*": [ "app/core/layout/*" ],
+      "@navigation/*": [ "app/core/navigation/*" ],
+      "@page/*": [ "app/core/page/*" ],
+    }
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
