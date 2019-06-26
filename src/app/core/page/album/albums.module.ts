@@ -3,17 +3,17 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { AngularMaterialModule } from '../../shared/angular-material.module';
-import { AlbumListComponent } from './album-list/album-list.component';
-import { AlbumCreateComponent } from './album-create/album-create.component';
-import { AlbumShowComponent } from './album-show/album-show.component';
+import { AngularMaterialModule } from '@shared/angular-material.module';
+import { AlbumComponent } from '@page/album/album.component';
+import { AlbumCreateComponent } from '@feature/album/create/album-create.component';
+import { AlbumShowComponent } from '@feature/album/show/album-show.component';
 import { AlbumsRoutingModule } from './albums-routing.module';
-import { AlbumEditComponent } from './album-edit/album-edit.component';
+import { AlbumEditComponent } from '@feature/album/edit/album-edit.component';
 
 
 @NgModule({
   declarations: [
-    AlbumListComponent,
+    AlbumComponent,
     AlbumCreateComponent,
     AlbumEditComponent,
     AlbumShowComponent

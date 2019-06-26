@@ -3,12 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { PageEvent } from '@angular/material';
 
-import { Album } from '../../../../shared/interface/album.interface';
-import { Article } from '../../../../shared/interface/article.interface';
-import { ArticleService } from '../../../../shared/service/article.service';
-import { AlbumsService } from '../../../../shared/service/albums.service';
-import { AuthService } from '../../../../shared/service/auth.service';
-
+import { Album } from '../../../shared/interface/album.interface';
+import { Article } from '../../../shared/interface/article.interface';
+import { ArticleService } from '../../../shared/service/article.service';
+import { AlbumsService } from '../../../shared/service/albums.service';
+import { AuthService } from '../../../shared/service/auth.service';
 
 @Component({
   selector: 'app-article-edit',

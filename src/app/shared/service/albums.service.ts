@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 
 import { Album } from '../interface/album.interface';
-import { environment as env } from '../../../../environments/environment';
+import { environment as env } from '@env/environment';
 import { User } from '../interface/user.interface';
 
 const BACKEND_URL = env.apiUrl + '/albums/';

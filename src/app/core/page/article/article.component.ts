@@ -2,21 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
-import { Article } from '../../../../shared/interface/article.interface';
-import { User } from '../../../../shared/interface/user.interface';
-import { Comment } from '../../../../shared/interface/comment.interface';
-import { ArticleService } from '../../../../shared/service/article.service';
-import { AuthService } from '../../../../shared/service/auth.service';
-import { CommentService } from '../../../../shared/service/comment.service';
-import { UserService } from '../../../../shared/service/user.service';
-
+import { Article } from '@interface/article.interface';
+import { User } from '@interface/user.interface';
+import { Comment } from '@interface/comment.interface';
+import { ArticleService } from '@service/article.service';
+import { AuthService } from '@service/auth.service';
+import { CommentService } from '@service/comment.service';
+import { UserService } from '@service/user.service';
 
 @Component({
   selector: 'app-article',
   templateUrl: './article.component.html',
   styleUrls: ['./article.component.css']
 })
-export class ArticleShowComponent implements OnInit {
+export class ArticleComponent implements OnInit {
 
   /** current article */
   article: Article;

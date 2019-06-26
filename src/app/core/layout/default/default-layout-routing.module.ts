@@ -1,11 +1,29 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { AuthGuard } from '@guard/auth.guard';
+
 const routes: Routes = [
-  { path: '', redirectTo: 'albums', pathMath: 'full' },
-  { path: 'auth', loadChildren: './shared/service/auth.module#AuthModule' },
-  { path: 'profile', loadCHildren: '@feature/profile/profile.module#ProfileModule', canActivate: [AuthGuard] },
-  { path: 'albums', loadChildren: '@page/albums.module#AlbumsModule', canActivate: [AuthGuard] },
+  {
+    path: 'auth',
+    loadChildren: '@page/auth/auth.module#AuthModule'
+  },
+  {
+    path: '',
+    redirectTo: 'albums',
+    pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'profile',
+    loadChildren: '@feature/profile/profile.module#ProfileModule',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'albums',
+    loadChildren: '@page/albums.module#AlbumsModule',
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({

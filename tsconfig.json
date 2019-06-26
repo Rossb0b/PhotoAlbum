@@ -8,11 +8,13 @@
       "@helper/*": [ "app/shared/helper/*" ],
       "@interface/*": [ "app/shared/interface/*" ],
       "@service/*": [ "app/shared/service/*" ],
-      "@feature/*": [ "app/core/feature/*" ],
+      "@feature/*": [ "app/feature/*" ],
+      "@shared/*": [ "app/shared/*" ],
       "@layout/*": [ "app/core/layout/*" ],
       "@navigation/*": [ "app/core/navigation/*" ],
       "@page/*": [ "app/core/page/*" ],
-    }
+      "@env/*": [ "app/../environments/*"]
+    },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,

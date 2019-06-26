@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { environment as env } from '../../../../environments/environment';
-import { Article } from './article.interface';
+import { environment as env } from '@env/environment';
+import { Article } from '@interface/article.interface';
 
 const BACKEND_URL = env.apiUrl + '/article/';
 

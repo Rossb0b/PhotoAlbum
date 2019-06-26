@@ -3,9 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
-import { environment } from '../../environments/environment';
-import { AuthData } from './auth-data.model';
-import { stringify } from '@angular/core/src/render3/util';
+import { environment } from '@env/environment';
+import { AuthData } from '@interface/auth-data.interface';
 
 const BACKEND_URL = environment.apiUrl + '/user/';
 
@@ -18,7 +17,6 @@ export class AuthService {
     private token: string;
     private tokenTimer: any;
     private userId: string;
-    private imagePath: string;
     private authStatusListener = new Subject<boolean>();
 
     constructor(private http: HttpClient, private router: Router) {}

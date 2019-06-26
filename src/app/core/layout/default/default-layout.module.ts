@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DefaultRoutingModule } from './default-routing.module';
-import { DefaultComponent } from './default.component';
+import { DefaultLayoutRoutingModule } from './default-layout-routing.module';
+import { DefaultLayoutComponent } from './default-layout.component';
 
 @NgModule({
-  declarations: [DefaultComponent],
+  declarations: [DefaultLayoutComponent],
   imports: [
     CommonModule,
-    DefaultRoutingModule
+    DefaultLayoutRoutingModule
   ]
 })
-export class DefaultModule { }
+export class DefaultLayoutModule { }

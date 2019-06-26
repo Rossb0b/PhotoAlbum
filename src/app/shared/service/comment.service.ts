@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 
-import { Comment } from './comment.interface';
-import { environment as env } from '../../../../environments/environment';
+import { Comment } from '@interface/comment.interface';
+import { environment as env } from '@env/environment';
 
 const BACKEND_URL = env.apiUrl + '/comments/';
 

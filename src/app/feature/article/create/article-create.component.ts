@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { PageEvent } from '@angular/material';
 
-import { Album } from '../../../../shared/interface/album.interface';
-import { ArticleService } from '../../../../shared/service/article.service';
-import { AlbumsService } from '../../../../shared/service/albums.service';
+import { Album } from '../../../shared/interface/album.interface';
+import { ArticleService } from '../../../shared/service/article.service';
+import { AlbumsService } from '../../../shared/service/albums.service';
 
 
 @Component({

@@ -4,9 +4,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
-import { AuthService } from '../../auth/auth.service';
-import { UserService } from '../../core/shared/service/user.service';
-import { mimeType } from 'src/app/core/shared/helper/validator/mime-type.validator';
+import { AuthService } from '@service/auth.service';
+import { UserService } from '@service/user.service';
+import { mimeType } from '@helper/validator/mime-type.validator';
 
 @Component({
   selector: 'app-user-profile',

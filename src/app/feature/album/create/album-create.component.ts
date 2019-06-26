@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
-import { Album } from '../../../shared/interface/album.interface';
-import { AlbumsService } from '../../../shared/service/albums.service';
-import { mimeType } from '../../../shared/helper/validator/mime-type.validator';
+import { Album } from '@interface/album.interface';
+import { AlbumsService } from '@service/albums.service';
+import { mimeType } from '@helper/validator/mime-type.validator';
 
 @Component({
   selector: 'app-album-create',

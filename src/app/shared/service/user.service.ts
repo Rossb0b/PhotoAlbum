@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { environment } from '../../../../environments/environment';
-import { User } from '../interface/user.interface';
-import { Observable } from 'rxjs';
+import { environment } from '@env/environment';
+import { User } from '@interface/user.interface';
 
 
 @Injectable({
@@ -13,8 +12,6 @@ import { Observable } from 'rxjs';
 export class UserService {
 
   private BACKEND_URL = environment.apiUrl + '/user/';
-  private error: string;
-  private userExist: boolean;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -37,6 +34,8 @@ export class UserService {
   updateUser(id: string, email: string, firstname: string, lastname: string, image: File | string, imagePath: string) {
     let userData: User | FormData;
     if (typeof(image) === 'object') {
+      // TODO: faire ces vérifs dans le component et envoyer un object
+      // user déjà prêt.
       userData = new FormData();
       userData.append('id', id);
       userData.append('email', email);
@@ -45,11 +44,10 @@ export class UserService {
       userData.append('image', image, id);
       userData.append('imagePath', imagePath);
       this.http.put(this.BACKEND_URL + id, userData)
-        .subscribe(response => {
+        .subscribe(() => {
+          // TODO: async await
             this.router.navigate(['/']);
         });
-    } else {
-      return this.error = 'Form is invalid';
     }
   }
 
