@@ -4,10 +4,8 @@ import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { PageEvent } from '@angular/material';
 
 import { Album } from '../../album.interface';
-import { Article } from '../article.interface';
 import { ArticleService } from '../article.service';
 import { AlbumsService } from '../../albums.service';
-import { AuthService } from 'src/app/auth/auth.service';
 
 
 @Component({
@@ -19,8 +17,6 @@ export class ArticleCreateComponent implements OnInit {
 
   /** current album */
   album: Album;
-  /** current article */
-  article: Article;
   /** ID of current album */
   albumId: string;
   /** ID of current logged in user */
@@ -36,14 +32,13 @@ export class ArticleCreateComponent implements OnInit {
   /** options for number of photo to display */
   pageSizeOptions = [4];
   /** array of current photos to display */
-  private photosToDisplay = [];
+  photosToDisplay = [];
   /** article form */
   form: FormGroup;
   /** define if form for add a photo pop in view */
   addPhoto = false;
 
   constructor(
-    private authService: AuthService,
     private router: Router,
     private articleService: ArticleService,
     private albumService: AlbumsService,
@@ -229,15 +224,17 @@ export class ArticleCreateComponent implements OnInit {
         this.form.value.title,
         this.form.value.paragraphs,
         this.album._id,
-        this.album.creator
-      ).then(result => {
-        localStorage.setItem('albumId', result.article._doc.albumId);
-        if (localStorage.getItem('albumId') === result.article._doc.albumId) {
-          this.router.navigate(['/albums/myAlbum/Article']);
-        } else {
-          this.router.navigate(['/albums']);
-        }
-      });
+        this.album.creator,
+      );
+
+      localStorage.setItem('albumId', this.albumId);
+
+      if (localStorage.getItem('albumId') === this.albumId) {
+        this.router.navigate(['/albums/myAlbum/Article']);
+      } else {
+        this.router.navigate(['/albums']);
+      }
+
     } catch (e) {
       /** debugging */
       console.error(e);

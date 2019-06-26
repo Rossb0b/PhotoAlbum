@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 
 import { Album } from '../album.interface';
 import { AlbumsService } from '../albums.service';
-import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
+import { mimeType } from 'src/app/validators/mime-type.validator';
 
 @Component({
   selector: 'app-album-create',

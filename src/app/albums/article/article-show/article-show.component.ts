@@ -84,6 +84,7 @@ export class ArticleShowComponent implements OnInit {
    * clean localstorage form 'albumId'
    *
    * @returns void
+   * @memberof ArticleShowComponent
    */
   handleStorage(): void {
     this.albumId = localStorage.getItem('albumId');
@@ -153,7 +154,6 @@ export class ArticleShowComponent implements OnInit {
     try {
       const result = await this.commentService.getCommentsFromArticleId(this.article._id);
       this.comments = result.comments;
-      console.log(this.comments);
     } catch (e) {
       /** debugging */
       console.error(e);
@@ -183,6 +183,7 @@ export class ArticleShowComponent implements OnInit {
       }
     }
 
+    this.form.reset();
     this.isLoading = false;
   }
 

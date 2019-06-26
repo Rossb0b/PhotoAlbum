@@ -2,6 +2,10 @@ mat-card {
   width:100%;
 }
 
+mat-spinner {
+  margin:auto;
+}
+
 .empty-container {
   display:none;
 }

@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../auth/auth.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
-import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
-import { Router } from '@angular/router';
-import { User } from '../user.interface';
+import { mimeType } from 'src/app/validators/mime-type.validator';
 
 @Component({
   selector: 'app-user-profile',
@@ -22,7 +22,6 @@ export class UserProfileComponent implements OnInit {
   imagePreview: any;
   public userIsAuthenticated: boolean;
   private authStatusSub: Subscription;
-  private userSub: Subscription;
 
   constructor(private authService: AuthService, private userService: UserService, private router: Router) { }
 

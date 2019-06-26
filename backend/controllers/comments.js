@@ -35,42 +35,42 @@ exports.createComment = async (req, res, next) => {
   });
 };
 
-// exports.editComment = async (req, res, next) => {
-//   const comment = new Comment (req.body);
+exports.editComment = async (req, res, next) => {
+  const comment = new Comment (req.body);
 
-//   comment.validate(async (error) => {
+  comment.validate(async (error) => {
 
-//     if (error) {
-//       res.status(500).json({
-//         message: 'not valid comment',
-//       });
-//     } else {
-//       try {
-//         const result = await Comment.updateOne({
-//           _id: req.body._id,
-//           creator: req.userData.userId,
-//           articleId: req.body.articleId,
-//         });
+    if (error) {
+      res.status(500).json({
+        message: 'not valid comment',
+      });
+    } else {
+      try {
+        const result = await Comment.updateOne({
+          _id: req.body._id,
+          creator: req.userData.userId,
+          articleId: req.body.articleId,
+        });
 
-//         if (result.n > 0) {
-//           res.status(200).json({
-//             message: 'Updated comment successfully',
-//           });
-//         } else {
-//           res.status(401).json({
-//             message: 'Not authorized',
-//           });
-//         }
+        if (result.n > 0) {
+          res.status(200).json({
+            message: 'Updated comment successfully',
+          });
+        } else {
+          res.status(401).json({
+            message: 'Not authorized',
+          });
+        }
 
-//       } catch (e) {
-//         res.status(500).json({
-//           message: 'Couldn\'t update comment',
-//         });
-//       }
-//     }
+      } catch (e) {
+        res.status(500).json({
+          message: 'Couldn\'t update comment',
+        });
+      }
+    }
 
-//   });
-// };
+  });
+};
 
 exports.getCommentsForThisArticle = async (req, res, next) => {
   try {

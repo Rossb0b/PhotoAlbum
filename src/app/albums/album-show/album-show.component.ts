@@ -9,7 +9,7 @@ import { Article } from '../article/article.interface';
 import { AlbumsService } from '../albums.service';
 import { ArticleService } from '../article/article.service';
 import { AuthService } from '../../auth/auth.service';
-import { mimeType } from 'src/app/posts/post-create/mime-type.validator';
+import { mimeType } from 'src/app/validators/mime-type.validator';
 
 @Component({
   selector: 'app-album-show',
@@ -199,7 +199,6 @@ export class AlbumShowComponent implements OnInit {
      */
     addArticle(albumId: string) {
       localStorage.setItem('albumId', albumId);
-      console.log(localStorage.getItem('albumId'));
       if (localStorage.getItem('albumId') !== null) {
         this.router.navigate(['/albums/myAlbum/Article/create']);
       } else {
