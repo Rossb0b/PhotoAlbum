@@ -6,7 +6,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
-// import { HeaderComponent } from '@navigation/header/header.component';
 import { AuthInterceptor } from '@helper/auth-interceptor';
 import { ErrorInterceptor } from '@helper/error-interceptor';
 import { ErrorComponent } from '@component/error/error.component';
@@ -16,7 +15,6 @@ import { AngularMaterialModule } from '@shared/angular-material.module';
   declarations: [
     AppComponent,
     ErrorComponent,
-    // HeaderComponent,
   ],
   imports: [
     BrowserModule,
