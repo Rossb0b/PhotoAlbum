@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { PageEvent } from '@angular/material';
 
-import { Album } from '../../../shared/interface/album.interface';
-import { ArticleService } from '../../../shared/service/article.service';
-import { AlbumsService } from '../../../shared/service/albums.service';
+import { Album } from '@interface/album.interface';
+import { ArticleService } from '@service/article.service';
+import { AlbumsService } from '@service/albums.service';
 
 
 @Component({
@@ -51,7 +51,7 @@ export class ArticleCreateComponent implements OnInit {
 
     const p = this.form.controls.paragraphs as FormArray;
     p.push(this.fb.group({
-      content: [null, Validators.required],
+      content: [null, Validators.required, Validators.minLength(80), Validators.maxLength(525)],
       path: [null],
       alt: [null],
     }));
@@ -157,7 +157,7 @@ export class ArticleCreateComponent implements OnInit {
     console.log('1', this.form.get('paragraphs'));
     const p = this.form.controls.paragraphs as FormArray;
     p.push(this.fb.group({
-      content: [null, Validators.required],
+      content: [null, Validators.required, Validators.minLength(80), Validators.maxLength(525)],
       path: [null],
       alt: [null],
     }));

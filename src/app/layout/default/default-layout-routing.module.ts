@@ -21,13 +21,14 @@ const routes: Routes = [
   },
   {
     path: 'albums',
-    loadChildren: '@page/albums.module#AlbumsModule',
+    loadChildren: '@page/album/albums.module#AlbumsModule',
     canActivate: [AuthGuard]
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthGuard]
 })
-export class DefaultRoutingModule { }
+export class DefaultLayoutRoutingModule { }

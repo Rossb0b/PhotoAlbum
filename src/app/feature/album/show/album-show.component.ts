@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { PageEvent } from '@angular/material';
 
 
-import { Album } from '../../../shared/interface/album.interface';
-import { Article } from '../../../shared/interface/article.interface';
-import { AlbumsService } from '../../../shared/service/albums.service';
-import { ArticleService } from '../../../shared/service/article.service';
-import { AuthService } from '../../../shared/service/auth.service';
-import { mimeType } from '../../../shared/helper/validator/mime-type.validator';
+import { Album } from '@interface/album.interface';
+import { Article } from '@interface/article.interface';
+import { AlbumsService } from '@service/albums.service';
+import { ArticleService } from '@service/article.service';
+import { AuthService } from '@service/auth.service';
+import { mimeType } from '@helper/validator/mime-type.validator';
 
 @Component({
   selector: 'app-album-show',

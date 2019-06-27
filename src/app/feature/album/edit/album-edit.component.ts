@@ -5,11 +5,11 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { from } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-import { Album } from '../../../shared/interface/album.interface';
-import { User } from '../../../shared/interface/user.interface';
-import { AlbumsService } from '../../../shared/service/albums.service';
-import { UserService } from '../../../shared/service/user.service';
-import { AuthService } from '../../../shared/service/auth.service'
+import { Album } from '@interface/album.interface';
+import { User } from '@interface/user.interface';
+import { AlbumsService } from '@service/albums.service';
+import { UserService } from '@service/user.service';
+import { AuthService } from '@service/auth.service';
 
 @Component({
   selector: 'app-album-edit',
@@ -171,15 +171,11 @@ export class AlbumEditComponent implements OnInit {
 
     if (this.form.valid) {
 
-
       const friendId = this.form.value.friendId || null;
-
-      /** TODO: make a mat-autocomplete wich display no-friends list */
       const isFriend = this.album.linked_friendsId.indexOf(friendId) > -1;
       if (friendId && !isFriend) {
         this.album.linked_friendsId.push(friendId);
       }
-
 
       this.album.title = this.form.get('title').value;
 

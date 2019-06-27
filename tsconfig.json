@@ -3,16 +3,16 @@
   "compilerOptions": {
     "baseUrl": "src",
     "paths": {
+      "@navigation/*": [ "app/core/navigation/*" ],
+      "@page/*": [ "app/core/page/*" ],
+      "@feature/*": [ "app/feature/*" ],
+      "@layout/*": [ "app/layout/*" ],
       "@component/*": [ "app/shared/component/*" ],
       "@guard/*": [ "app/shared/guard/*" ],
       "@helper/*": [ "app/shared/helper/*" ],
       "@interface/*": [ "app/shared/interface/*" ],
       "@service/*": [ "app/shared/service/*" ],
-      "@feature/*": [ "app/feature/*" ],
       "@shared/*": [ "app/shared/*" ],
-      "@layout/*": [ "app/core/layout/*" ],
-      "@navigation/*": [ "app/core/navigation/*" ],
-      "@page/*": [ "app/core/page/*" ],
       "@env/*": [ "app/../environments/*"]
     },
     "outDir": "./dist/out-tsc",

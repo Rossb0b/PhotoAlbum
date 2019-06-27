@@ -9,9 +9,9 @@ import { UserService } from '@service/user.service';
 import { mimeType } from '@helper/validator/mime-type.validator';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
 
@@ -40,11 +40,10 @@ export class UserProfileComponent implements OnInit {
     this.initialize();
   }
 
-  async initialize(): Promise<void>
-  {
+  async initialize(): Promise<void> {
     try {
       this.user = await this.userService.getUser(this.userId);
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
 

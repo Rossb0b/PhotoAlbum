@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
-import { AuthService } from '../../../shared/service/auth.service';
+import { AuthService } from '@service/auth.service';
 
 @Component({
   templateUrl: './signup.component.html',
@@ -27,7 +27,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   onSignup(form: NgForm) {
-    if(form.invalid) {
+    if (form.invalid) {
       return;
     }
     this.isLoading = true;

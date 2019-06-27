@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { PageEvent } from '@angular/material';
 
-import { Album } from '../../../shared/interface/album.interface';
-import { Article } from '../../../shared/interface/article.interface';
-import { ArticleService } from '../../../shared/service/article.service';
-import { AlbumsService } from '../../../shared/service/albums.service';
-import { AuthService } from '../../../shared/service/auth.service';
+import { Album } from '@interface/album.interface';
+import { Article } from '@interface/article.interface';
+import { ArticleService } from '@service/article.service';
+import { AlbumsService } from '@service/albums.service';
+import { AuthService } from '@service/auth.service';
 
 @Component({
   selector: 'app-article-edit',
@@ -48,19 +48,7 @@ export class ArticleEditComponent implements OnInit {
     private articleService: ArticleService,
     private albumService: AlbumsService,
     private fb: FormBuilder,
-  ) {
-      // this.form = this.fb.group({
-      //   title: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(34)]],
-      //   paragraphs: this.fb.array([])
-      // });
-
-      // const p = this.form.controls.paragraphs as FormArray;
-      // p.push(this.fb.group({
-      //   content: [null, Validators.required],
-      //   path: [null],
-      //   alt: [null],
-      // }));
-   }
+  ) { }
 
   ngOnInit() {
     this.initialize();
@@ -128,7 +116,7 @@ export class ArticleEditComponent implements OnInit {
     this.article[0].paragraphs.forEach(paragraph => {
       const p = this.form.controls.paragraphs as FormArray;
       p.push(this.fb.group({
-        content: [paragraph.content, Validators.required],
+        content: [paragraph.content, Validators.required, Validators.minLength(80), Validators.maxLength(525)],
         path: [paragraph.path],
         alt: [paragraph.alt],
       }));
@@ -179,7 +167,7 @@ export class ArticleEditComponent implements OnInit {
     console.log('1', this.form.get('paragraphs'));
     const p = this.form.controls.paragraphs as FormArray;
     p.push(this.fb.group({
-      content: [null, Validators.required],
+      content: [null, Validators.required, Validators.minLength(80), Validators.maxLength(525)],
       path: [null],
       alt: [null],
     }));

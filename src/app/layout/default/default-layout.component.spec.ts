@@ -4,7 +4,7 @@ import { DefaultLayoutComponent } from './default-layout.component';
 
 describe('DefaultLayoutComponent', () => {
   let component: DefaultLayoutComponent;
-  let fixture: ComponentFixture<DefaultDelayoutComponent>;
+  let fixture: ComponentFixture<DefaultLayoutComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
