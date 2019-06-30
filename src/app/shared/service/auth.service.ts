@@ -88,10 +88,10 @@ export class AuthService {
         this.token = null;
         this.isAuthenticated = false;
         this.authStatusListener.next(false);
-        this.router.navigate(['/']);
         this.clearAuthData();
         this.userId = null;
         clearTimeout(this.tokenTimer);
+        this.router.navigate(['/']);
     }
 
     private setAuthTimer(duration: number) {

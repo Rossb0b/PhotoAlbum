@@ -10,11 +10,13 @@ import { AuthInterceptor } from '@helper/auth-interceptor';
 import { ErrorInterceptor } from '@helper/error-interceptor';
 import { ErrorComponent } from '@component/error/error.component';
 import { AngularMaterialModule } from '@shared/angular-material.module';
+import { HeaderComponent } from '@navigation/header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ErrorComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,

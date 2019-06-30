@@ -31,11 +31,11 @@ const articleSchema = mongoose.Schema({
   albumId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Album',
-    required: true
+    required: true,
   },
   created_at: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
 });
 
