@@ -42,10 +42,11 @@
               </div>
 
               <div class="col-5 col-sm-4 col-md-4 col-lg-4 mx-auto text-center">
-                <button
+                <a
                 mat-raised-button
                 color="primary"
-                (click)="onShow(album._id)">Show</button>
+                [routerLink]="['/albums/', album._id]"
+                style="padding:0!important;">Show</a>
               </div>
 
               <div class="col col-sm-4 col-md-4 col-lg-4 mx-auto text-center">

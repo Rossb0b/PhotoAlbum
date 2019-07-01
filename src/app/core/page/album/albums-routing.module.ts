@@ -9,19 +9,23 @@ import { AuthGuard } from '@guard/auth.guard';
 const routes: Routes = [
   {
     path: '',
-    component: AlbumComponent
+    component: AlbumComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'create',
-    component: AlbumCreateComponent
+    component: AlbumCreateComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':albumId',
-    component: AlbumShowComponent
+    component: AlbumShowComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'edit/:albumId',
-    component: AlbumEditComponent
+    component: AlbumEditComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':albumId/article',

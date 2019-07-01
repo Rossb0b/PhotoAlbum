@@ -1,8 +1,6 @@
-/* mat-toolbar {
-  /* position:fixed;
-  top:0; */
-  /* height:5vh; */
-/* } */ 
+mat-toolbar {
+  height:5vh;
+}
 
 .active-color {
   color:#5D70D4;

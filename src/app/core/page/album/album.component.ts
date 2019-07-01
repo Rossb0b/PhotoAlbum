@@ -64,17 +64,6 @@ export class AlbumComponent implements OnInit {
    *
    *
    * @param {string} albumId
-   * @memberof AlbumListComponent
-   */
-  onShow(albumId: string) {
-    localStorage.setItem('albumId', albumId);
-    this.router.navigate(['/albums/myAlbum']);
-  }
-
-  /**
-   *
-   *
-   * @param {string} albumId
    * @returns {Promise<void>}
    * @memberof AlbumListComponent
    */

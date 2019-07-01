@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PageEvent } from '@angular/material';
 
 
@@ -53,6 +53,7 @@ export class AlbumShowComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    public route: ActivatedRoute,
     private authService: AuthService,
     private albumService: AlbumsService,
     private articleService: ArticleService,
@@ -73,8 +74,8 @@ export class AlbumShowComponent implements OnInit {
      */
     async initialize(): Promise<void> {
       this.isLoading = true;
+      this.albumId = this.route.snapshot.params.albumId;
 
-      this.handleStorage();
       this.getAlbum();
       this.getArticle();
 
@@ -135,20 +136,6 @@ export class AlbumShowComponent implements OnInit {
         this.articleId = this.article._id;
       } else {
         this.articleExist = false;
-      }
-    }
-
-    /**
-     * definie albumId saved in localstorage
-     * clean localstorage form 'albumId'
-     * @returns void
-     */
-    handleStorage(): void {
-      this.albumId = localStorage.getItem('albumId');
-      localStorage.removeItem('albumId');
-
-      if (this.albumId === null) {
-        this.router.navigate(['/albums']);
       }
     }
 
