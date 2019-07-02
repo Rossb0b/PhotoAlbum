@@ -169,14 +169,14 @@ export class AlbumShowComponent implements OnInit {
      * @param {string} albumId
      * @memberof AlbumShowComponent
      */
-    onShow(albumId: string) {
-      localStorage.setItem('albumId', albumId);
-      if (localStorage.getItem('albumId') !== null) {
-        this.router.navigate(['/albums/myAlbum/Article']);
-      } else {
-        this.router.navigate(['/albums/myAlbum']);
-      }
-    }
+    // onShow(albumId: string) {
+    //   localStorage.setItem('albumId', albumId);
+    //   if (localStorage.getItem('albumId') !== null) {
+    //     this.router.navigate(['/albums/myAlbum/Article']);
+    //   } else {
+    //     this.router.navigate(['/albums/myAlbum']);
+    //   }
+    // }
 
     /**
      *

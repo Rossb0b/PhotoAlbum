@@ -17,7 +17,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'edit/:albumId',
+    path: 'editArticle/:albumId',
     component: ArticleEditComponent,
     canActivate: [AuthGuard],
   },

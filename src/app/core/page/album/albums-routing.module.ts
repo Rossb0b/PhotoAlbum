@@ -5,6 +5,7 @@ import { AlbumShowComponent } from '@feature/album/show/album-show.component';
 import { AlbumEditComponent } from '@feature/album/edit/album-edit.component';
 import { AlbumComponent } from './album.component';
 import { AuthGuard } from '@guard/auth.guard';
+import { ArticleCreateComponent } from '@feature/article/create/article-create.component';
 
 const routes: Routes = [
   {
@@ -28,10 +29,15 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: ':albumId/article',
+    path: 'article/:albumId',
     loadChildren: '../article/articles.module#ArticlesModule',
-    canActivate: [AuthGuard]
-  }
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'article/create/:albumId',
+    component: ArticleCreateComponent,
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({
