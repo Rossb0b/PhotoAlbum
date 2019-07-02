@@ -41,7 +41,6 @@ export class AlbumComponent implements OnInit {
     }
 
     this.getAlbums();
-    this.isLoading = false;
   }
 
   /**
@@ -58,6 +57,8 @@ export class AlbumComponent implements OnInit {
       console.error(e);
       alert('fetching albums failed');
     }
+
+    this.isLoading = false;
   }
 
   /**
