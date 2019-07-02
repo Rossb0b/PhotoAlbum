@@ -239,8 +239,7 @@ export class ArticleEditComponent implements OnInit {
         console.error(e);
       }
 
-      this.router.navigate(['/albums']);
-
+      this.router.navigate(['/albums/article', this.albumId]);
     }
 
     this.isLoading = false;

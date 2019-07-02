@@ -213,6 +213,7 @@ export class ArticleCreateComponent implements OnInit {
         this.album._id,
         this.album.creator,
       );
+
       this.router.navigate(['/albums/article', this.albumId]);
     } catch (e) {
       /** debugging */

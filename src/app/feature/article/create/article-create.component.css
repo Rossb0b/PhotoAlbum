@@ -10,6 +10,10 @@ mat-card {
   width:100%;
 }
 
+button[type="submit"] {
+  margin-top:10px;
+}
+
 mat-form-field {
   width:100%;
 }

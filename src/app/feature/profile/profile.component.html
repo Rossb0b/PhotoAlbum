@@ -1,6 +1,6 @@
 <div class="container">
 
-  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <mat-spinner class="mt-4" *ngIf="isLoading"></mat-spinner>
 
   <div class="row mt-3">
     <div class="mx-auto col-12 col-md-10 col-lg-8">
@@ -9,26 +9,6 @@
         <div class="row">
           <div class="col">
             <mat-card-title class="text-center">Welcome {{user.firstname}}</mat-card-title>
-          </div>
-        </div>
-
-        <div class="row mt-3">
-          <div class="col">
-            <p class="text-justify">
-              There is your user ID, you can share it to your friends using the application allowing them to share their ablums with you.
-            </p>
-            <ul>
-              <li id="id">{{userId}}</li>
-            </ul>
-            <div class="row">
-              <div class="col" style="display:flex; flex-direction:row;">
-                <i class="material-icons">warning</i>
-                <p class="ml-2 text-center">
-                  This user Id is unique and cannot be change, so be carreful about who you are sharing it with.
-                </p>
-
-              </div>
-            </div>
           </div>
         </div>
 

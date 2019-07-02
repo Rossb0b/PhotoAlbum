@@ -16,6 +16,11 @@ mat-spinner {
   margin:auto;
 }
 
+mat-card-footer {
+  position:relative;
+  bottom:0;
+}
+
 .container {
   padding:1vh;
 }

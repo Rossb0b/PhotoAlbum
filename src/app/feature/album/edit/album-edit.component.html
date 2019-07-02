@@ -1,4 +1,4 @@
-<div class="row mt-3" *ngIf="isLoading || !album; else container">
+<div class="row mt-4" *ngIf="isLoading || !album; else container">
   <mat-spinner></mat-spinner>
 </div>
 
@@ -66,8 +66,7 @@
                 <button
                 mat-raised-button
                 color="accent"
-                type="submit"
-                style="margin-top:10px;">Save Album</button>
+                type="submit">Save Album</button>
               </div>
             </div>
           </form>

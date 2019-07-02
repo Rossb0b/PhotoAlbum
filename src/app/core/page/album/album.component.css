@@ -12,6 +12,10 @@ img {
   height:100%;
 }
 
+.href-button {
+  padding:0px;
+}
+
 
 mat-card-title {
   text-align:center;

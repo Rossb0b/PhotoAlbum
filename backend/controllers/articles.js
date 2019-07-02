@@ -1,7 +1,7 @@
 const Article = require('../models/article');
 
 exports.createArticle = async (req, res, next) => {
-  if (req.body.owner == req.userData.userId) {
+  if (req.body.owner === req.userData.userId) {
     const url = req.protocol + '://' + req.get("host");
     const article = new Article(req.body);
     article.creator = req.body.owner;

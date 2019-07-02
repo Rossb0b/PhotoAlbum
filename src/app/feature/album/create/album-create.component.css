@@ -6,6 +6,10 @@ mat-form-field {
   width:80%;
 }
 
+button[type="submit"] {
+  margin-top:10px;
+}
+
 input[type="file"] {
   visibility:hidden;
 }

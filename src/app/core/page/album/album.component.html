@@ -1,6 +1,6 @@
 <div class="container">
 
-  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <mat-spinner class="mt-4" *ngIf="isLoading"></mat-spinner>
 
   <div class="mb-2" *ngIf="!isLoading">
 
@@ -33,12 +33,12 @@
             <div class="row">
               <div class="col-5 col-sm-4 col-md-4 col-lg-4 mx-auto text-center">
                 <a
-                *ngIf="userId == album.creator"
+                *ngIf="userId === album.creator"
                 [routerLink]="['/albums/edit', album._id]"
                 class="mx-auto"
                 mat-raised-button
                 color="primary"
-                style="padding:0!important;">Edit</a>
+                class="href-button">Edit</a>
               </div>
 
               <div class="col-5 col-sm-4 col-md-4 col-lg-4 mx-auto text-center">
@@ -46,12 +46,12 @@
                 mat-raised-button
                 color="primary"
                 [routerLink]="['/albums/', album._id]"
-                style="padding:0!important;">Show</a>
+                class="href-button">Show</a>
               </div>
 
               <div class="col col-sm-4 col-md-4 col-lg-4 mx-auto text-center">
                 <button
-                *ngIf="userId == album.creator"
+                *ngIf="userId === album.creator"
                 mat-raised-button
                 color="warn"
                 (click)="deleteAlbum(album._id)">Delete</button>
@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <div class="row mt-2" *ngIf="albums.length == 0">
+    <div class="row mt-2" *ngIf="albums.length === 0">
       <div class="col text-center">
         <p class="h3">You haven't yet any album to fetch</p>
       </div>
