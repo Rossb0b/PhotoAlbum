@@ -80,6 +80,5 @@ export class AlbumComponent implements OnInit {
     }
 
     this.getAlbums();
-    this.isLoading = false;
   }
 }
