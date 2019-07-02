@@ -1,0 +1,205 @@
+<div class="article">
+  <div class="container">
+
+    <mat-spinner class="mt-4" *ngIf="isLoading"></mat-spinner>
+
+    <div *ngIf="!isLoading">
+
+      <div class="row mt-4 title p-2">
+        <div class="col-12">
+
+          <div class="row">
+            <div class="col text-center">
+              <h1>{{ article.title | titlecase }}</h1>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <a
+              *ngIf="article && userId === article.creator"
+              mat-raised-button
+              class="align-left"
+              color="primary"
+              [routerLink]="['edit', albumId]">Edit Article</a>
+
+              <button
+              *ngIf="article && userId === article.creator"
+              mat-raised-button
+              class="align-right"
+              color="warn"
+              (click)="deleteArticle(article._id)">Delete Article</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div *ngIf="paragraphsLength >= 1" class="row mt-4">
+        <div class="col-10 mx-auto">
+          <p>
+            <img [src]="article.paragraphs[0].path" [alt]="article.paragraphs[0].alt" class="paragraphs-image float-right m-3">
+            <span class="paragraphs-text">{{ article.paragraphs[0].content }}</span>
+          </p>
+        </div>
+      </div>
+
+      <div *ngIf="paragraphsLength >= 2" class="row mt-4">
+        <div class="col-10 mx-auto">
+          <p>
+            <img [src]="article.paragraphs[1].path" [alt]="article.paragraphs[1].alt" class="paragraphs-image float-left m-3">
+            <span class="paragraphs-text">{{ article.paragraphs[1].content }}</span>
+          </p>
+        </div>
+      </div>
+
+      <div *ngIf="paragraphsLength >= 3" class="row mt-4">
+        <div class="col-10 mx-auto">
+          <p>
+            <img [src]="article.paragraphs[2].path" [alt]="article.paragraphs[2].alt" class="paragraphs-image float-right m-3">
+            <span class="paragraphs-text">{{ article.paragraphs[2].content }}</span>
+          </p>
+        </div>
+      </div>
+
+      <div *ngIf="paragraphsLength >= 4" class="row mt-4">
+        <div class="col-10 mx-auto">
+          <p>
+            <img [src]="article.paragraphs[3].path" [alt]="article.paragraphs[3].alt" class="paragraphs-image float-left m-3">
+            <span class="paragraphs-text">{{ article.paragraphs[3].content }}</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="row mt-5 mb-3">
+        <div class="col-10 mx-auto">
+          <mat-card>
+
+            <ng-container *ngIf="comments.length > 0">
+              <div class="row mt-3" *ngFor="let comment of comments; let i = index;">
+
+                <ng-container *ngFor="let user of filteredUsers">
+                  <mat-card class="col-3 mx-auto" *ngIf="user._id === comment.creator">
+
+                    <div class="row">
+                      <div class="col-8 mx-auto">
+                        <img class="avatar" [src]="user.imagePath" alt="user avatar">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col text-center">
+                        {{ user.firstname + ' ' + user.lastname | titlecase }}
+                      </div>
+                    </div>
+
+                  </mat-card>
+                </ng-container>
+
+
+                <div class="commentary-container-{{i}} col-8 mx-auto">
+                  <button
+                  *ngIf="userId === comment.creator"
+                  mat-raised-button
+                  class="text-center delete-comment-button"
+                  color="warn"
+                  (click)="deleteComment(comment._id)">Del</button>
+
+                  <button
+                  *ngIf="userId === comment.creator"
+                  mat-raised-button
+                  class="text-center edit-comment-button"
+                  color="primary"
+                  (click)="editComment(i)">Edit</button>
+
+                  <mat-card class="comment-card">
+                    <mat-card-content class="text-center text-justify text-break p-4">
+                      <p>
+                        {{ comment.content }}
+                      </p>
+                    </mat-card-content>
+
+
+                    <mat-card-footer class="text-center pb-4">
+                      <p>
+                        {{ comment.created_date | date: 'dd/MM/yyyy' }}
+                      </p>
+                    </mat-card-footer>
+                  </mat-card>
+                </div>
+
+                <div class="edit-commentary-container-{{i}} col-8 mx-auto" style="display:none;">
+                  <button
+                  *ngIf="userId === comment.creator"
+                  mat-raised-button
+                  class="text-center cancel-edit-comment-button"
+                  color="warn"
+                  (click)="cancelEditComment(i)">Cancel</button>
+
+                  <form [formGroup]="editCommentForm" (ngSubmit)="saveComment(i)">
+                    <button
+                    *ngIf="userId === comment.creator"
+                    mat-raised-button
+                    class="text-center submit-edit-comment-button"
+                    color="accent"
+                    type="submit">Validate</button>
+
+                    <mat-card class="comment-card">
+                      <mat-card-content class="p-4">
+                        <mat-form-field>
+                          <input
+                          matInput
+                          type="text"
+                          formControlName="content"
+                          minLength="1"
+                          maxLength="80">
+                          <mat-error *ngIf="form.get('content').invalid">Please enter a comment content with at least 1 caracters and a max of 80.</mat-error>
+                        </mat-form-field>
+                      </mat-card-content>
+                    </mat-card>
+                  </form>
+                </div>
+
+
+              </div>
+            </ng-container>
+
+            <div class="create-comment">
+              <form [formGroup]="form" (submit)="createComment()">
+
+                <div class="row mt-4">
+                  <div class="col-10 mx-auto">
+                    <mat-form-field>
+                      <input
+                      matInput
+                      type="text"
+                      formControlName="content"
+                      minLength="1"
+                      maxLength="80"
+                      placeholder="Leave your comments for {{ article.title | titlecase }} article">
+                      <mat-error *ngIf="form.get('content').invalid">Please enter a comment content with at least 1 caracters and a max of 80.</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-10">
+                      <button
+                      class="align-right"
+                      mat-raised-button
+                      color="accent"
+                      type="submit">Save commentary</button>
+                    </div>
+                </div>
+
+              </form>
+            </div>
+
+          </mat-card>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post("", checkAuth, CommentController.createComment);
 
-// router.put("/:id", checkAuth, CommentController.editComment);
+router.put("/:id", checkAuth, CommentController.editComment);
 
 router.get("", checkAuth, CommentController.getCommentsForThisArticle);
 

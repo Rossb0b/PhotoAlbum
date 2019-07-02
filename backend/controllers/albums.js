@@ -19,46 +19,40 @@ exports.createAlbum = async (req, res, next) => {
   });
 
   if (req.body.title) {
-    if (req.body.title.length < 4 || req.body.title.length > 18 ) {
-      res.status(406).json({
-        message: 'Your title must have 4 caracters at least and less than 18.'
-      });
-    } else {
-      const album = new Album({
-        title: req.body.title,
-        images: formatedArrayOfFile,
-        linked_friendsId: [],
-        creator: req.userData.userId,
-      });
+    const album = new Album({
+      title: req.body.title,
+      images: formatedArrayOfFile,
+      linked_friendsId: [],
+      creator: req.userData.userId,
+    });
 
-      /** checking that we got a valid album, that he respects Album's model */
-      album.validate(async (error) => {
+    /** checking that we got a valid album, that he respects Album's model */
+    album.validate(async (error) => {
 
-        if(error) {
-            res.status(500).json({
-              message: 'not valid album',
-              error: error,
+      if(error) {
+          res.status(500).json({
+            message: 'not valid album',
+            error: error,
+          });
+      } else {
+        try {
+          await album.save().then(createdAlbum => {
+            res.status(201).json({
+                message: 'Album added successfully',
+                album: {
+                  ...createdAlbum,
+                  id: createdAlbum._id
+                }
             });
-        } else {
-          try {
-            await album.save().then(createdAlbum => {
-              res.status(201).json({
-                  message: 'Album added successfully',
-                  album: {
-                    ...createdAlbum,
-                    id: createdAlbum._id
-                  }
-              });
-            });
-          } catch (e) {
-            res.status(500).json({
-                message: 'Creating an Album failed'
-            });
-          }
+          });
+        } catch (e) {
+          res.status(500).json({
+              message: 'Creating an Album failed'
+          });
         }
+      }
 
-      });
-    }
+    });
   } else {
     res.status(204).json({
       message: 'Req without expected content'
@@ -126,7 +120,7 @@ exports.editAlbum = (req, res, next) => {
   }
 
   /** Handle  title modification add new friends in list */
-  if(!req.body.imageToDeletePath && !req.body.onAdd && req.body.title.length >= 4 && req.body.title.length <= 18) {
+  if(!req.body.imageToDeletePath && !req.body.onAdd) {
     album = new Album(req.body);
   }
 
@@ -193,15 +187,16 @@ exports.getAlbums = async (req, res, next) => {
 };
 
 /**
- * @returns {json({album<Album>})}
+ * @returns {json({album})}
  */
 exports.getAlbum = async (req, res, next) => {
   try {
     const album = await Album.findById(req.params.id);
     const users = await findUsersShareWithThisAlbum(album.linked_friendsId);
-    album.linked_friendsId = users;
-    console.log(album);
-    res.status(200).json(album);
+    res.status(200).json({
+      album: album,
+      users: users
+    });
   } catch (e) {
     res.status(500).json({
       message: 'Fetching album failed'

@@ -1,0 +1,69 @@
+<div class="container">
+
+  <div class="row mt-4">
+    <div class="mx-auto col-12 col-md-10 col-lg-6">
+
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+      <mat-card>
+        <form (submit)="onSignup(signupForm)" #signupForm="ngForm" *ngIf="!isLoading">
+          <mat-form-field>
+            <input
+            matInput
+            type="email"
+            placeholder="E-mail Adress"
+            name="email"
+            ngModel
+            #emailInput="ngModel"
+            required email>
+            <mat-error *ngIf="emailInput.invalid">Please enter a valid E-mail</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input
+            matInput
+            type="password"
+            placeholder="Password"
+            name="password"
+            ngModel
+            #passwordInput="ngModel"
+            required>
+            <mat-error *ngIf="passwordInput.invalid">Please enter a valid password</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input
+            matInput
+            type="text"
+            placeholder="First name"
+            name="firstname"
+            ngModel
+            #firstnameInput="ngModel"
+            required>
+            <mat-error *ngIf="firstnameInput.invalid">Please enter a First name</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input
+            matInput
+            type="text"
+            placeholder="Last name"
+            name="lastname"
+            ngModel
+            #lastnameInput="ngModel"
+            required>
+            <mat-error *ngIf="lastnameInput.invalid">Please enter a lastname</mat-error>
+          </mat-form-field>
+
+          <button
+          mat-raised-button
+          color="accent"
+          type="submit"
+          *ngIf="!isLoading">Signup</button>
+        </form>
+      </mat-card>
+
+    </div>
+  </div>
+
+</div>

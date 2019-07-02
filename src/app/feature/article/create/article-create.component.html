@@ -1,0 +1,105 @@
+<div class="container">
+
+  <mat-spinner class="mt-4" *ngIf="isLoading"></mat-spinner>
+
+  <form [formGroup]="form" (submit)="saveArticle()" *ngIf="!isLoading">
+    <div class="row mt-3">
+      <div class="col-6 mx-auto">
+        <mat-form-field>
+          <input
+          matInput
+          type="text"
+          formControlName="title"
+          minLength="4"
+          maxLength="34"
+          placeholder="Article's title">
+          <mat-error *ngIf="form.get('title').invalid">Please enter an article title with at least 4 caracters and a max of 18.</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div *ngFor="let p of form.get('paragraphs').controls; let i = index">
+      <div class="mt-4" formArrayName="paragraphs">
+        <div [formGroupName]="i">
+          <mat-form-field>
+            <textarea
+            (focus)="goToView()"
+            matInput
+            rows="4"
+            formControlName="content"
+            minLength="80"
+            maxLength="525"
+            placeholder="Paragraph {{ i + 1 }}"
+            (focus)="displayChooseImg(i)"></textarea>
+            <mat-error *ngIf="form.get('paragraphs').invalid">Please enter an article content with at least 80 caracters and a max of 525.</mat-error>
+          </mat-form-field>
+          <div class="choose-image">
+            <p class="mt-4">Pick an image to illustrate your content</p>
+            <div *ngIf="photosToDisplay.length === 4" class="row mt-3">
+              <div class="col-8 col-sm-5 col-md-3 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+                <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
+                  <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo.path" [alt]="photo.alt">
+                </mat-card>
+              </div>
+            </div>
+
+            <div *ngIf="photosToDisplay.length === 3" class="row mt-3">
+              <div class="col-8 col-sm-4 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+                <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
+                  <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo.path" [alt]="photo.alt">
+                </mat-card>
+              </div>
+            </div>
+
+            <div *ngIf="photosToDisplay.length === 2" class="row mt-3">
+              <div class="col-8 col-sm-5 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+                <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
+                  <img mat-card-image class="mx-auto mt-1 medium-picture" [src]="photo.path" [alt]="photo.alt">
+                </mat-card>
+              </div>
+            </div>
+
+            <div *ngIf="photosToDisplay.length === 1" class="row mt-3">
+              <div class="col-8 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+                <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
+                  <img mat-card-image class="mx-auto mt-1 big-picture" [src]="photo.path" [alt]="photo.alt">
+                </mat-card>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col">
+                <mat-paginator [length]="totalPhotos" [pageSize]="photosPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)"></mat-paginator>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <mat-card class="col-8 col-sm-6 col-md-4 mx-auto" *ngIf="p.controls.path.value !== null">
+              <img mat-card-image class="ml-1 mt-1 little-picture" [src]="p.controls.path.value" [alt]="p.controls.alt.value">
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-5 col-sm-3 col-md-2 mr-4" *ngIf="form.get('paragraphs').controls.length < 4">
+        <button mat-raised-button color="primary" type="button" (click)="addparagraph()">Add a paragraph</button>
+      </div>
+
+      <div class="col-5 col-sm-3 col-md-2" *ngIf="form.get('paragraphs').controls.length > 1">
+        <button mat-raised-button color="primary" type="button" (click)="deleteparagraph()">Delete a paragraph</button>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col">
+        <button
+        id="submit-button"
+        mat-raised-button
+        color="accent"
+        type="submit">Save Article</button>
+      </div>
+    </div>
+  </form>
+</div>

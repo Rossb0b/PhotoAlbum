@@ -1,0 +1,12 @@
+mat-spinner {
+  margin:auto;
+}
+
+mat-form-field, .rmvButton {
+  width:80%;
+}
+
+button[type="submit"] {
+  margin-top:10px;
+}
+
