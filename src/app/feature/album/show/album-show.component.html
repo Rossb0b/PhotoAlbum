@@ -13,7 +13,7 @@
   <div class="row">
     <!-- Button that make appear and disappear the container to add a photo -->
     <div class="col-5 col-md-2 col-lg-3 mx-auto">
-      <button *ngIf="album && userId == album.creator" mat-raised-button class="text-center" color="primary" (click)="onAdd()">Add a Photo</button>
+      <button *ngIf="album && userId === album.creator" mat-raised-button class="text-center" color="primary" (click)="onAdd()">Add a Photo</button>
     </div>
 
     <!-- Container for add photo, only exist with a min-width of 576px, and if user wants to add a photo -->
@@ -41,25 +41,16 @@
     <!-- Buttons for redirect to article's components -->
       <div class="col-5 col-md-2 col-lg-3 mx-auto text-right">
         <a
-        *ngIf="articleExist"
-        mat-raised-button
-        color="primary"
-        [routerLink]="['/albums/article', album._id]">Show Article</a>
-        <!-- <button
         *ngIf='articleExist'
         mat-raised-button
         color="primary"
-        (click)="onShow(albumId)">Show Article</button> -->
+        [routerLink]="['/albums/article', album._id]">Show Article</a>
 
         <a
-        *ngIf='!articleExist && userID === album.creator'
+        *ngIf='!articleExist && userId === album.creator'
         mat-raised-button
         color="primary"
         [routerLink]="['/albums/article/create', album._id]">Create article</a>
-        <!-- <button
-        *ngIf='!articleExist && userId == album.creator'
-        mat-raised-button color="primary"
-        (click)="addArticle(albumId)">Create article</button> -->
       </div>
     </div>
 
@@ -92,36 +83,36 @@
       </div>
     </div>
 
-    <div class="image-paginator" *ngIf="photosToDisplay.length == 4" class="row mt-3">
+    <div class="image-paginator" *ngIf="photosToDisplay.length === 4" class="row mt-3">
       <div class="col-11 col-md-3 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
-        <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
+        <button *ngIf="userId === album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
         <mat-card>
           <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo.path" [alt]="photo.alt">
         </mat-card>
       </div>
     </div>
 
-    <div class="image-paginator" *ngIf="photosToDisplay.length == 3" class="row mt-3">
+    <div class="image-paginator" *ngIf="photosToDisplay.length === 3" class="row mt-3">
       <div class="col-11 col-md-4 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
-        <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
+        <button *ngIf="userId === album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
         <mat-card>
           <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo.path" [alt]="photo.alt">
         </mat-card>
       </div>
     </div>
 
-    <div class="image-paginator" *ngIf="photosToDisplay.length == 2" class="row mt-3">
+    <div class="image-paginator" *ngIf="photosToDisplay.length === 2" class="row mt-3">
       <div class="col-11 col-md-5 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
-        <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
+        <button *ngIf="userId === album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
         <mat-card>
           <img mat-card-image class="mx-auto mt-1 medium-picture" [src]="photo.path" [alt]="photo.alt">
         </mat-card>
       </div>
     </div>
 
-    <div class="image-paginator" *ngIf="photosToDisplay.length == 1" class="row mt-3">
+    <div class="image-paginator" *ngIf="photosToDisplay.length === 1" class="row mt-3">
       <div class="col-11 col-md-7 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
-        <button *ngIf="userId == album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
+        <button *ngIf="userId === album.creator" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
         <mat-card>
           <img mat-card-image class="mx-auto mt-1 big-picture" [src]="photo.path" [alt]="photo.alt">
         </mat-card>

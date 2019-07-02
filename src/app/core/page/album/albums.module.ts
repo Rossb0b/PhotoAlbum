@@ -3,12 +3,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { AngularMaterialModule } from '@shared/angular-material.module';
 import { AlbumComponent } from '@page/album/album.component';
-import { AlbumCreateComponent } from '@feature/album/create/album-create.component';
 import { AlbumShowComponent } from '@feature/album/show/album-show.component';
-import { AlbumsRoutingModule } from './albums-routing.module';
 import { AlbumEditComponent } from '@feature/album/edit/album-edit.component';
+import { AlbumCreateComponent } from '@feature/album/create/album-create.component';
+import { ArticleCreateComponent } from '@feature/article/create/article-create.component';
+import { AngularMaterialModule } from '@shared/angular-material.module';
+import { AlbumsRoutingModule } from './albums-routing.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { AlbumEditComponent } from '@feature/album/edit/album-edit.component';
     AlbumComponent,
     AlbumCreateComponent,
     AlbumEditComponent,
-    AlbumShowComponent
+    AlbumShowComponent,
+    ArticleCreateComponent,
   ],
   imports: [
     CommonModule,

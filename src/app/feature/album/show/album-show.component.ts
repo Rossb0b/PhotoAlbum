@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { PageEvent } from '@angular/material';
 
 
@@ -19,19 +19,19 @@ import { mimeType } from '@helper/validator/mime-type.validator';
 export class AlbumShowComponent implements OnInit {
 
   /** current album */
-  album: Album;
+  public album: Album;
   /** ID of current album */
   albumId: string;
   /** current article if exist */
-  article: Article;
+  private article: Article;
   /** ID of the current article if exist */
   articleId: string;
   /** current status of article */
-  articleExist = false;
+  public articleExist = false;
   /** define if front is communicating with api */
-  isLoading = false;
+  public isLoading = false;
   /** current ID of logged in user */
-  userId: string;
+  public userId: string;
   /** current array of images to display */
   newArrayOfImage: any;
   /** current value of total photo to load */
@@ -57,7 +57,6 @@ export class AlbumShowComponent implements OnInit {
     private authService: AuthService,
     private albumService: AlbumsService,
     private articleService: ArticleService,
-    private router: Router
     ) {
       this.buildForm();
     }
@@ -160,36 +159,6 @@ export class AlbumShowComponent implements OnInit {
         this.addPhoto = true;
       } else {
         this.addPhoto = false;
-      }
-    }
-
-    /**
-     *
-     *
-     * @param {string} albumId
-     * @memberof AlbumShowComponent
-     */
-    // onShow(albumId: string) {
-    //   localStorage.setItem('albumId', albumId);
-    //   if (localStorage.getItem('albumId') !== null) {
-    //     this.router.navigate(['/albums/myAlbum/Article']);
-    //   } else {
-    //     this.router.navigate(['/albums/myAlbum']);
-    //   }
-    // }
-
-    /**
-     *
-     *
-     * @param {string} albumId
-     * @memberof AlbumShowComponent
-     */
-    addArticle(albumId: string) {
-      localStorage.setItem('albumId', albumId);
-      if (localStorage.getItem('albumId') !== null) {
-        this.router.navigate(['/albums/myAlbum/Article/create']);
-      } else {
-        this.router.navigate(['/albums/myAlbum']);
       }
     }
 

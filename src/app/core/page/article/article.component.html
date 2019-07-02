@@ -21,7 +21,7 @@
               mat-raised-button
               class="align-left"
               color="primary"
-              [routerLink]="['/albums/myAlbum/Article/edit', albumId]">Edit Article</a>
+              [routerLink]="['edit', albumId]">Edit Article</a>
 
               <button
               *ngIf="article && userId === article.creator"

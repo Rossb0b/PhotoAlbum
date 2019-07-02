@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { PageEvent } from '@angular/material';
 
@@ -40,18 +40,19 @@ export class ArticleCreateComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private articleService: ArticleService,
     private albumService: AlbumsService,
     private fb: FormBuilder,
   ) {
     this.form = this.fb.group({
-      title: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(34)]],
+      title: [null, { validators: [Validators.required, Validators.minLength(4), Validators.maxLength(34)] }],
       paragraphs: this.fb.array([])
     });
 
     const p = this.form.controls.paragraphs as FormArray;
     p.push(this.fb.group({
-      content: [null, Validators.required, Validators.minLength(80), Validators.maxLength(525)],
+      content: [null, { validators: [Validators.required, Validators.minLength(80), Validators.maxLength(525)] }],
       path: [null],
       alt: [null],
     }));
@@ -69,8 +70,8 @@ export class ArticleCreateComponent implements OnInit {
    */
   async initialize(): Promise<void> {
     this.isLoading = true;
+    this.albumId = this.route.snapshot.params.albumId;
 
-    this.handleStorage();
     this.getAlbum();
 
     this.isLoading = false;
@@ -96,20 +97,6 @@ export class ArticleCreateComponent implements OnInit {
       if (this.album.images[i]) {
         this.photosToDisplay.push(this.album.images[i]);
       }
-    }
-  }
-
-  /**
-   * definie albumId saved in localstorage
-   * clean localstorage form 'albumId'
-   * @returns void
-   */
-  handleStorage(): void {
-    this.albumId = localStorage.getItem('albumId');
-    localStorage.removeItem('albumId');
-
-    if (this.albumId === null) {
-      this.router.navigate(['/albums']);
     }
   }
 
@@ -157,7 +144,7 @@ export class ArticleCreateComponent implements OnInit {
     console.log('1', this.form.get('paragraphs'));
     const p = this.form.controls.paragraphs as FormArray;
     p.push(this.fb.group({
-      content: [null, Validators.required, Validators.minLength(80), Validators.maxLength(525)],
+      content: [null, { validators: [Validators.required, Validators.minLength(80), Validators.maxLength(525)] }],
       path: [null],
       alt: [null],
     }));
@@ -226,21 +213,12 @@ export class ArticleCreateComponent implements OnInit {
         this.album._id,
         this.album.creator,
       );
-
-      localStorage.setItem('albumId', this.albumId);
-
-      if (localStorage.getItem('albumId') === this.albumId) {
-        this.router.navigate(['/albums/myAlbum/Article']);
-      } else {
-        this.router.navigate(['/albums']);
-      }
-
+      this.router.navigate(['/albums/article', this.albumId]);
     } catch (e) {
       /** debugging */
       console.error(e);
     }
 
-    // this.form.reset();
     this.isLoading = false;
   }
 }

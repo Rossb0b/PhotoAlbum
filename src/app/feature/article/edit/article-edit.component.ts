@@ -109,14 +109,14 @@ export class ArticleEditComponent implements OnInit {
    */
   buildForm(): void {
     this.form = this.fb.group({
-      title: [this.article[0].title, [Validators.required, Validators.minLength(4), Validators.maxLength(34)]],
+      title: [this.article[0].title, { validators: [Validators.required, Validators.minLength(4), Validators.maxLength(34)] }],
       paragraphs: this.fb.array([])
     });
 
     this.article[0].paragraphs.forEach(paragraph => {
       const p = this.form.controls.paragraphs as FormArray;
       p.push(this.fb.group({
-        content: [paragraph.content, Validators.required, Validators.minLength(80), Validators.maxLength(525)],
+        content: [paragraph.content, { validators: [Validators.required, Validators.minLength(80), Validators.maxLength(525)] }],
         path: [paragraph.path],
         alt: [paragraph.alt],
       }));
@@ -167,7 +167,7 @@ export class ArticleEditComponent implements OnInit {
     console.log('1', this.form.get('paragraphs'));
     const p = this.form.controls.paragraphs as FormArray;
     p.push(this.fb.group({
-      content: [null, Validators.required, Validators.minLength(80), Validators.maxLength(525)],
+      content: [null, { validators: [Validators.required, Validators.minLength(80), Validators.maxLength(525)] }],
       path: [null],
       alt: [null],
     }));

@@ -11,7 +11,7 @@
           type="text"
           formControlName="title"
           minLength="4"
-          maxlength="34"
+          maxLength="34"
           placeholder="Article's title">
           <mat-error *ngIf="form.get('title').invalid">Please enter an article title with at least 4 caracters and a max of 18.</mat-error>
         </mat-form-field>
@@ -26,12 +26,12 @@
             (focus)="goToView()"
             matInput
             rows="4"
-            minlength="80"
-            maxlength="525"
             formControlName="content"
+            minLength="80"
+            maxLength="525"
             placeholder="Paragraph {{ i + 1 }}"
             (focus)="displayChooseImg(i)"></textarea>
-            <mat-error *ngIf="form.get('paragraphs').invalid">Please enter an article content with at least 60 caracters and a max of 255.</mat-error>
+            <mat-error *ngIf="form.get('paragraphs').invalid">Please enter an article content with at least 80 caracters and a max of 525.</mat-error>
           </mat-form-field>
           <div class="choose-image">
             <p class="mt-4">Pick an image to illustrate your content</p>
@@ -43,7 +43,7 @@
               </div>
             </div>
 
-            <div *ngIf="photosToDisplay.length == 3" class="row mt-3">
+            <div *ngIf="photosToDisplay.length === 3" class="row mt-3">
               <div class="col-8 col-sm-4 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
                 <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
                   <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo.path" [alt]="photo.alt">
@@ -51,7 +51,7 @@
               </div>
             </div>
 
-            <div *ngIf="photosToDisplay.length == 2" class="row mt-3">
+            <div *ngIf="photosToDisplay.length === 2" class="row mt-3">
               <div class="col-8 col-sm-5 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
                 <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
                   <img mat-card-image class="mx-auto mt-1 medium-picture" [src]="photo.path" [alt]="photo.alt">
@@ -59,7 +59,7 @@
               </div>
             </div>
 
-            <div *ngIf="photosToDisplay.length == 1" class="row mt-3">
+            <div *ngIf="photosToDisplay.length === 1" class="row mt-3">
               <div class="col-8 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
                 <mat-card [class.selected]="photo === selectedPhoto" (click)="selectImage(i, photo)">
                   <img mat-card-image class="mx-auto mt-1 big-picture" [src]="photo.path" [alt]="photo.alt">

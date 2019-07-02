@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
 import { Article } from '@interface/article.interface';
@@ -43,6 +43,7 @@ export class ArticleComponent implements OnInit {
     private articleService: ArticleService,
     private commentService: CommentService,
     private userService: UserService,
+    private route: ActivatedRoute,
     ) {
       this.buildForm();
      }
@@ -58,8 +59,9 @@ export class ArticleComponent implements OnInit {
    */
   async initialize(): Promise<void> {
     this.isLoading = true;
+    this.albumId = this.route.snapshot.params.albumId;
 
-    this.handleStorage();
+    // this.handleStorage();
 
     try {
       const result = await this.articleService.getArticleFromAlbumId(this.albumId);
@@ -75,23 +77,6 @@ export class ArticleComponent implements OnInit {
     this.getComments();
 
     this.isLoading = false;
-  }
-
-  /**
-   *
-   * definie albumId saved in localstorage
-   * clean localstorage form 'albumId'
-   *
-   * @returns void
-   * @memberof ArticleShowComponent
-   */
-  handleStorage(): void {
-    this.albumId = localStorage.getItem('albumId');
-    localStorage.removeItem('albumId');
-
-    if (this.albumId === null) {
-      this.router.navigate(['/albums']);
-    }
   }
 
   /**
@@ -217,12 +202,7 @@ export class ArticleComponent implements OnInit {
 
     try {
       return this.articleService.deleteArticle(articleId).then(() => {
-        localStorage.setItem('albumId', this.albumId);
-        if (localStorage.getItem('albumId') !== null) {
-          this.router.navigate(['/albums/myAlbum']);
-        } else {
-          this.router.navigate(['/albums']);
-        }
+        this.router.navigate(['albums', this.albumId]);
       });
     } catch (e) {
       /** debugging */
