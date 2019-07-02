@@ -5,23 +5,18 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AuthInterceptor } from './auth/auth-interceptor';
-import { ErrorInterceptor } from './error-interceptor';
-import { ErrorComponent } from './error/error.component';
-import { AngularMaterialModule } from './angular-material.module';
-import { UsersModule } from './users/users.module';
-import { AlbumsService } from './albums/albums.service';
-import { HomeComponent } from './home/home.component';
-import { ArticlesModule } from './albums/article/articles.module';
+import { AuthInterceptor } from '@helper/auth-interceptor';
+import { ErrorInterceptor } from '@helper/error-interceptor';
+import { ErrorComponent } from '@component/error/error.component';
+import { AngularMaterialModule } from '@shared/angular-material.module';
+import { HeaderComponent } from '@navigation/header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     ErrorComponent,
-    HomeComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,11 +25,8 @@ import { ArticlesModule } from './albums/article/articles.module';
     BrowserAnimationsModule,
     HttpClientModule,
     AngularMaterialModule,
-    UsersModule,
-    ArticlesModule,
   ],
   providers: [
-    AlbumsService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],

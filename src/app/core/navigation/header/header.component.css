@@ -1,0 +1,23 @@
+mat-toolbar {
+  height:5vh;
+}
+
+.active-color {
+  color:#5D70D4;
+}
+
+ul {
+  display: flex;
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+a {
+  text-decoration:none;
+  color:white;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
