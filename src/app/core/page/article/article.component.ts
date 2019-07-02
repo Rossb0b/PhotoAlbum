@@ -31,8 +31,12 @@ export class ArticleComponent implements OnInit {
   comments: Comment[] = [];
   /** define if front is communicating with API */
   isLoading = false;
-  /** comment form */
+  /** comment create form */
   form: FormGroup;
+  /** comment edit form */
+  editCommentForm: FormGroup;
+  /** current status of editing comment */
+  private editingComment = false;
   /** define of many paragraphs view as to generate */
   paragraphsLength: number;
 
@@ -61,8 +65,6 @@ export class ArticleComponent implements OnInit {
     this.isLoading = true;
     this.albumId = this.route.snapshot.params.albumId;
 
-    // this.handleStorage();
-
     try {
       const result = await this.articleService.getArticleFromAlbumId(this.albumId);
       this.article = result[0];
@@ -85,8 +87,29 @@ export class ArticleComponent implements OnInit {
    */
   buildForm(): void {
     this.form = this.formBuilder.group({
-      content: new FormControl(null, {validators: [Validators.required, Validators.minLength(1), Validators.maxLength(80)]}),
+      content: new FormControl(null, { validators: [Validators.required, Validators.minLength(1), Validators.maxLength(80)] }),
     });
+
+    this.editCommentForm = this.formBuilder.group({
+      content: new FormControl(null, { validators: [Validators.required, Validators.minLength(1), Validators.maxLength(80)] })
+    });
+  }
+
+  editComment(index: number) {
+    if (this.editingComment === false) {
+      this.editingComment = true;
+      (document.querySelector('.commentary-container-' + index) as HTMLElement).style.display = 'none';
+      this.editCommentForm.patchValue(this.comments[index]);
+      (document.querySelector('.edit-commentary-container-' + index) as HTMLElement).style.display = 'block';
+    } else {
+      alert('Close the first form');
+    }
+  }
+
+  cancelEditComment(index: number) {
+    this.editingComment = false;
+    (document.querySelector('.commentary-container-' + index) as HTMLElement).style.display = 'block';
+    (document.querySelector('.edit-commentary-container-' + index) as HTMLElement).style.display = 'none';
   }
 
   /**
@@ -168,6 +191,26 @@ export class ArticleComponent implements OnInit {
     }
 
     this.form.reset();
+    this.isLoading = false;
+  }
+
+  async saveComment(index: number): Promise<void> {
+    this.isLoading = true;
+
+    if (this.editCommentForm.valid) {
+      const editedComment = this.comments[index];
+      editedComment.content = this.editCommentForm.get('content').value;
+
+      try {
+        await this.commentService.updateComment(editedComment);
+      } catch (e) {
+        /** debugging */
+        console.error(e);
+        alert('server couldn\'t update comment, try again later');
+      }
+    }
+
+    this.editingComment = false;
     this.isLoading = false;
   }
 

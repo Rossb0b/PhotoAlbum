@@ -32,6 +32,10 @@ export class CommentService {
         return this.http.post<{message: string, comment: Comment}>(BACKEND_URL, commentData).toPromise();
     }
 
+    updateComment(comment: Comment): Promise<any> {
+      return this.http.put(BACKEND_URL + comment._id, comment).toPromise();
+    }
+
     deleteComment(commentId: string): Promise<any> {
         return this.http.delete(BACKEND_URL + commentId).toPromise();
     }

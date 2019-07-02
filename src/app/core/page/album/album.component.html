@@ -19,11 +19,11 @@
         <div class="row mt-3">
           <div class="col">
             <mat-card>
-              <mat-card-title>{{album.title}}</mat-card-title>
+              <mat-card-title>{{ album.title }}</mat-card-title>
               <div class="image-holder mt-2 col-12 mx-auto">
                 <img class="ml-1" [src]="album.images[0].path" [alt]="album.images[0].alt">
               </div>
-              <mat-card-footer class="text-center m-2">{{album.created_date | date: 'dd/MM/yyyy'}}</mat-card-footer>
+              <mat-card-footer class="text-center m-2">{{ album.created_date | date: 'dd/MM/yyyy' }}</mat-card-footer>
             </mat-card>
           </div>
         </div>

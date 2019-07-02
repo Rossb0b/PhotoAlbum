@@ -47,10 +47,10 @@ exports.editComment = async (req, res, next) => {
     } else {
       try {
         const result = await Comment.updateOne({
-          _id: req.body._id,
+          _id: comment._id,
           creator: req.userData.userId,
           articleId: req.body.articleId,
-        });
+        }, comment);
 
         if (result.n > 0) {
           res.status(200).json({
@@ -90,7 +90,7 @@ exports.getCommentsForThisArticle = async (req, res, next) => {
 
 exports.deleteComment = async (req, res, next) => {
   try {
-    const result = Comment.deleteOne({
+    const result = await Comment.deleteOne({
       _id: req.params.id,
       creator: req.userData.userId
     });
