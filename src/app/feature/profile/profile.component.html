@@ -18,7 +18,7 @@
               <img [src]="user.imagePath" alt="user avatar">
             </div>
 
-            <form [formGroup]="form" (submit)="onSaveUser()" *ngIf="!isLoading">
+            <form [formGroup]="form" (submit)="SaveUser()" *ngIf="!isLoading">
 
               <div class="row">
                 <div class="col">

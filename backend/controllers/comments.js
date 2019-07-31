@@ -1,6 +1,14 @@
 const Comment = require('../models/comment');
 
+/**
+ * Async method to create a new Comment.
+ * Init the comment send by the request.
+ * Ensure that the comment is valid.
+ *
+ * @returns {json{message<string>, comments<Comment[]> if success}}
+ */
 exports.createComment = async (req, res, next) => {
+
   const url = req.protocol + '://' + req.get("host");
   const comment = new Comment({
     content: req.body.content,
@@ -8,6 +16,7 @@ exports.createComment = async (req, res, next) => {
     articleId: req.body.articleId,
   });
 
+  /** checking that we got a valid comment, that he respects Comment's model */
   comment.validate(async (error) => {
 
     if (error) {
@@ -35,9 +44,18 @@ exports.createComment = async (req, res, next) => {
   });
 };
 
+/**
+ * Async method to edit a Comment.
+ * Init the comment edited send by the request.
+ * Ensure that the comment is valid.
+ *
+ * @returns {json{message<string>}}
+ */
 exports.editComment = async (req, res, next) => {
+
   const comment = new Comment (req.body);
 
+  /** checking that we got a valid comment, that he respects Comment's model */
   comment.validate(async (error) => {
 
     if (error) {
@@ -72,7 +90,13 @@ exports.editComment = async (req, res, next) => {
   });
 };
 
+/**
+ * Async method to get the comments for this Article.
+ *
+ * @returns {json{message<string>, comments<Comment[]> if success}}
+ */
 exports.getCommentsForThisArticle = async (req, res, next) => {
+
   try {
     const comments = await Comment.find({
       articleId: req.query.articleId,
@@ -88,7 +112,13 @@ exports.getCommentsForThisArticle = async (req, res, next) => {
   }
 };
 
+/**
+ * Async method to delete the wanted comment.
+ *
+ * @returns {json{message<string>}}
+ */
 exports.deleteComment = async (req, res, next) => {
+
   try {
     const result = await Comment.deleteOne({
       _id: req.params.id,

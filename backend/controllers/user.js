@@ -4,7 +4,15 @@ const fs = require('fs');
 
 const User = require('../models/user');
 
+/**
+ * Async method to create a new User.
+ * Init the user send by the request.
+ * Define the default avatar for the user.
+ *
+ * @returns {json{message<string>, result<User> if success}}
+ */
 exports.createUser = async (req, res, next) => {
+
   const url = req.protocol + '://' + req.get("host");
   const user = new User(req.body);
   user.imagePath = url + '/images/avatars/default.png';
@@ -23,11 +31,23 @@ exports.createUser = async (req, res, next) => {
   }
 };
 
+/**
+ * Encrypt the password.
+ */
 hashPassword = (password) => {
   return bcrypt.hash(password, 10);
 };
 
+/**
+ * Async method to connect a User.
+ * First check that the user exist.
+ * Uncrypt and compare the password.
+ * Create a new token with user data, the JWT key, and the delay before it connexion expires.
+ *
+ * @returns {json{message<string> || message<string>, token, expiresIn<number>, userId<string>}}
+ */
 exports.userLogin = async (req, res, next) => {
+
   try {
     const user = await User.findOne({
       email: req.body.email
@@ -62,6 +82,9 @@ exports.userLogin = async (req, res, next) => {
   }
 };
 
+/**
+ * Create a new token of connexion for the identified user.
+ */
 jwtSign = ({ email, userId }) => {
   return jwt.sign(
     { email: email, userId: userId },
@@ -70,7 +93,13 @@ jwtSign = ({ email, userId }) => {
   );
 };
 
+/**
+ * Async method to get the wanted User.
+ *
+ * @returns {json{user<User> || message<string>}}
+ */
 exports.getUser = async (req, res, next) => {
+
   try {
     const user = await User.findById(req.params.id);
     res.status(200).json(user);
@@ -81,7 +110,13 @@ exports.getUser = async (req, res, next) => {
   }
 };
 
+/**
+ * Async method to get every User.
+ *
+ * @returns {json{users<User[]> || message<string>}}
+ */
 exports.getUsers = async (req, res, next) => {
+
   try {
     const users = await User.find();
     res.status(200).json(users);
@@ -93,7 +128,17 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
+/**
+ * Async method to edit an User.
+ * Get the old avatar to delete it.
+ * Get the new avatar to store it.
+ * Init the new user send by the request.
+ * After success of editing, delete the old avatar in local (if not the default one).
+ *
+ * @returns {json{message<string>}}
+ */
 exports.editUser = async (req, res, next) => {
+
   let imageToDelete = req.body.imagePath;
   var imageToDeleteFractionnalPath = imageToDelete.split("avatars/").pop();
   let imageToDeleteFinalPath = "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/avatars/" + imageToDeleteFractionnalPath;
@@ -105,10 +150,11 @@ exports.editUser = async (req, res, next) => {
   }
 
   const user = new User (req.body);
+  user._id = req.body.id;
   user.imagePath = imagePath;
 
   try {
-    const result = User.updateOne({
+    const result = await User.updateOne({
       _id: req.params.id,
     }, user);
 
@@ -128,6 +174,7 @@ exports.editUser = async (req, res, next) => {
       });
     }
   } catch (e) {
+    console.log(e);
     res.status(401).json({
       message: 'Update failed'
     });

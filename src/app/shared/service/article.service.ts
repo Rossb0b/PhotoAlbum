@@ -12,12 +12,10 @@ const BACKEND_URL = env.apiUrl + '/article/';
 })
 export class ArticleService {
 
-  private article: Article[];
-
   constructor(private http: HttpClient, private router: Router) { }
 
   /**
-   *
+   * Request the article linked to this album.
    *
    * @param {string} albumId
    * @returns {Promise<Article>}
@@ -29,7 +27,7 @@ export class ArticleService {
   }
 
   /**
-   *
+   * Request to create a new article and link it to this album.
    *
    * @param {string} title
    * @param {*} paragraphs
@@ -48,12 +46,19 @@ export class ArticleService {
     return this.http.post<{message: string, article: Article}>(BACKEND_URL, articleData).toPromise();
   }
 
+  /**
+   * Request to update the article selectionned.
+   *
+   * @param article
+   * @returns {Promise<any>}
+   * @memberof ArticleService
+   */
   updateArticle(article: Article): Promise<any> {
     return this.http.put(BACKEND_URL + article._id, article).toPromise();
   }
 
   /**
-   *
+   * Request to delete the article selectionned.
    *
    * @param {string} articleId
    * @returns {Promise<any>}

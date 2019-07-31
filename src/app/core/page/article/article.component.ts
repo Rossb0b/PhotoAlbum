@@ -17,14 +17,16 @@ import { UserService } from '@service/user.service';
 })
 export class ArticleComponent implements OnInit {
 
+  /** current status of editing comment */
+  editingComment = false;
+  /** current list of all user */
+  users: User[] = [];
   /** current article */
   article: Article;
   /** current ID of the album linked to this article */
   albumId: string;
   /** current ID of logged in user */
   userId: string;
-  /** current list of all user */
-  users: User[] = [];
   /** current list of all user with filtered data */
   filteredUsers: {_id: string, firstname: string, lastname: string}[] = [];
   /** current list of comments */
@@ -35,8 +37,6 @@ export class ArticleComponent implements OnInit {
   form: FormGroup;
   /** comment edit form */
   editCommentForm: FormGroup;
-  /** current status of editing comment */
-  private editingComment = false;
   /** define of many paragraphs view as to generate */
   paragraphsLength: number;
 
@@ -57,6 +57,14 @@ export class ArticleComponent implements OnInit {
   }
 
   /**
+   * Initialize the component;
+   * Set the loading on true,
+   * Identify the albumId from the url,
+   * Define the artile to show in function of the albumId,
+   * Get the userId of current logged in user,
+   * Get list of all users,
+   * Get list of comments to show,
+   * Set the loading on false,
    *
    * @returns {Promise<void>}
    * @memberof ArticleShowComponent
@@ -82,6 +90,8 @@ export class ArticleComponent implements OnInit {
   }
 
   /**
+   * Set the form to add new comment to the article,
+   * Set the form to edit a listed comment of the article,
    *
    * @memberof ArticleShowComponent
    */
@@ -95,6 +105,17 @@ export class ArticleComponent implements OnInit {
     });
   }
 
+  /**
+   * Function called to editing a comment.
+   * First check if the user isn't already editing a comment,
+   * If the user isn't already editing a comment, tell the app that he is doing it now,
+   * Hide the comment actually being edit,
+   * Set the value of this comment to the editCommentForm,
+   * Show the edit form for this comment.
+   * If the user is already editing a comment, display an error message inviting him to close the first edit block,
+   *
+   * @param index
+   */
   editComment(index: number) {
     if (this.editingComment === false) {
       this.editingComment = true;
@@ -106,6 +127,15 @@ export class ArticleComponent implements OnInit {
     }
   }
 
+  /**
+   * Function called to close an editing form.
+   * First, tell the app that the user isn't editing a comment anymore by swithching value of editingComment to false,
+   * Hide the edit form actually being showed,
+   * Then show the comment that was being edit,
+   *
+   * @param {number} index
+   * @memberof ArticleComponent
+   */
   cancelEditComment(index: number) {
     this.editingComment = false;
     (document.querySelector('.commentary-container-' + index) as HTMLElement).style.display = 'block';
@@ -113,6 +143,7 @@ export class ArticleComponent implements OnInit {
   }
 
   /**
+   * Get the userId of the current logged in user.
    *
    * @returns {Promise<void>}
    * @memberof ArticleShowComponent
@@ -127,7 +158,8 @@ export class ArticleComponent implements OnInit {
   }
 
   /**
-   *
+   * Get every users,
+   * redefine the users for fetch only wanted data.
    *
    * @returns {Promise<void>}
    * @memberof ArticleShowComponent
@@ -152,7 +184,7 @@ export class ArticleComponent implements OnInit {
   }
 
   /**
-   *
+   * Get every comments linked to this article.
    *
    * @returns {Promise<void>}
    * @memberof ArticleShowComponent
@@ -168,7 +200,12 @@ export class ArticleComponent implements OnInit {
   }
 
   /**
-   *
+   * Function called to creating a new comment.
+   * Set the loading on true,
+   * Save the new comment on database,
+   * Refresh the list of comments,
+   * Reset the form to add comments,
+   * Set the loading on false,
    *
    * @memberof ArticleShowComponent
    */
@@ -194,6 +231,18 @@ export class ArticleComponent implements OnInit {
     this.isLoading = false;
   }
 
+  /**
+   * Function called to save the edit of a comment.
+   * Set the loading on true,
+   * If the editComment form is validate, get the value of the form,
+   * Save the new comment on database,
+   * Tell the app that the user isn't editing a comment anymore,
+   * Set the loading on false,
+   *
+   * @param {number} index
+   * @returns {Promise<void>}
+   * @memberof ArticleComponent
+   */
   async saveComment(index: number): Promise<void> {
     this.isLoading = true;
 
@@ -215,6 +264,11 @@ export class ArticleComponent implements OnInit {
   }
 
   /**
+   * Function called to delete a comment.
+   * Set the loading on true,
+   * Delete the comment selectionned,
+   * Refresh list of comments,
+   * Set the loading on false,
    *
    * @param commentId
    */
@@ -234,7 +288,11 @@ export class ArticleComponent implements OnInit {
   }
 
   /**
-   *
+   * Function called to delete the article.
+   * Set loading on true,
+   * Delete the actual article,
+   * Redirect to the album that was link to the article deleted,
+   * Set loading on false (in case of error),
    *
    * @param {string} articleId
    * @returns {Promise<void>}

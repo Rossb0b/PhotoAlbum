@@ -16,7 +16,20 @@ const albumSchema = mongoose.Schema({
     alt: {
       type: String,
       required: true,
-    }
+    },
+    // reactions: [{
+    //   creator: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User',
+    //     required: true,
+    //     unique: true,
+    //   },
+    //   value: {
+    //     type: string,
+    //     enum: [ 'love', 'smile', 'sad', 'cry' ],
+    //     required: true,
+    //   },
+    // }],
   }],
   linked_friendsId: [ {
     type: String,

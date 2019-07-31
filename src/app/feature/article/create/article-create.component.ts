@@ -63,7 +63,11 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   *
+   * Initialize the component.
+   * Set loading on true,
+   * Identify the albumId from the url,
+   * Get the album linked to the article we want to create,
+   * Set loading on false,
    *
    * @returns {Promise<void>}
    * @memberof ArticleCreateComponent
@@ -78,7 +82,8 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   *
+   * Get the album we use to create the article.
+   * Push the images to an array for the pagination system.
    *
    * @returns {Promise<void>}
    * @memberof ArticleCreateComponent
@@ -101,7 +106,7 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   *
+   * Display images in fonction of pageData information.
    *
    * @param {PageEvent} pageData
    * @memberof ArticleCreateComponent
@@ -122,7 +127,8 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   *
+   * Scrolling method called on paragraphs select and on creation of a new paragraph.
+   * It scrolls to the bottom of the page (submit button) for a better UX.
    *
    * @memberof ArticleCreateComponent
    */
@@ -136,7 +142,7 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   *
+   * Push a new paragraph to the form.
    *
    * @memberof ArticleCreateComponent
    */
@@ -152,7 +158,7 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   *
+   * Delete the last paragraph of the form.
    *
    * @memberof ArticleCreateComponent
    */
@@ -166,7 +172,7 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   *
+   * When user select a paragraph, display the list of photos he can choose to illustrate this paragraph.
    *
    * @param {number} index
    * @memberof ArticleCreateComponent
@@ -184,7 +190,7 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   *
+   * For each image that user selected to create a paragraph, display it underneath.
    *
    * @param {number} index
    * @param {{path: string, alt: string}} photo
@@ -198,7 +204,10 @@ export class ArticleCreateComponent implements OnInit {
   }
 
   /**
-   *
+   * Function called to create the article.
+   * Set loading on true,
+   * If creation is a success, redirect to the article created,
+   * Set loading on false in case of error,
    *
    * @returns {Promise<void>}
    * @memberof ArticleCreateComponent

@@ -4,6 +4,11 @@ const User = require('../models/user');
 const fs = require('fs');
 
 /**
+ * Async method that create an Album.
+ * First, for each file of http request, we define a new image pushed into an array of formatted image,
+ * For this, we define a path and an alt depending of the filename.
+ * Then we ensure that the new album that we want to create is valid before saving it.
+ *
  * @returns {json({message<string>, album<Album> if success})}
  */
 exports.createAlbum = async (req, res, next) => {
@@ -60,11 +65,20 @@ exports.createAlbum = async (req, res, next) => {
   }
 };
 
-
+/**
+ * Async method to edit an Album.
+ * First, we get the images of the album before editing.
+ * We look for changes that user wants and play with array of images if needed.
+ * Then we ensure that the new album that we want to create is valid before saving it.
+ *
+ * @returns {json({message<string>})}
+ */
 exports.editAlbum = (req, res, next) => {
 
   const formatedArrayOfFile = [];
   let images = [];
+
+  album = new Album(req.body);
 
   if (req.body.imagesPath) {
     for (let i = 0; i < req.body.imagesPath.length; i++) {
@@ -75,18 +89,22 @@ exports.editAlbum = (req, res, next) => {
     images = req.body.images;
   }
 
-  if(req.body.onAdd === 'true') {
+  // Checking if the user is editing the album by adding a simple image to this last one.
+  if (req.body.onAdd === 'true') {
     images.forEach(image => {
       formatedArrayOfFile.push(image);
     });
 
-    if(req.file) {
+    // Checking that their is effectivly a file in the http request.
+    if (req.file) {
       const url = req.protocol + "://" + req.get("host");
       const imagePath = url + "/images/photos/" + req.file.filename;
       const imageAlt = '-Image-' + req.file.filename;
       const image = {path: imagePath, alt: imageAlt};
 
-      if(formatedArrayOfFile.length <= 12) {
+      // Checking length of the array of file for the album.
+      // Albumms can't get more than two images.
+      if (formatedArrayOfFile.length <= 12) {
         formatedArrayOfFile.push(image);
       } else {
         res.status(403).json({
@@ -95,7 +113,6 @@ exports.editAlbum = (req, res, next) => {
       }
     }
 
-    album = new Album(req.body);
     album.images = formatedArrayOfFile;
   }
 
@@ -115,13 +132,7 @@ exports.editAlbum = (req, res, next) => {
       }
     });
 
-    album = new Album(req.body);
     album.images = formatedArrayOfFile;
-  }
-
-  /** Handle  title modification add new friends in list */
-  if(!req.body.imageToDeletePath && !req.body.onAdd) {
-    album = new Album(req.body);
   }
 
   /** Checking that we got a valid album, that he respects Album's model */
@@ -161,6 +172,8 @@ exports.editAlbum = (req, res, next) => {
 };
 
 /**
+ * Async methods to get every album for this user.
+ *
  * @returns {json({message<string>, albums<Album[]> if success})}
  */
 exports.getAlbums = async (req, res, next) => {
@@ -187,7 +200,10 @@ exports.getAlbums = async (req, res, next) => {
 };
 
 /**
- * @returns {json({album})}
+ * Async method to get the wanted album and the user linked to this album.
+ *
+ *
+ * @returns {json({album<Album>, users<User[]>})}
  */
 exports.getAlbum = async (req, res, next) => {
   try {
@@ -204,6 +220,12 @@ exports.getAlbum = async (req, res, next) => {
   }
 };
 
+
+/**
+ * Async method that find every user shared with the identified album
+ *
+ * @returns {json({message<string>})}
+ */
 findUsersShareWithThisAlbum = async (friendsId) => {
   try {
     return await User.find({
@@ -219,6 +241,8 @@ findUsersShareWithThisAlbum = async (friendsId) => {
 };
 
 /**
+ * Async method that delete an album and the article linked to it if exist.
+ *
  * @returns {json({messsage<string>})}
  */
 exports.deleteAlbum = async (req, res, next) => {

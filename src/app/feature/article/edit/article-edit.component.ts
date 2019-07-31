@@ -35,7 +35,7 @@ export class ArticleEditComponent implements OnInit {
   /** options for number of photo to display */
   pageSizeOptions = [4];
   /** array of current photos to display */
-  private photosToDisplay = [];
+  photosToDisplay = [];
   /** article form */
   form: FormGroup;
   /** define if form for add a photo pop in view */
@@ -55,7 +55,13 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Initialize the component.
+   * Set loading on true,
+   * Identify the albumId from the url,
+   * Get the album linked to the article,
+   * Get the article from the albumId,
+   * Init the form to edit the article,
+   * Set loading on false,
    *
    * @returns {Promise<void>}
    * @memberof ArticleEditComponent
@@ -80,7 +86,7 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Get the album linked to the article for edit this last one.
    *
    * @returns {Promise<void>}
    * @memberof ArticleEditComponent
@@ -103,7 +109,7 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Build the form to edit the article.
    *
    * @memberof ArticleEditComponent
    */
@@ -124,7 +130,7 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Display images in fonction of pageData information.
    *
    * @param {PageEvent} pageData
    * @memberof ArticleEditComponent
@@ -145,7 +151,8 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Scrolling method called on paragraphs select and on creation of a new paragraph.
+   * It scrolls to the bottom of the page (submit button) for a better UX.
    *
    * @memberof ArticleEditComponent
    */
@@ -159,7 +166,7 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Push a new paragraph to the form.
    *
    * @memberof ArticleEditComponent
    */
@@ -175,6 +182,8 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
+   * Delete the last paragraph of the form.
+   *
    * @memberof ArticleEditComponent
    */
   deleteparagraph(): void {
@@ -187,7 +196,7 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
-   *
+   * When user select a paragraph, display the list of photos he can choose to illustrate this paragraph.
    *
    * @param {number} index
    * @memberof ArticleEditComponent
@@ -205,7 +214,7 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
-   *
+   * For each image that user selected to create a paragraph, display it underneath.
    *
    * @param {number} index
    * @param {{path: string, alt: string}} photo
@@ -219,7 +228,10 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Function called to edit the article.
+   * Set loading on true,
+   * If edition is a success, redirect to the article edited,
+   * Set loading on false in case of error,
    *
    * @returns {Promise<void>}
    * @memberof ArticleEditComponent

@@ -33,7 +33,7 @@ export class AlbumCreateComponent {
     }
 
   /**
-   *
+   * Set the form to create an album.
    *
    * @memberof AlbumCreateComponent
    */
@@ -45,7 +45,11 @@ export class AlbumCreateComponent {
   }
 
   /**
-   *
+   * Function called after the user picked image(s).
+   * Get the array of files to upload,
+   * Initialize imagePreview constante,
+   * Get through every files to upload, read them, check their format,
+   * If format is valid, push the image source to the array of imagePreview,
    *
    * @param {Event} event
    * @memberof AlbumCreateComponent
@@ -67,7 +71,11 @@ export class AlbumCreateComponent {
   }
 
   /**
-   *
+   * Function called to create the album.
+   * Set loading on true,
+   * Check the form manually,
+   * Save the new album and redirect to albums list,
+   * Reset the form and set loading on false (in case of error),
    *
    * @returns {Promise<void>}
    * @memberof AlbumCreateComponent

@@ -11,7 +11,7 @@ const commentsRoutes = require('./routes/comments');
 const app = express();
 
 mongoose.set('useCreateIndex', true);
-mongoose.connect("mongodb+srv://DBUSERNAME:" + process.env.MONGO_ATLAS_PW + "@cluster0-6xxe0.mongodb.net/test?retryWrites=true", { useNewUrlParser: true })
+mongoose.connect("mongodb+srv://Users:" + process.env.MONGO_ATLAS_PW + "@cluster0-6xxe0.mongodb.net/test?retryWrites=true", { useNewUrlParser: true })
   .then(() => {
     console.log('connected to database');
   })

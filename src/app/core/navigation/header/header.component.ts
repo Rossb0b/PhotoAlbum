@@ -12,14 +12,15 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
+  authListenerSubs: Subscription;
+  authStatusSub: Subscription;
   userIsAuthenticated = false;
   userId: string;
-  private authListenerSubs: Subscription;
-  private authStatusSub: Subscription;
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
+    /** Update user status */
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authListenerSubs = this.authService
       .getAuthStatusListener()
