@@ -12,7 +12,7 @@ import { AuthService } from '@service/auth.service';
 
 export class LoginComponent implements OnInit, OnDestroy {
   isLoading = false;
-  private authStatusSub: Subscription;
+  authStatusSub: Subscription;
 
   constructor(public authService: AuthService) {}
 
@@ -25,9 +25,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onLogin(form: NgForm) {
+
     if (form.invalid) {
       return;
     }
+
     this.isLoading = true;
     this.authService.login(form.value.email, form.value.password);
   }

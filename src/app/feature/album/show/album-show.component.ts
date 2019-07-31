@@ -19,19 +19,19 @@ import { mimeType } from '@helper/validator/mime-type.validator';
 export class AlbumShowComponent implements OnInit {
 
   /** current album */
-  public album: Album;
+  album: Album;
   /** ID of current album */
   albumId: string;
   /** current article if exist */
-  private article: Article;
+  article: Article;
   /** ID of the current article if exist */
   articleId: string;
   /** current status of article */
-  public articleExist = false;
+  articleExist = false;
   /** define if front is communicating with api */
-  public isLoading = false;
+  isLoading = false;
   /** current ID of logged in user */
-  public userId: string;
+  userId: string;
   /** current array of images to display */
   newArrayOfImage: any;
   /** current value of total photo to load */
@@ -66,7 +66,12 @@ export class AlbumShowComponent implements OnInit {
     }
 
     /**
-     *
+     * Initialize the component.
+     * Set loading on true,
+     * Get albumId from,
+     * Get the album to show,
+     * Get the article linked to the album,
+     * Get the userId of current logged in user,
      *
      * @returns {Promise<void>}
      * @memberof AlbumShowComponent
@@ -89,7 +94,7 @@ export class AlbumShowComponent implements OnInit {
     }
 
     /**
-     *
+     * Get the album to show.
      *
      * @returns {Promise<void>}
      * @memberof AlbumShowComponent
@@ -113,7 +118,10 @@ export class AlbumShowComponent implements OnInit {
     }
 
     /**
-     *
+     * Get the article linked to the album showed.
+     * Get the article linked to this album,
+     * Checking that the article has data,
+     * Define article existance by passing articleExist to true or false,
      *
      * @returns {Promise<void>}
      * @memberof AlbumShowComponent
@@ -123,7 +131,7 @@ export class AlbumShowComponent implements OnInit {
 
       try {
         this.article = await this.articleService.getArticleFromAlbumId(this.albumId);
-        this.articleExist = true;
+        // this.articleExist = true;  ??
         this.articleId = this.article._id;
       } catch (e) {
         /** debugging */
@@ -139,7 +147,7 @@ export class AlbumShowComponent implements OnInit {
     }
 
     /**
-     *
+     * Set the form to add a single image to the album.
      *
      * @memberof AlbumShowComponent
      */
@@ -150,7 +158,7 @@ export class AlbumShowComponent implements OnInit {
     }
 
     /**
-     *
+     * Function called by user OnClick for changing the layout.
      *
      * @memberof AlbumShowComponent
      */
@@ -163,9 +171,9 @@ export class AlbumShowComponent implements OnInit {
     }
 
     /**
+     * Display images in fonction of pageData information.
      *
      * @param pageData data from pagination
-     * display images in fonction of pageData information
      * @returns void
      */
     onChangedPage(pageData: PageEvent) {
@@ -185,9 +193,9 @@ export class AlbumShowComponent implements OnInit {
     }
 
     /**
+     * Handle the image preview on image select.
      *
      * @param event on pick image
-     * handle the image preview on image select
      * @returns void
      */
     onPhotoPicked(event: Event) {
@@ -202,7 +210,13 @@ export class AlbumShowComponent implements OnInit {
     }
 
     /**
-     *
+     * Function called to add a photo to the album.
+     * Set loading on true,
+     * Defile addPhoto on false for layout,
+     * Edit the album,
+     * Get the album edited,
+     * Reset the form,
+     * Set loading on false,
      *
      * @returns {Promise<void>}
      * @memberof AlbumShowComponent
@@ -229,7 +243,12 @@ export class AlbumShowComponent implements OnInit {
     }
 
     /**
-     *
+     * Function called to delete a photo from the album.
+     * Set loading on true,
+     * Delete the photo to the array that display photos of the album,
+     * Delete the photo from the album,
+     * Get the album edited,
+     * Set loading on false,
      *
      * @param {string} photo
      * @returns {Promise<void>}

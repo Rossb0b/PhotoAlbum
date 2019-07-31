@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { Album } from '@interface/album.interface';
 import { AlbumsService } from '@service/albums.service';
@@ -22,13 +21,22 @@ export class AlbumComponent implements OnInit {
   constructor(
     public albumsService: AlbumsService,
     private authService: AuthService,
-    private router: Router
     ) { }
 
   ngOnInit() {
     this.initialize();
   }
 
+  /**
+   * Initialize the component;
+   * Set the loading on true,
+   * Get the userId of current logged in user,
+   * Get all albums to list,
+   * Set the loading on false,
+   *
+   * @returns {Promise<void>}
+   * @memberof AlbumComponent
+   */
   async initialize(): Promise<void> {
     this.isLoading = true;
 
@@ -45,7 +53,7 @@ export class AlbumComponent implements OnInit {
   }
 
   /**
-   *
+   * Fetch a list of current albums that user can see
    *
    * @returns {Promise<void>}
    * @memberof AlbumListComponent
@@ -61,7 +69,8 @@ export class AlbumComponent implements OnInit {
   }
 
   /**
-   *
+   * Delete the selectionned album,
+   * Refresh the list of albums that user can see
    *
    * @param {string} albumId
    * @returns {Promise<void>}

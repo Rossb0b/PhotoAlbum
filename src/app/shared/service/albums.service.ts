@@ -20,7 +20,7 @@ export class AlbumsService {
   constructor(private http: HttpClient, private router: Router) { }
 
   /**
-   *
+   * Request every album the actual user can see.
    *
    * @param {string} userId
    * @returns {Promise <any>}
@@ -32,7 +32,7 @@ export class AlbumsService {
   }
 
   /**
-   *
+   * Request the album the user choose.
    *
    * @param {string} id
    * @returns {Promise<Album>}
@@ -43,7 +43,7 @@ export class AlbumsService {
   }
 
   /**
-   *
+   * Request to create a new album.
    *
    * @param {string} title
    * @param {*} images
@@ -62,7 +62,7 @@ export class AlbumsService {
   }
 
   /**
-   *
+   * Request to delete the album selectionned.
    *
    * @param {string} albumId
    * @returns {Promise<any>}
@@ -73,7 +73,7 @@ export class AlbumsService {
   }
 
   /**
-   *
+   * Request to update the album selectionned.
    *
    * @param {Album} album
    * @returns {Promise<any>}
@@ -84,7 +84,7 @@ export class AlbumsService {
   }
 
   /**
-   *
+   * Request to upload a new image to the album selectionned.
    *
    * @param {Album} album
    * @param {string} imageToAdd
@@ -107,11 +107,13 @@ export class AlbumsService {
     albumData.append('created_date', album.created_date);
     albumData.append('image', imageToAdd, album.title);
     albumData.append('onAdd', onAdd);
+
+
     return this.http.put(BACKEND_URL + album._id, albumData).toPromise();
   }
 
   /**
-   *
+   * Request to delete the selectionned photo from the selectionned album.
    *
    * @param {Album} album
    * @param {string} imageToDeletePath
@@ -129,6 +131,7 @@ export class AlbumsService {
     });
     albumData.append('created_date', album.created_date);
     albumData.append('imageToDeletePath', imageToDeletePath);
+
     return this.http.put(BACKEND_URL + album._id, albumData).toPromise();
   }
 }

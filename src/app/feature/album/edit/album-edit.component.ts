@@ -21,7 +21,7 @@ export class AlbumEditComponent implements OnInit {
   /** current album */
   album: Album;
   /** album id in url params used to retrieve album */
-  private albumId: string;
+  albumId: string;
   /** Current ID of logged in user */
   userId: string;
   /** define if front is communicating with api */
@@ -31,9 +31,9 @@ export class AlbumEditComponent implements OnInit {
   /** current list of all user share in album */
   friends: User[] = [];
   /** current list of all user */
-  private users;
+  users;
   /** current list of all user with filtered data */
-  private filteredUsers: {_id: string, firstname: string, lastname: string}[];
+  filteredUsers: {_id: string, firstname: string, lastname: string}[];
 
 
   constructor(
@@ -57,7 +57,11 @@ export class AlbumEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Initialize the component;
+   * Identify the albumId from the url,
+   * Get the userId of current logged in user,
+   * Get the album to edit from his id,
+   * Define the list of all users shared with this album,
    *
    * @returns {Promise<void>}
    * @memberof AlbumEditComponent
@@ -85,7 +89,8 @@ export class AlbumEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Get a list of all users,
+   * push them into an array used in html except the current logged in user,
    *
    * @returns {Promise<void>}
    * @memberof AlbumEditComponent
@@ -138,7 +143,7 @@ export class AlbumEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Set the form to edit the album
    *
    * @memberof AlbumEditComponent
    */
@@ -150,7 +155,7 @@ export class AlbumEditComponent implements OnInit {
   }
 
   /**
-   *
+   * delete the friend selectionned by the user on his click
    *
    * @param {string} id
    * @memberof AlbumEditComponent
@@ -161,7 +166,12 @@ export class AlbumEditComponent implements OnInit {
   }
 
   /**
-   *
+   * Function called to edit the album.
+   * Set loading on true,
+   * Check the form,
+   * Checking manually that the user added isn't the current logged in user,
+   * If success, redirect,
+   * Set loading on false,
    *
    * @returns {Promise<void>}
    * @memberof AlbumEditComponent
@@ -173,6 +183,7 @@ export class AlbumEditComponent implements OnInit {
 
       const friendId = this.form.value.friendId || null;
       const isFriend = this.album.linked_friendsId.indexOf(friendId) > -1;
+
       if (friendId && !isFriend) {
         this.album.linked_friendsId.push(friendId);
       }

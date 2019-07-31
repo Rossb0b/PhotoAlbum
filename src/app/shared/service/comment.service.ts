@@ -13,29 +13,57 @@ const BACKEND_URL = env.apiUrl + '/comments/';
 })
 export class CommentService {
 
-    /** current list of album fetched */
-    private comments: Comment[] = [];
-
     constructor(private http: HttpClient, private router: Router) { }
 
+    /**
+     * Request to get the comments of this article.
+     *
+     * @param articleId
+     * @returns {Promise<any>}
+     * @memberof CommentService
+     */
     getCommentsFromArticleId(articleId: string): Promise<any> {
         const queryParams = `?articleId=${articleId}`;
         return this.http.get(BACKEND_URL + queryParams).toPromise();
     }
 
+    /**
+     * Request to create a new comment for this article.
+     *
+     * @param content
+     * @param creator
+     * @param articleId
+     * @returns {Promise<any>}
+     * @memberof CommentService
+     */
     addComment(content: string, creator: string, articleId: string): Promise<any> {
         const commentData = {
             content,
             creator,
             articleId,
         };
+
         return this.http.post<{message: string, comment: Comment}>(BACKEND_URL, commentData).toPromise();
     }
 
+    /**
+     * Request to edit the comment selectionned.
+     *
+     * @param comment
+     * @returns {Promise<any>}
+     * @memberof CommentService
+     */
     updateComment(comment: Comment): Promise<any> {
       return this.http.put(BACKEND_URL + comment._id, comment).toPromise();
     }
 
+    /**
+     * Request to delete the comment selectionned.
+     *
+     * @param commentId
+     * @returns {Promise<any>}
+     * @memberof CommentService
+     */
     deleteComment(commentId: string): Promise<any> {
         return this.http.delete(BACKEND_URL + commentId).toPromise();
     }
