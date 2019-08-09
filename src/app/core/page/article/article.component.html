@@ -99,7 +99,7 @@
 
                 <div class="commentary-container-{{i}} col-8 mx-auto">
                   <button
-                  *ngIf="userId === comment.creator"
+                  *ngIf="userId === comment.creator || userId === article.creator"
                   mat-raised-button
                   class="text-center delete-comment-button"
                   color="warn"

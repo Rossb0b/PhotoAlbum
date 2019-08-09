@@ -1,5 +1,5 @@
 const Comment = require('../models/comment');
-
+const Article = require('../models/article');
 /**
  * Async method to create a new Comment.
  * Init the comment send by the request.
@@ -114,16 +114,28 @@ exports.getCommentsForThisArticle = async (req, res, next) => {
 
 /**
  * Async method to delete the wanted comment.
+ * First get the comment to get the article to identify the article creator.
+ * If the article creator is the user connected, allow him to delete any comment.
+ * If not, only the comment creator can delete it.
  *
  * @returns {json{message<string>}}
  */
 exports.deleteComment = async (req, res, next) => {
 
   try {
-    const result = await Comment.deleteOne({
-      _id: req.params.id,
-      creator: req.userData.userId
-    });
+    const comment = await Comment.findById(req.params.id);
+
+    const article = await Article.findById(comment.articleId);
+    let result;
+
+    if (article.creator == req.userData.userId) {
+      result = await Comment.deleteOne({_id: req.params.id});
+    } else {
+      result = await Comment.deleteOne({
+        _id: req.params.id,
+        creator: req.userData.userId,
+      });
+    }
 
     if (result.n > 0) {
       res.status(200).json({
@@ -136,6 +148,7 @@ exports.deleteComment = async (req, res, next) => {
     }
 
   } catch (e) {
+    console.log(e);
     res.status(500).json({
       message: 'Deleting comment failed',
     });
