@@ -272,7 +272,7 @@ export class ArticleComponent implements OnInit {
    *
    * @param commentId
    */
-  async deleteComment(commentId: string, albumId, articleCreator: string): Promise<void> {
+  async deleteComment(commentId: string): Promise<void> {
     this.isLoading = true;
 
     try {
