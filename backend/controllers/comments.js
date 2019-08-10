@@ -1,5 +1,6 @@
 const Comment = require('../models/comment');
 const Article = require('../models/article');
+
 /**
  * Async method to create a new Comment.
  * Init the comment send by the request.
