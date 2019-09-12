@@ -18,7 +18,7 @@ const albumSchema = mongoose.Schema({
       required: true,
     },
     // reactions: [{
-    //   creator: {
+    //   userId: {
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'User',
     //     required: true,
@@ -31,7 +31,7 @@ const albumSchema = mongoose.Schema({
     //   },
     // }],
   }],
-  linked_friendsId: [ {
+  sharedUsers: [ {
     type: String,
     validate: function(v) {
       return new Promise(function(resolve, reject) {
@@ -42,7 +42,7 @@ const albumSchema = mongoose.Schema({
     },
     required: true,
   } ],
-  creator: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,

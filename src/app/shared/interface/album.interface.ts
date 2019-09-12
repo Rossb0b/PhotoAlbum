@@ -6,7 +6,7 @@ export interface Album {
     path: string,
     alt: string
   }];
-  linked_friendsId: string[];
-  creator: string;
+  sharedUsers: string[];
+  userId: string;
   created_date: string;
 }

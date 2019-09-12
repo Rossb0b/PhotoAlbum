@@ -101,8 +101,8 @@ export class AlbumEditComponent implements OnInit {
 
       for (let i = 0; i < this.users.length; i++) {
         // tslint:disable-next-line: prefer-for-of
-        for (let j = 0; j < this.album.linked_friendsId.length; j++) {
-          if (this.users[i]._id === this.album.linked_friendsId[j]) {
+        for (let j = 0; j < this.album.sharedUsers.length; j++) {
+          if (this.users[i]._id === this.album.sharedUsers[j]) {
             this.users.splice(i, 1);
             i--;
           }
@@ -161,8 +161,8 @@ export class AlbumEditComponent implements OnInit {
    * @memberof AlbumEditComponent
    */
   removeFriend(id: string): void {
-    const index = this.album.linked_friendsId.indexOf(id);
-    this.album.linked_friendsId.splice(index, 1);
+    const index = this.album.sharedUsers.indexOf(id);
+    this.album.sharedUsers.splice(index, 1);
   }
 
   /**
@@ -182,10 +182,10 @@ export class AlbumEditComponent implements OnInit {
     if (this.form.valid) {
 
       const friendId = this.form.value.friendId || null;
-      const isFriend = this.album.linked_friendsId.indexOf(friendId) > -1;
+      const isFriend = this.album.sharedUsers.indexOf(friendId) > -1;
 
       if (friendId && !isFriend) {
-        this.album.linked_friendsId.push(friendId);
+        this.album.sharedUsers.push(friendId);
       }
 
       this.album.title = this.form.get('title').value;

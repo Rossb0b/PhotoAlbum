@@ -216,11 +216,28 @@ export class ArticleCreateComponent implements OnInit {
     this.isLoading = true;
 
     try {
+      let paragraphs = [];
+
+      for (let i = 0; i <= this.form.value.paragraphs.length - 1; i++) {
+        let paragraph: {
+          content: string,
+          image: {
+            path: string,
+            alt: string
+          }} = {
+            content: this.form.value.paragraphs[i].content,
+            image: {
+              path: this.form.value.paragraphs[i].path,
+              alt: this.form.value.paragraphs[i].alt
+            }};
+        paragraphs.push(paragraph);
+      }
+
       await this.articleService.addArticle(
         this.form.value.title,
-        this.form.value.paragraphs,
+        paragraphs,
         this.album._id,
-        this.album.creator,
+        this.album.userId,
       );
 
       this.router.navigate(['/albums/article', this.albumId]);

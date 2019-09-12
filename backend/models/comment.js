@@ -7,7 +7,7 @@ const commentSchema = mongoose.Schema({
     minLength: [ 1, 'Your comment must have a length of 1 caracter at least' ],
     maxLength: [ 80, 'Your comment must have a length of 80 caracters maximum' ],
   },
-  creator: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,

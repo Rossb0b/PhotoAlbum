@@ -123,8 +123,8 @@ export class ArticleEditComponent implements OnInit {
       const p = this.form.controls.paragraphs as FormArray;
       p.push(this.fb.group({
         content: [paragraph.content, { validators: [Validators.required, Validators.minLength(80), Validators.maxLength(525)] }],
-        path: [paragraph.path],
-        alt: [paragraph.alt],
+        path: [paragraph.image.path],
+        alt: [paragraph.image.alt],
       }));
     });
   }

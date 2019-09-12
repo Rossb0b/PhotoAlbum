@@ -99,7 +99,7 @@ export class AlbumsService {
     const onAdd = 'true';
     albumData.append('_id', album._id);
     albumData.append('title', album.title);
-    albumData.append('creator', album.creator);
+    albumData.append('userId', album.userId);
     album.images.forEach(image => {
       albumData.append('imagesPath[]', image.path);
       albumData.append('imagesAlt[]', image.alt);
@@ -124,7 +124,7 @@ export class AlbumsService {
     const albumData = new FormData();
     albumData.append('_id', album._id);
     albumData.append('title', album.title);
-    albumData.append('creator', album.creator);
+    albumData.append('userId', album.userId);
     album.images.forEach(image => {
       albumData.append('imagesPath[]', image.path);
       albumData.append('imagesAlt[]', image.alt);
