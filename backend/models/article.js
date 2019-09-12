@@ -14,16 +14,18 @@ const articleSchema = mongoose.Schema({
       minLength: [ 80, 'Your paragraph\'s content must have a length of 80 caracters at least' ],
       maxLength: [ 525, 'Your paragraph\'s content must have a length of 525 caracters maximum' ],
     },
-    path: {
-      type: String,
-      required: true,
-    },
-    alt: {
-      type: String,
-      required: true,
+    image: {
+      path: {
+        type: String,
+        required: true,
+      },
+      alt: {
+        type: String,
+        required: true,
+      },
     },
   }],
-  creator: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,

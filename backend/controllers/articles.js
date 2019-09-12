@@ -3,18 +3,20 @@ const Comment = require('../models/comment');
 
 /**
  * Async method to create a new Article.
- * First check that the creator is the owner of the album.
+ * First check that the userId is the owner of the album.
  * Ensure that the article is valid before saving it.
  *
  * @returns {json{message<string>, article<Article> if success}}
  */
 exports.createArticle = async (req, res, next) => {
 
-  /** checking that the creator is the owner of the album linked to this article */
-  if (req.body.owner === req.userData.userId) {
+  /** checking that the userId is the owner of the album linked to this article */
+  if (req.body.userId === req.userData.userId) {
     const url = req.protocol + '://' + req.get("host");
     const article = new Article(req.body);
-    article.creator = req.body.owner;
+    console.log(req.body);
+    console.log(article);
+    article.userId = req.body.userId;
 
     /** checking that we got a valid article, that he respects Article's model */
     article.validate(async (error) => {
@@ -72,7 +74,7 @@ exports.editArticle = async (req, res, next) => {
       try {
         let result = await Article.updateOne({
           _id: article._id,
-          creator: req.userData.userId,
+          userId: req.userData.userId,
         }, article);
 
         if (result.n > 0) {
@@ -122,7 +124,7 @@ exports.deleteArticle = async (req, res, next) => {
   try {
     const result = await Article.deleteOne({
       _id: req.params.id,
-      creator: req.userData.userId,
+      userId: req.userData.userId,
     });
 
     await Comment.deleteMany({

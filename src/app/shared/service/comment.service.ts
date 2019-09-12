@@ -31,15 +31,15 @@ export class CommentService {
      * Request to create a new comment for this article.
      *
      * @param content
-     * @param creator
+     * @param userId
      * @param articleId
      * @returns {Promise<any>}
      * @memberof CommentService
      */
-    addComment(content: string, creator: string, articleId: string): Promise<any> {
+    addComment(content: string, userId: string, articleId: string): Promise<any> {
         const commentData = {
             content,
-            creator,
+            userId,
             articleId,
         };
 

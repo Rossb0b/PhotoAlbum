@@ -32,16 +32,16 @@ export class ArticleService {
    * @param {string} title
    * @param {*} paragraphs
    * @param {string} albumId
-   * @param {string} owner
+   * @param {string} userId
    * @returns {Promise<{message: string, article: Article}>}
    * @memberof ArticleService
    */
-  addArticle(title: string, paragraphs: any, albumId: string, owner: string): Promise<{message: string, article: Article}> {
+  addArticle(title: string, paragraphs: any, albumId: string, userId: string): Promise<{message: string, article: Article}> {
     const articleData = {
       title,
       paragraphs,
       albumId,
-      owner
+      userId
     };
     return this.http.post<{message: string, article: Article}>(BACKEND_URL, articleData).toPromise();
   }

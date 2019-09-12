@@ -27,8 +27,8 @@ exports.createAlbum = async (req, res, next) => {
     const album = new Album({
       title: req.body.title,
       images: formatedArrayOfFile,
-      linked_friendsId: [],
-      creator: req.userData.userId,
+      sharedUsers: [],
+      userId: req.userData.userId,
     });
 
     /** checking that we got a valid album, that he respects Album's model */
@@ -148,7 +148,7 @@ exports.editAlbum = (req, res, next) => {
       try {
         let result = await Album.updateOne({
           _id: album._id,
-          creator: req.userData.userId
+          userId: req.userData.userId
         }, album);
 
         if (result.n > 0) {
@@ -178,11 +178,11 @@ exports.editAlbum = (req, res, next) => {
  */
 exports.getAlbums = async (req, res, next) => {
   try {
-    /** Find albums where creator = connected userID, or, where connected userID is in linked_friendsID array */
+    /** Find albums where userId = connected userID, or, where connected userID is in sharedUsers array */
     const albums = await Album.find({
       $or:[
-        { creator: req.query.userId },
-        { linked_friendsId: {
+        { userId: req.query.userId },
+        { sharedUsers: {
           "$in" : [req.query.userId]
           }
         },
@@ -208,7 +208,7 @@ exports.getAlbums = async (req, res, next) => {
 exports.getAlbum = async (req, res, next) => {
   try {
     const album = await Album.findById(req.params.id);
-    const users = await findUsersShareWithThisAlbum(album.linked_friendsId);
+    const users = await findUsersShareWithThisAlbum(album.sharedUsers);
     res.status(200).json({
       album: album,
       users: users

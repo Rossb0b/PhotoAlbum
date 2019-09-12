@@ -3,10 +3,12 @@ export interface Article {
   title: string;
   paragraphs: [{
     content: string;
-    path: string;
-    alt: string;
+    image: {
+      path: string;
+      alt: string;
+    }
   }];
-  creator: string;
+  userId: string;
   albumId: string;
   created_date: any;
 }

@@ -13,7 +13,7 @@ exports.createComment = async (req, res, next) => {
   const url = req.protocol + '://' + req.get("host");
   const comment = new Comment({
     content: req.body.content,
-    creator: req.userData.userId,
+    userId: req.userData.userId,
     articleId: req.body.articleId,
   });
 
@@ -67,7 +67,7 @@ exports.editComment = async (req, res, next) => {
       try {
         const result = await Comment.updateOne({
           _id: comment._id,
-          creator: req.userData.userId,
+          userId: req.userData.userId,
           articleId: req.body.articleId,
         }, comment);
 
@@ -115,9 +115,9 @@ exports.getCommentsForThisArticle = async (req, res, next) => {
 
 /**
  * Async method to delete the wanted comment.
- * First get the comment to get the article to identify the article creator.
- * If the article creator is the user connected, allow him to delete any comment.
- * If not, only the comment creator can delete it.
+ * First get the comment to get the article to identify the article userId.
+ * If the article userId is the user connected, allow him to delete any comment.
+ * If not, only the comment userId can delete it.
  *
  * @returns {json{message<string>}}
  */
@@ -129,12 +129,12 @@ exports.deleteComment = async (req, res, next) => {
     const article = await Article.findById(comment.articleId);
     let result;
 
-    if (article.creator == req.userData.userId) {
+    if (article.userId == req.userData.userId) {
       result = await Comment.deleteOne({_id: req.params.id});
     } else {
       result = await Comment.deleteOne({
         _id: req.params.id,
-        creator: req.userData.userId,
+        userId: req.userData.userId,
       });
     }
 

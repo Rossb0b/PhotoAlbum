@@ -131,7 +131,6 @@ export class AlbumShowComponent implements OnInit {
 
       try {
         this.article = await this.articleService.getArticleFromAlbumId(this.albumId);
-        // this.articleExist = true;  ??
         this.articleId = this.article._id;
       } catch (e) {
         /** debugging */
