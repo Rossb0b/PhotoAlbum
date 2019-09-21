@@ -84,7 +84,7 @@
     </div>
 
     <div class="image-paginator" *ngIf="photosToDisplay.length === 4" class="row mt-3">
-      <div class="col-11 col-md-3 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
+      <div class="col-11 col-md-6 col-lg-3 mx-auto mt-4" *ngFor="let photo of photosToDisplay">
         <button *ngIf="userId === album.userId" mat-raised-button class="text-center ml-3" color="warn" (click)="deletePhoto(photo.path)">X</button>
         <mat-card>
           <img mat-card-image class="mx-auto mt-1 little-picture" [src]="photo.path" [alt]="photo.alt">
