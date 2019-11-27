@@ -149,36 +149,41 @@ exports.editUser = async (req, res, next) => {
     imagePath = url + "/images/avatars/" + req.file.filename;
   }
 
-  const user = new User (req.body);
-  user._id = req.body.id;
-  user.imagePath = imagePath;
+  if (user._id === req.params.id) {
 
-  try {
-    const result = await User.updateOne({
-      _id: req.params.id,
-    }, user);
+    const user = new User (req.body);
+    user._id = req.body.id;
+    user.imagePath = imagePath;
 
-    if (result.n > 0) {
+    try {
+      const result = await User.updateOne({
+        _id: req.params.id,
+      }, user);
 
-      if (imageToDeleteFinalPath !== "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/avatars/default.png") {
-        /** Delete the image with synchron function after removing the album successfully */
-        fs.unlinkSync(imageToDeleteFinalPath);
+      if (result.n > 0) {
+
+        if (imageToDeleteFinalPath !== "C:/Users/Nico/Desktop/Dév/Personnel/Projet/ImageAlbum/backend/images/avatars/default.png") {
+          /** Delete the image with synchron function after removing the album successfully */
+          fs.unlinkSync(imageToDeleteFinalPath);
+        }
+
+        res.status(200).json({
+          message: 'update successfull'
+        });
+      } else {
+        res.status(401).json({
+          message: 'Not authorized'
+        });
       }
-
-      res.status(200).json({
-        message: 'update successfull'
-      });
-    } else {
+    } catch (e) {
+      console.log(e);
       res.status(401).json({
-        message: 'Not authorized'
+        message: 'Update failed'
       });
     }
-  } catch (e) {
-    console.log(e);
+  } else {
     res.status(401).json({
-      message: 'Update failed'
+      message: 'You cannot modify the profile of someone else'
     });
   }
 };
-
-

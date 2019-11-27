@@ -1,3 +1,4 @@
+const Album = require('../models/album');
 const Article = require('../models/article');
 const Comment = require('../models/comment');
 
@@ -104,8 +105,33 @@ exports.editArticle = async (req, res, next) => {
 exports.getArticle = async (req, res, next) => {
 
   try {
-    const article = await Article.find({ albumId: req.query.albumId });
-    res.status(200).json(article);
+    let userAuth;
+    const album = await Album.find({ albumId: req.query.albumId });
+
+    if (req.params.id === album.userId) {
+      userAuth = true;
+    } else {
+      for (i = 0; i <= album.sharedUsers.length - 1; i++) {
+        if (req.params.id === album.sharedUsers[i]) {
+          userAuth = true;
+        } else {
+          if (userAuth === true) {
+            userAuth = true;
+          } else {
+            userAuth = false;
+          }
+        }
+      }
+    }
+
+    if (userAuth === true) {
+      const article = await Article.find({ albumId: req.query.albumId });
+      res.status(200).json(article);
+    } else {
+      res.status(401).json({
+        message: 'You don\'t have access to this article'
+      });
+    }
   } catch (e) {
     res.status(500).json({
       message: 'Fetching article failed'
