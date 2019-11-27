@@ -1,4 +1,5 @@
 const Comment = require('../models/comment');
+const Album = require('../models/album');
 const Article = require('../models/article');
 
 /**
@@ -35,7 +36,6 @@ exports.createComment = async (req, res, next) => {
           },
         });
       } catch (e) {
-        console.log(e);
         res.status(500).json({
           message: 'Creating comment failed',
         });
@@ -65,6 +65,7 @@ exports.editComment = async (req, res, next) => {
       });
     } else {
       try {
+
         const result = await Comment.updateOne({
           _id: comment._id,
           userId: req.userData.userId,
@@ -99,14 +100,18 @@ exports.editComment = async (req, res, next) => {
 exports.getCommentsForThisArticle = async (req, res, next) => {
 
   try {
+    checkUserShare(req.query.articleId);
+
     const comments = await Comment.find({
       articleId: req.query.articleId,
     });
+
     res.status(200).json({
       message: 'Fetched comments successfully',
       comments: comments,
     });
   } catch (e) {
+    console.log(e);
     res.status(500).json({
       message: 'Fetching comments failed',
     });
@@ -152,6 +157,40 @@ exports.deleteComment = async (req, res, next) => {
     console.log(e);
     res.status(500).json({
       message: 'Deleting comment failed',
+    });
+  }
+};
+
+/**
+ * Async method that check if the user that want to access the article and comments is a known one.
+ *
+ * @param {string} articleId
+ * @returns {void || json{message<string>}}
+ */
+checkUserShare = async (articleId) => {
+  try {
+    const article = await Article.findById(articleId);
+
+    const album = await Album.findOne({
+      albumId: article.albumId
+    });
+
+    /**
+     * If the user is the owner, the logic follow her way.
+     * Same if he is part of the list of sharedUsers array.
+    */
+    if (req.params.userId === album.userId) {
+      next();
+    } else {
+      album.sharedUsers.forEach(user => {
+        if (req.params.user === user) {
+          next();
+        }
+      });
+    }
+  } catch (e) {
+    res.status(500).json({
+      message: 'Couldn\'t find the article'
     });
   }
 };
