@@ -1,0 +1,10 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "backend/package.json",
+        "package.json"
+      ]
+    }
+  }
+}
