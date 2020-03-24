@@ -1,5 +1,7 @@
 # ImageAlbum
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Rossb0b/PhotoAlbum.svg)](https://greenkeeper.io/)
+
 ## Technical spec
 
 * Angular CLI 7.3.7
