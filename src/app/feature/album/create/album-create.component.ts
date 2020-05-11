@@ -86,19 +86,16 @@ export class AlbumCreateComponent {
     /** checking that form is correctly filled */
     if (this.form.value.title && this.form.value.title !== 'null' && this.filesToUpload.length > 0) {
       try {
-        await this.albumService.addAlbum(
-          this.form.value.title,
-          this.filesToUpload
-        ).then(() => {
-          this.router.navigate(['/albums/']);
-        });
+        await this.albumService.addAlbum(this.form.value.title, this.filesToUpload);
+        this.router.navigate(['/albums/']);
       } catch (e) {
           /** debugging */
           console.error(e);
+      } finally {
+        this.isLoading = false;
       }
     }
 
     this.form.reset();
-    this.isLoading = false;
   }
 }
